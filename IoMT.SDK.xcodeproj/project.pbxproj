@@ -1,0 +1,435 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */; };
+		2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DCA2B15D01000DC3E29 /* NetService.swift */; };
+		7388E9592B74F3FC00510466 /* Observation.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */; };
+		7388E95C2B74F44B00510466 /* Entity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */; };
+		7388E95D2B74F44B00510466 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */; };
+		7388E95F2B74F46B00510466 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7388E95E2B74F46B00510466 /* CoreDataStack.swift */; };
+		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2F2131272AB8564C007F8FD2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2F2131292AB8564C007F8FD2 /* libIoMT.SDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libIoMT.SDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F21315E2AB858B8007F8FD2 /* InternetManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternetManager.swift; sourceTree = "<group>"; };
+		2F2131602AB858BA007F8FD2 /* ConnectClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectClass.swift; sourceTree = "<group>"; };
+		2F2131612AB858BA007F8FD2 /* EltaGlucometr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EltaGlucometr.swift; sourceTree = "<group>"; };
+		2F2131622AB858BA007F8FD2 /* AndTonometr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AndTonometr.swift; sourceTree = "<group>"; };
+		2F2131642AB858C0007F8FD2 /* BleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BleManager.swift; sourceTree = "<group>"; };
+		2F2131652AB858C0007F8FD2 /* DeviceBleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceBleManager.swift; sourceTree = "<group>"; };
+		2F2131662AB858C0007F8FD2 /* DeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceService.swift; sourceTree = "<group>"; };
+		2F2131672AB858C0007F8FD2 /* DataCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCollector.swift; sourceTree = "<group>"; };
+		2F2131682AB858C0007F8FD2 /* DevicesEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevicesEnum.swift; sourceTree = "<group>"; };
+		2F2131692AB858C0007F8FD2 /* FhirTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FhirTemplate.swift; sourceTree = "<group>"; };
+		2F21316A2AB858C0007F8FD2 /* DeviceCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCallback.swift; sourceTree = "<group>"; };
+		2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = IoMT.SDK.podspec; sourceTree = "<group>"; };
+		2F2DA6202AB8940D0096A741 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueService.swift; sourceTree = "<group>"; };
+		2F5E9DCA2B15D01000DC3E29 /* NetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetService.swift; sourceTree = "<group>"; };
+		5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IoMT_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7388E9582B74F3FC00510466 /* Observation.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Observation.xcdatamodel; sourceTree = "<group>"; };
+		7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = "<group>"; };
+		7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7388E95E2B74F46B00510466 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
+		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2F2131262AB8564C007F8FD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1EA0FA9986DA08BC689D011F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */,
+				818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		2F2131202AB8564C007F8FD2 = {
+			isa = PBXGroup;
+			children = (
+				2F2DA6202AB8940D0096A741 /* LICENSE */,
+				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
+				2F21312A2AB8564C007F8FD2 /* Products */,
+				2F21312B2AB8564C007F8FD2 /* IoMT.SDK */,
+				1EA0FA9986DA08BC689D011F /* Pods */,
+				6430A7261BC11EC50F7540D2 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2F21312A2AB8564C007F8FD2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2F2131292AB8564C007F8FD2 /* libIoMT.SDK.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
+			isa = PBXGroup;
+			children = (
+				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
+				7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */,
+				7388E95E2B74F46B00510466 /* CoreDataStack.swift */,
+				7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */,
+				2F2131632AB858C0007F8FD2 /* MainServices */,
+				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
+				2F21315D2AB858B7007F8FD2 /* InternetManager */,
+			);
+			path = IoMT.SDK;
+			sourceTree = "<group>";
+		};
+		2F21315D2AB858B7007F8FD2 /* InternetManager */ = {
+			isa = PBXGroup;
+			children = (
+				2F21315E2AB858B8007F8FD2 /* InternetManager.swift */,
+			);
+			path = InternetManager;
+			sourceTree = "<group>";
+		};
+		2F21315F2AB858BA007F8FD2 /* ConnectClass */ = {
+			isa = PBXGroup;
+			children = (
+				2F2131622AB858BA007F8FD2 /* AndTonometr.swift */,
+				2F2131602AB858BA007F8FD2 /* ConnectClass.swift */,
+				2F2131612AB858BA007F8FD2 /* EltaGlucometr.swift */,
+			);
+			path = ConnectClass;
+			sourceTree = "<group>";
+		};
+		2F2131632AB858C0007F8FD2 /* MainServices */ = {
+			isa = PBXGroup;
+			children = (
+				2F2131682AB858C0007F8FD2 /* DevicesEnum.swift */,
+				2F2131672AB858C0007F8FD2 /* DataCollector.swift */,
+				2F2131642AB858C0007F8FD2 /* BleManager.swift */,
+				2F21316A2AB858C0007F8FD2 /* DeviceCallback.swift */,
+				2F2131652AB858C0007F8FD2 /* DeviceBleManager.swift */,
+				2F2131662AB858C0007F8FD2 /* DeviceService.swift */,
+				2F2131692AB858C0007F8FD2 /* FhirTemplate.swift */,
+				2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */,
+				2F5E9DCA2B15D01000DC3E29 /* NetService.swift */,
+			);
+			path = MainServices;
+			sourceTree = "<group>";
+		};
+		6430A7261BC11EC50F7540D2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2F2131282AB8564C007F8FD2 /* IoMT.SDK */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2F2131302AB8564C007F8FD2 /* Build configuration list for PBXNativeTarget "IoMT.SDK" */;
+			buildPhases = (
+				1C3EB60A3D9D70E47A7A3B7A /* [CP] Check Pods Manifest.lock */,
+				2F2131252AB8564C007F8FD2 /* Sources */,
+				2F2131262AB8564C007F8FD2 /* Frameworks */,
+				2F2131272AB8564C007F8FD2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IoMT.SDK;
+			productName = IoMT.SDK;
+			productReference = 2F2131292AB8564C007F8FD2 /* libIoMT.SDK.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2F2131212AB8564C007F8FD2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					2F2131282AB8564C007F8FD2 = {
+						CreatedOnToolsVersion = 14.3.1;
+						LastSwiftMigration = 1430;
+					};
+				};
+			};
+			buildConfigurationList = 2F2131242AB8564C007F8FD2 /* Build configuration list for PBXProject "IoMT.SDK" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2F2131202AB8564C007F8FD2;
+			productRefGroup = 2F21312A2AB8564C007F8FD2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2F2131282AB8564C007F8FD2 /* IoMT.SDK */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1C3EB60A3D9D70E47A7A3B7A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-IoMT.SDK-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2F2131252AB8564C007F8FD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7388E95D2B74F44B00510466 /* Entity+CoreDataProperties.swift in Sources */,
+				2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */,
+				7388E9592B74F3FC00510466 /* Observation.xcdatamodeld in Sources */,
+				7388E95F2B74F46B00510466 /* CoreDataStack.swift in Sources */,
+				7388E95C2B74F44B00510466 /* Entity+CoreDataClass.swift in Sources */,
+				2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2F21312E2AB8564C007F8FD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2F21312F2AB8564C007F8FD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2F2131312AB8564C007F8FD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 69A943J88V;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "IoMT.SDK/MainServices/IoMT.SDK-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2F2131322AB8564C007F8FD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 69A943J88V;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "IoMT.SDK/MainServices/IoMT.SDK-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2F2131242AB8564C007F8FD2 /* Build configuration list for PBXProject "IoMT.SDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F21312E2AB8564C007F8FD2 /* Debug */,
+				2F21312F2AB8564C007F8FD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2F2131302AB8564C007F8FD2 /* Build configuration list for PBXNativeTarget "IoMT.SDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F2131312AB8564C007F8FD2 /* Debug */,
+				2F2131322AB8564C007F8FD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				7388E9582B74F3FC00510466 /* Observation.xcdatamodel */,
+			);
+			currentVersion = 7388E9582B74F3FC00510466 /* Observation.xcdatamodel */;
+			path = Observation.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 2F2131212AB8564C007F8FD2 /* Project object */;
+}
