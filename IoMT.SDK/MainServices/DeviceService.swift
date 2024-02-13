@@ -150,22 +150,22 @@ public class DeviceService {
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
-}
-public func checkCache(){
-    let context = persistentContainer.viewContext
+    public func checkCache(){
+        let context = persistentContainer.viewContext
 
-    // Создаем запрос fetch для получения всех объектов заданной сущности
-    let fetchRequest: NSFetchRequest<YourEntity> = YourEntity.fetchRequest()
+        // Создаем запрос fetch для получения всех объектов заданной сущности
+        let fetchRequest: NSFetchRequest<YourEntity> = YourEntity.fetchRequest()
 
-    do {
-        // Выполняем запрос fetch и получаем массив объектов
-        let results = try context.fetch(fetchRequest)
-        
-        // Получаем количество объектов в массиве
-        let count = results.count
-       return count
-    } catch {
-        print("Ошибка при выполнении запроса fetch: \(error)")
+        do {
+            // Выполняем запрос fetch и получаем массив объектов
+            let results = try context.fetch(fetchRequest)
+            
+            // Получаем количество объектов в массиве
+            let count = results.count
+           return count
+        } catch {
+            print("Ошибка при выполнении запроса fetch: \(error)")
+        }
     }
 }
 
