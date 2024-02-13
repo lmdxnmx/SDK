@@ -16,5 +16,4 @@ Pod::Spec.new do |spec|
   spec.swift_version = '5.0'
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
   spec.preserve_paths = 'IoMT.SDK/*'
-  spec.dependency 'CoreData'
 end
