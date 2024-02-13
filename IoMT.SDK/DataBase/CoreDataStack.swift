@@ -6,14 +6,15 @@
 //
 import CoreData
 import Foundation
+class PersistentContainer: NSPersistentContainer { }
 class CoreDataStack {
     // Создание shared экземпляра для использования во всем приложении
     static let shared = CoreDataStack()
-    
+   
     // Ленивая инициализация persistentContainer
-    lazy var persistentContainer: NSPersistentContainer = {
+    lazy var persistentContainer: PersistentContainer = {
         // Создание NSPersistentContainer с именем вашей модели данных
-        let container = NSPersistentContainer(name: "Observation")
+        let container = PersistentContainer(name: "Observation")
         
         // Загрузка persistent store для данного контейнера
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
