@@ -78,6 +78,10 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
+				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
+				7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */,
+				7388E95E2B74F46B00510466 /* CoreDataStack.swift */,
+				7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
@@ -98,10 +102,6 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
-				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
-				7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */,
-				7388E95E2B74F46B00510466 /* CoreDataStack.swift */,
-				7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
 				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
 				2F21315D2AB858B7007F8FD2 /* InternetManager */,
