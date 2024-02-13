@@ -163,7 +163,9 @@ public class DeviceService {
            return count
         } catch {
             print("Ошибка при выполнении запроса fetch: \(error)")
+            return 0
         }
+       return 0;
     }
 }
 
