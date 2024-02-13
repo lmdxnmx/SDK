@@ -8,6 +8,7 @@ import CoreData
 import Foundation
 class PersistentContainer: NSPersistentContainer { }
 class CoreDataStack {
+    
     // Создание shared экземпляра для использования во всем приложении
     static let shared = CoreDataStack()
    
@@ -46,4 +47,5 @@ class CoreDataStack {
             }
         }
     }
+    
 }
