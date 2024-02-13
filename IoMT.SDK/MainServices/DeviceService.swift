@@ -150,7 +150,7 @@ public class DeviceService {
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
-    public func checkCache(){
+   public func getCountOfEntities() -> Int {
         let context = CoreDataStack.shared.viewContext
         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
 
