@@ -98,6 +98,7 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
+				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
 				7382DDD12B7B407000BACD76 /* DataBase */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
 				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
@@ -155,7 +156,6 @@
 				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
 				7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */,
 				7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */,
-				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
 			);
 			path = DataBase;
 			sourceTree = "<group>";
