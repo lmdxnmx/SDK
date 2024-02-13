@@ -2,7 +2,6 @@ import Foundation
 import Reachability
 
 class ReachabilityManager {
-    static let shared = ReachabilityManager()
     
     let reachability: Reachability
     var im:InternetManager
