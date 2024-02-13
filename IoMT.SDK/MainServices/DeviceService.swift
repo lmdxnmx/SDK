@@ -37,6 +37,7 @@ public class DeviceService {
     private var _test: Bool = false
     
     internal var im: InternetManager
+    internal var rm: ReachabilityManager
     
     private var _callback: DeviceCallback = _baseCallback()
     
@@ -54,6 +55,7 @@ public class DeviceService {
     internal init(){
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
     
@@ -64,6 +66,7 @@ public class DeviceService {
         _password = password
         _callback = callbackFunction
         im = InternetManager(login: _login, password: _password, debug: _test, callback: callbackFunction)
+        rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
     
@@ -72,6 +75,7 @@ public class DeviceService {
         _login = login
         _password = password
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
     
@@ -135,12 +139,14 @@ public class DeviceService {
     public func toTest() {
         _test = true
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
     ///Отправка данных будет производиться на основную площадку <ppma.ru>
     public func toProd() {
         _test = false
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
 }

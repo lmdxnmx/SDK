@@ -12,6 +12,7 @@
 		7382DDCC2B7B3AD900BACD76 /* Entity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */; };
 		7382DDCD2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */; };
 		7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */; };
+		7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDE02B7B7ABF00BACD76 /* Reachability.swift */; };
 		7388E9592B74F3FC00510466 /* Observation.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
@@ -74,6 +75,7 @@
 		7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Entity+CoreDataProperties.swift"; path = "IoMT.SDK/DataBase/Entity+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7382DDD22B7B505A00BACD76 /* MedicalApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MedicalApp.xcodeproj; path = "../../ios-main/MedicalApp.xcodeproj"; sourceTree = "<group>"; };
+		7382DDE02B7B7ABF00BACD76 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		7388E9582B74F3FC00510466 /* Observation.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Observation.xcdatamodel; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				2F21315E2AB858B8007F8FD2 /* InternetManager.swift */,
+				7382DDE02B7B7ABF00BACD76 /* Reachability.swift */,
 			);
 			path = InternetManager;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */,
 				7382DDCD2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift in Sources */,
 				2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */,
 				7388E9592B74F3FC00510466 /* Observation.xcdatamodeld in Sources */,

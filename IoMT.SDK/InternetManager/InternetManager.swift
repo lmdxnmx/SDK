@@ -103,6 +103,14 @@ class InternetManager{
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
+    func dropTimer(){
+        if(isCoreDataNotEmpty()){
+            self.stopTimer()
+            self.interval = 1
+            print(interval)
+            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+        }
+    }
 
     
     internal func postResource(identifier: UUID, data: Data) {
