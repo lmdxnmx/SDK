@@ -46,8 +46,8 @@
 		2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueService.swift; sourceTree = "<group>"; };
 		2F5E9DCA2B15D01000DC3E29 /* NetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetService.swift; sourceTree = "<group>"; };
 		5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IoMT_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
-		7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Entity+CoreDataClass.swift"; path = "IoMT.SDK/DataBase/Entity+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Entity+CoreDataProperties.swift"; path = "IoMT.SDK/DataBase/Entity+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7388E9582B74F3FC00510466 /* Observation.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Observation.xcdatamodel; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
@@ -98,10 +98,7 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
-				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
-				7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */,
-				7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */,
-				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
+				7382DDD12B7B407000BACD76 /* DataBase */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
 				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
 				2F21315D2AB858B7007F8FD2 /* InternetManager */,
@@ -150,6 +147,17 @@
 				5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7382DDD12B7B407000BACD76 /* DataBase */ = {
+			isa = PBXGroup;
+			children = (
+				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
+				7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */,
+				7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */,
+				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
+			);
+			path = DataBase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -11,7 +11,7 @@ Pod::Spec.new do |spec|
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
   spec.source_files = 'IoMT.SDK/**/*.{swift}'
-  s.resources = 'IoMT.SDK/*.{xcdatamodel}'
+  s.resources = 'IoMT.SDK/**/*.{xcdatamodel}'
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.0'
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
