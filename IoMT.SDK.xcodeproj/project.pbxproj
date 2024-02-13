@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */; };
 		2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DCA2B15D01000DC3E29 /* NetService.swift */; };
+		7382DDCC2B7B3AD900BACD76 /* Entity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */; };
+		7382DDCD2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */; };
+		7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */; };
 		7388E9592B74F3FC00510466 /* Observation.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */; };
-		7388E95C2B74F44B00510466 /* Entity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */; };
-		7388E95D2B74F44B00510466 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */; };
-		7388E95F2B74F46B00510466 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7388E95E2B74F46B00510466 /* CoreDataStack.swift */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -46,10 +46,10 @@
 		2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueService.swift; sourceTree = "<group>"; };
 		2F5E9DCA2B15D01000DC3E29 /* NetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetService.swift; sourceTree = "<group>"; };
 		5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IoMT_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
+		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7388E9582B74F3FC00510466 /* Observation.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Observation.xcdatamodel; sourceTree = "<group>"; };
-		7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = "<group>"; };
-		7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		7388E95E2B74F46B00510466 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -72,21 +72,17 @@
 				CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */,
 				818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */,
 			);
-			path = Pods;
+			name = Pods;
+			path = ../Pods;
 			sourceTree = "<group>";
 		};
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
-				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
-				7388E95A2B74F44A00510466 /* Entity+CoreDataClass.swift */,
-				7388E95E2B74F46B00510466 /* CoreDataStack.swift */,
-				7388E95B2B74F44B00510466 /* Entity+CoreDataProperties.swift */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
 				2F21312B2AB8564C007F8FD2 /* IoMT.SDK */,
-				1EA0FA9986DA08BC689D011F /* Pods */,
 				6430A7261BC11EC50F7540D2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -102,9 +98,14 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
+				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
+				7382DDCA2B7B3AD900BACD76 /* Entity+CoreDataClass.swift */,
+				7382DDCB2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift */,
+				7388E9572B74F3FC00510466 /* Observation.xcdatamodeld */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
 				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
 				2F21315D2AB858B7007F8FD2 /* InternetManager */,
+				1EA0FA9986DA08BC689D011F /* Pods */,
 			);
 			path = IoMT.SDK;
 			sourceTree = "<group>";
@@ -236,11 +237,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7388E95D2B74F44B00510466 /* Entity+CoreDataProperties.swift in Sources */,
+				7382DDCD2B7B3AD900BACD76 /* Entity+CoreDataProperties.swift in Sources */,
 				2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */,
 				7388E9592B74F3FC00510466 /* Observation.xcdatamodeld in Sources */,
-				7388E95F2B74F46B00510466 /* CoreDataStack.swift in Sources */,
-				7388E95C2B74F44B00510466 /* Entity+CoreDataClass.swift in Sources */,
+				7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */,
+				7382DDCC2B7B3AD900BACD76 /* Entity+CoreDataClass.swift in Sources */,
 				2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
