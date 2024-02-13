@@ -151,10 +151,8 @@ public class DeviceService {
         instanceDS = self
     }
     public func checkCache(){
-        let context = persistentContainer.viewContext
-
-        // Создаем запрос fetch для получения всех объектов заданной сущности
-        let fetchRequest: NSFetchRequest<YourEntity> = YourEntity.fetchRequest()
+        let context = CoreDataStack.shared.viewContext
+        let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
 
         do {
             // Выполняем запрос fetch и получаем массив объектов
