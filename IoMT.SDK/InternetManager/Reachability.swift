@@ -5,7 +5,7 @@ class ReachabilityManager {
     
     let reachability: Reachability
     var im:InternetManager
-    private init(manager:InternetManager) {
+    internal init(manager:InternetManager) {
         // Инициализируем Reachability
         guard let reachability = try? Reachability() else {
             fatalError("Unable to create Reachability")
