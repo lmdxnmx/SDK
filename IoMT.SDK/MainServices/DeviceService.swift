@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreBluetooth
+import CoreData
 
 fileprivate class _baseCallback: DeviceCallback {
     func onExploreDevice(mac: UUID, atr: Atributes, value: Any){}
@@ -148,6 +149,23 @@ public class DeviceService {
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
+    }
+}
+public func checkCache(){
+    let context = persistentContainer.viewContext
+
+    // Создаем запрос fetch для получения всех объектов заданной сущности
+    let fetchRequest: NSFetchRequest<YourEntity> = YourEntity.fetchRequest()
+
+    do {
+        // Выполняем запрос fetch и получаем массив объектов
+        let results = try context.fetch(fetchRequest)
+        
+        // Получаем количество объектов в массиве
+        let count = results.count
+       return count
+    } catch {
+        print("Ошибка при выполнении запроса fetch: \(error)")
     }
 }
 
