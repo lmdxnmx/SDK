@@ -56,12 +56,12 @@ import CoreData
      public func sendLogs(){
          let context = CoreDataStack.shared.viewContext
          let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
-        
+
          do {
              let logs = try context.fetch(fetchRequest)
             
              // Собираем все логи в словарь данных
-             var logsDataDictionary = [String: Any]()
+             var logsDataDictionary = [String: String]()
              let dateFormatter = ISO8601DateFormatter()
              for log in logs {
                  let dateString = dateFormatter.string(from: log.date ?? Date()) // Преобразуем дату в строку
