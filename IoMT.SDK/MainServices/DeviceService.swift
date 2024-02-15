@@ -58,15 +58,19 @@ public class DeviceService {
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
                  let storedUUID = UUID(uuidString: storedUUIDString) {
                   self.instanceId = storedUUID
+            print(storedUUID, storedUUID.uuidString)
               } else {
                   let newUUID = UUID()
+                  
                   self.instanceId = newUUID
+                  print(newUUID, newUUID.uuidString)
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
               }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
         rm = ReachabilityManager(manager:im)
         ls = LogService(debug: _test,instanceId:instanceId)
+        print(instanceId, instanceId.uuidString)
         instanceDS = self
     }
     
@@ -80,10 +84,12 @@ public class DeviceService {
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
                  let storedUUID = UUID(uuidString: storedUUIDString) {
                  instanceId = storedUUID
+            print(instanceId, instanceId.uuidString)
               } else {
                   let newUUID = UUID()
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
                   instanceId = newUUID
+                  print(instanceId, instanceId.uuidString)
               }
         
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
