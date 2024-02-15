@@ -63,11 +63,12 @@ public class DeviceService {
     }
     
     ///Создание объекта с указанием авторизационных данных и функции обратного вызова для получения текущего состояния работы сервиса
-    public init(login: String, password: String, callbackFunction: DeviceCallback){
+    public init(login: String, password: String, callbackFunction: DeviceCallback, debug: Bool){
         BLEManager.getSharedBLEManager().initCentralManager(queue: nil, options: nil)
         _login = login
         _password = password
         _callback = callbackFunction
+        _test = debug
         im = InternetManager(login: _login, password: _password, debug: _test, callback: callbackFunction)
         rm = ReachabilityManager(manager:im)
         ls = LogService(debug:_test)
