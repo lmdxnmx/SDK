@@ -65,7 +65,7 @@ class InternetManager{
         
         if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
             print("insertedObj",self.isCoreDataNotEmpty(),self.timer)
-            if(self.timer == nil){
+            if(self.timer == nil && self.isCoreDataNotEmpty() == true){
                 self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
                 self.sendDataToServer()
             }

@@ -173,6 +173,7 @@ public class DeviceService {
     public func sendLogs(){
         ls.sendLogs();
     }
+    
 }
 
 ///Структура для сохранения информации об устройтсве
