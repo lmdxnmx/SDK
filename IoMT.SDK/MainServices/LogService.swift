@@ -82,6 +82,7 @@ import CoreData
 
     
     private func sendLogsToServer(data: Data) {
+        print(self.instanceId)
         var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
@@ -102,7 +103,6 @@ import CoreData
             
             if httpResponse.statusCode <=  202 {
                 // Очищаем только объекты типа Logs из CoreData
-                print(self.instanceId)
                 self.clearLogsFromCoreData()
             } else {
                 print("Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
