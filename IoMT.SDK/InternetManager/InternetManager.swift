@@ -313,7 +313,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
-                    DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)"))
+                    DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)")
                     print("Response: \(responseString)")
                 }
             }
