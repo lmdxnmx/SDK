@@ -16,6 +16,7 @@ import CoreData
     //Encoded login/password
 //    internal var auth: String
     internal var sdkVersion: String?
+     internal var instanceId:UUID
      internal init(debug: Bool,instanceId:UUID) {
         apiAddress = "/logs/sdk/save"
         if(!debug){
@@ -24,6 +25,7 @@ import CoreData
         else{ baseAddress = "http://test.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+         self.instanceId = instanceId
     }
     public func addLogs(text:String){
         let context = CoreDataStack.shared.viewContext

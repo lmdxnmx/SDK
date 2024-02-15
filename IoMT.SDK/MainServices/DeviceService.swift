@@ -87,7 +87,7 @@ public class DeviceService {
     public func changeCredentials(login: String, password: String){
         _login = login
         _password = password
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
@@ -151,14 +151,14 @@ public class DeviceService {
     ///Отправка данных будет производиться на тестовую площадку <test.ppma.ru>
     public func toTest() {
         _test = true
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
     ///Отправка данных будет производиться на основную площадку <ppma.ru>
     public func toProd() {
         _test = false
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
