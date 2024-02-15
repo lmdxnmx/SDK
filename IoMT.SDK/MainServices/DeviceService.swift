@@ -40,7 +40,6 @@ public class DeviceService {
     internal var im: InternetManager
     internal var rm: ReachabilityManager
     internal var ls: LogService
-    internal var instanceId: UUID
     private var _callback: DeviceCallback = _baseCallback()
     
     ///Получение экземпляр класса, если до этого он не был иницирован, создаётся пустой объект с базовыми параметрами.
@@ -57,20 +56,15 @@ public class DeviceService {
     internal init(){
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
                  let storedUUID = UUID(uuidString: storedUUIDString) {
-                  self.instanceId = storedUUID
             print(storedUUID, storedUUID.uuidString)
               } else {
                   let newUUID = UUID()
-                  
-                  self.instanceId = newUUID
-                  print(newUUID, newUUID.uuidString)
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
               }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
-        ls = LogService(debug: _test,instanceId:instanceId)
-        print(instanceId, instanceId.uuidString)
+        ls = LogService(debug: _test)
         instanceDS = self
     }
     
@@ -81,20 +75,11 @@ public class DeviceService {
         _password = password
         _callback = callbackFunction
         _test = debug
-        if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
-                 let storedUUID = UUID(uuidString: storedUUIDString) {
-                 instanceId = storedUUID
-            print(instanceId, instanceId.uuidString)
-              } else {
-                  let newUUID = UUID()
-                  UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
-                  instanceId = newUUID
-                  print(instanceId, instanceId.uuidString)
-              }
+ 
         
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
-        ls = LogService(debug: _test,instanceId:instanceId)
+        ls = LogService(debug: _test)
         instanceDS = self
     }
     
@@ -102,7 +87,7 @@ public class DeviceService {
     public func changeCredentials(login: String, password: String){
         _login = login
         _password = password
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
@@ -166,14 +151,14 @@ public class DeviceService {
     ///Отправка данных будет производиться на тестовую площадку <test.ppma.ru>
     public func toTest() {
         _test = true
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
     ///Отправка данных будет производиться на основную площадку <ppma.ru>
     public func toProd() {
         _test = false
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }

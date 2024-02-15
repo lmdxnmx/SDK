@@ -47,7 +47,7 @@ fileprivate class _baseCallback: DeviceCallback {
     var timer: Timer? = nil
     var interval: TimeInterval = 1
     
-     internal init(login: String, password: String, debug: Bool, callback: DeviceCallback,instanceId:UUID) {
+     internal init(login: String, password: String, debug: Bool, callback: DeviceCallback) {
         self.auth = Data((login + ":" + password).utf8).base64EncodedString()
         apiAddress = "/gateway/iiot/api/Observation/data"
         if(!debug){
@@ -57,7 +57,12 @@ fileprivate class _baseCallback: DeviceCallback {
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-         self.instanceId = instanceId
+         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
+            let storedUUID = UUID(uuidString: storedUUIDString) {
+             self.instanceId = storedUUID
+         } else {
+            print("instance не найден")
+         }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
         if self.isCoreDataNotEmpty() {

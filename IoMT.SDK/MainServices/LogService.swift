@@ -17,12 +17,18 @@ import CoreData
 //    internal var auth: String
     internal var sdkVersion: String?
      internal var instanceId:UUID
-     internal init(debug: Bool,instanceId:UUID) {
+     internal init(debug: Bool) {
         apiAddress = "/logs/sdk/save"
         if(!debug){
             baseAddress = "https://ppma.ru"
         }
         else{ baseAddress = "http://test.ppma.ru" }
+         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
+            let storedUUID = UUID(uuidString: storedUUIDString) {
+             self.instanceId = storedUUID
+         } else {
+            print("instance не найден")
+         }
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
          self.instanceId = instanceId
