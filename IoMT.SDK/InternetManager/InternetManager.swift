@@ -72,7 +72,6 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         
         if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
-            print("insertedObj",self.isCoreDataNotEmpty(),self.timer)
             if(self.timer == nil && self.isCoreDataNotEmpty() == true){
                 self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
                 self.sendDataToServer()
@@ -163,6 +162,7 @@ fileprivate class _baseCallback: DeviceCallback {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
                     print("Status Code: \(statusCode)")
+                    DeviceService.getInstance().ls.addLogs(text: "Status Code: \(statusCode)")
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                     
