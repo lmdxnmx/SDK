@@ -14,7 +14,7 @@ public class LogService{
     //Url's variabls
     internal var urlGateWay: URL
     //Encoded login/password
-    internal var auth: String
+//    internal var auth: String
     internal var sdkVersion: String?
     internal init(debug: Bool) {
         apiAddress = "/logs/sdk/save"
