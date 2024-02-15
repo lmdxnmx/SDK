@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-public class LogService{
+ class LogService{
     internal var baseAddress: String
     internal var apiAddress: String
     //Url's variabls
@@ -16,7 +16,7 @@ public class LogService{
     //Encoded login/password
 //    internal var auth: String
     internal var sdkVersion: String?
-    internal init(debug: Bool) {
+     internal init(debug: Bool,instanceId:UUID) {
         apiAddress = "/logs/sdk/save"
         if(!debug){
             baseAddress = "https://ppma.ru"
@@ -78,6 +78,7 @@ public class LogService{
         var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
+        urlRequest.addValue("Id " + instanceId, forHTTPHeaderField: "InstanceID")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = data
         print(self.urlGateWay)

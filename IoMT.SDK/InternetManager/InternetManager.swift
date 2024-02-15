@@ -20,7 +20,7 @@ fileprivate class _baseCallback: DeviceCallback {
 }
 
 
-class InternetManager{
+ class InternetManager{
     internal var baseAddress: String
     internal var apiAddress: String
     //Url's variabls

@@ -40,7 +40,7 @@ public class DeviceService {
     internal var im: InternetManager
     internal var rm: ReachabilityManager
     internal var ls: LogService
-    
+    private internal var instanceId: UUID
     private var _callback: DeviceCallback = _baseCallback()
     
     ///Получение экземпляр класса, если до этого он не был иницирован, создаётся пустой объект с базовыми параметрами.
@@ -55,10 +55,18 @@ public class DeviceService {
     }
     
     internal init(){
+        if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
+                 let storedUUID = UUID(uuidString: storedUUIDString) {
+                  self.uuid = storedUUID
+              } else {
+                  let newUUID = UUID()
+                  self.instanceId = newUUID
+                  UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
+              }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
         rm = ReachabilityManager(manager:im)
-        ls = LogService(debug: _test)
+        ls = LogService(debug: _test,instanceId:instanceId)
         instanceDS = self
     }
     
@@ -69,9 +77,9 @@ public class DeviceService {
         _password = password
         _callback = callbackFunction
         _test = debug
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: callbackFunction)
+        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
         rm = ReachabilityManager(manager:im)
-        ls = LogService(debug:_test)
+        ls = LogService(debug: _test,instanceId:instanceId)
         instanceDS = self
     }
     
