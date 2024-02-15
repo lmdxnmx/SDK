@@ -62,9 +62,9 @@ public class DeviceService {
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
               }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
+        ls = LogService(debug: _test)
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
-        ls = LogService(debug: _test)
         instanceDS = self
     }
     
