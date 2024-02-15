@@ -88,7 +88,6 @@ import CoreData
         urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = data
-        print(self.urlGateWay)
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { (responseData, response, error) in
             if let error = error {
@@ -101,8 +100,9 @@ import CoreData
                 return
             }
             
-            if httpResponse.statusCode <=  200 {
+            if httpResponse.statusCode <=  202 {
                 // Очищаем только объекты типа Logs из CoreData
+                print(self.instanceId)
                 self.clearLogsFromCoreData()
             } else {
                 print("Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
