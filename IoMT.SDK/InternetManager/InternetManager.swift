@@ -264,6 +264,7 @@ fileprivate class _baseCallback: DeviceCallback {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
                     print("Status Code: \(statusCode)")
+                    DeviceService.getInstance().ls.addLogs(text: "Status Code: \(statusCode)")
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                     
