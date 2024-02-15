@@ -39,6 +39,7 @@ public class DeviceService {
     
     internal var im: InternetManager
     internal var rm: ReachabilityManager
+    internal var ls: LogService
     
     private var _callback: DeviceCallback = _baseCallback()
     
@@ -68,6 +69,7 @@ public class DeviceService {
         _callback = callbackFunction
         im = InternetManager(login: _login, password: _password, debug: _test, callback: callbackFunction)
         rm = ReachabilityManager(manager:im)
+        ls = LogService(debug:_test)
         instanceDS = self
     }
     
@@ -152,8 +154,8 @@ public class DeviceService {
     }
    public func getCountOfEntities() -> Int {
         let context = CoreDataStack.shared.viewContext
-        let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-
+        let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+       ls.addLogs(text: "ffaffafgeorov")
         do {
             // Выполняем запрос fetch и получаем массив объектов
             let results = try context.fetch(fetchRequest)
@@ -166,6 +168,9 @@ public class DeviceService {
             return 0
         }
        return 0;
+    }
+    public func sendLogs(){
+        ls.sendLogs();
     }
 }
 

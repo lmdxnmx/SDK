@@ -2,6 +2,7 @@ import Foundation
 import Reachability
 
 class ReachabilityManager {
+
     
     let reachability: Reachability
     var im:InternetManager
