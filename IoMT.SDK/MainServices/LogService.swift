@@ -53,31 +53,45 @@ import CoreData
     public func removeLogs(){
         
     }
-     public func sendLogs(){
+     public func sendLogs() {
          let context = CoreDataStack.shared.viewContext
          let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
 
          do {
              let logs = try context.fetch(fetchRequest)
-            
+             
+             // Создаем защищенный сериализатор диспетчера
+             let serialQueue = DispatchQueue(label: "com.example.app.serialQueue")
+             
              // Собираем все логи в словарь данных
              var logsDataDictionary = [String: String]()
              let dateFormatter = ISO8601DateFormatter()
              for log in logs {
                  let dateString = dateFormatter.string(from: log.date ?? Date()) // Преобразуем дату в строку
-                 logsDataDictionary[dateString] = log.log ?? ""
+                 
+                 // Используем асинхронное выполнение на защищенном сериализаторе для безопасного доступа к словарю
+                 serialQueue.async {
+                     logsDataDictionary[dateString] = log.log ?? ""
+                 }
              }
-            
-             // Подготовка данных для отправки на сервер
-             let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
-            
-             // Отправка данных на сервер
-             sendLogsToServer(data: jsonData)
-            
+             
+             // Ожидание завершения асинхронных операций и подготовка данных для отправки на сервер
+             serialQueue.sync {
+                 do {
+                     let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
+                     
+                     // Отправка данных на сервер
+                     sendLogsToServer(data: jsonData)
+                 } catch {
+                     print("Ошибка при подготовке данных для отправки на сервер: \(error)")
+                 }
+             }
+             
          } catch {
              print("Ошибка при получении данных из CoreData: \(error)")
          }
      }
+
 
 
     
