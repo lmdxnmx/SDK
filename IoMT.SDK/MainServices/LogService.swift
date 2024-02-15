@@ -27,7 +27,8 @@ import CoreData
             let storedUUID = UUID(uuidString: storedUUIDString) {
              self.instanceId = storedUUID
          } else {
-            print("instance не найден")
+             let newUUID = UUID()
+             UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
          }
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
