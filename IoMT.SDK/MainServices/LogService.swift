@@ -23,13 +23,7 @@ public class LogService{
         }
         else{ baseAddress = "http://test.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
-        self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-        sharedManager = self
-        NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
-        if self.isCoreDataNotEmpty() {
-            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-        }
     }
     public func addLogs(text:String){
         let context = CoreDataStack.shared.viewContext
