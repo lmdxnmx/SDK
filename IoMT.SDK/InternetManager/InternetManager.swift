@@ -33,14 +33,7 @@ fileprivate class _baseCallback: DeviceCallback {
     
     static internal func getManager () -> InternetManager {
         if sharedManager == nil {
-            if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
-               let storedUUID = UUID(uuidString: storedUUIDString) {
-                   sharedManager = InternetManager(login: "", password: "", debug: true, callback: _baseCallback(),instanceId:storedUUID)
-            } else {
-                let newUUID = UUID()
-                UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
-                sharedManager = InternetManager(login: "", password: "", debug: true, callback: _baseCallback(),instanceId:newUUID)
-            }
+                   sharedManager = InternetManager(login: "", password: "", debug: true, callback: _baseCallback())
         }
         return sharedManager!
     }
