@@ -28,7 +28,7 @@ fileprivate class _baseCallback: DeviceCallback {
     //Encoded login/password
     internal var auth: String
     internal var sdkVersion: String?
-    
+    internal var instanceId:UUID
     internal var callback: DeviceCallback
     
     static internal func getManager () -> InternetManager {
@@ -40,7 +40,7 @@ fileprivate class _baseCallback: DeviceCallback {
     var timer: Timer? = nil
     var interval: TimeInterval = 1
     
-    internal init(login: String, password: String, debug: Bool, callback: DeviceCallback) {
+     internal init(login: String, password: String, debug: Bool, callback: DeviceCallback,instanceId:UUID) {
         self.auth = Data((login + ":" + password).utf8).base64EncodedString()
         apiAddress = "/gateway/iiot/api/Observation/data"
         if(!debug){
@@ -50,6 +50,7 @@ fileprivate class _baseCallback: DeviceCallback {
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+         self.instanceId = instanceId
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
         if self.isCoreDataNotEmpty() {
