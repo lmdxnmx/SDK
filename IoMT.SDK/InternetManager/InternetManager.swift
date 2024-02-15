@@ -53,8 +53,9 @@ fileprivate class _baseCallback: DeviceCallback {
          if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
             let storedUUID = UUID(uuidString: storedUUIDString) {
              self.instanceId = storedUUID
-         } else {
-            print("instance не найден")
+         }else {
+             let newUUID = UUID()
+             UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
          }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
