@@ -80,7 +80,7 @@ import CoreData
         var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
-        urlRequest.addValue("Id " + instanceId, forHTTPHeaderField: "InstanceID")
+        urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = data
         print(self.urlGateWay)
