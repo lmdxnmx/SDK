@@ -29,6 +29,7 @@ import CoreData
          } else {
              let newUUID = UUID()
              UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
+             self.instanceId = newUUID
          }
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String

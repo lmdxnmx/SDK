@@ -56,6 +56,7 @@ fileprivate class _baseCallback: DeviceCallback {
          }else {
              let newUUID = UUID()
              UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
+             self.instanceId = newUUID
          }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
