@@ -58,6 +58,7 @@ public class DeviceService {
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
+        ls = LogService(debug: _test)
         instanceDS = self
     }
     
