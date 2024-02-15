@@ -77,9 +77,18 @@ public class DeviceService {
         _password = password
         _callback = callbackFunction
         _test = debug
-        im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
-        rm = ReachabilityManager(manager:im)
-        ls = LogService(debug: _test,instanceId:instanceId)
+        if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
+                 let storedUUID = UUID(uuidString: storedUUIDString) {
+            im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:storedUUID)
+            rm = ReachabilityManager(manager:im)
+            ls = LogService(debug: _test,instanceId:storedUUID)
+              } else {
+                  let newUUID = UUID()
+                  UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
+                  im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:newUUID)
+                  rm = ReachabilityManager(manager:im)
+                  ls = LogService(debug: _test,instanceId:newUUID)
+              }
         instanceDS = self
     }
     
