@@ -83,7 +83,7 @@ public class DeviceService {
               } else {
                   let newUUID = UUID()
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
-                  instanceId =newUUID
+                  instanceId = newUUID
               }
         
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback,instanceId:instanceId)
