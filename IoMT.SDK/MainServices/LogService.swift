@@ -31,7 +31,6 @@ import CoreData
          }
         self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-         self.instanceId = instanceId
     }
     public func addLogs(text:String){
         let context = CoreDataStack.shared.viewContext
