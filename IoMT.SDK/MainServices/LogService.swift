@@ -80,15 +80,44 @@ public class LogService{
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = data
-        
+        print(urlRequest)
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { (responseData, response, error) in
             if let error = error {
                 print("Ошибка при отправке логов на сервер: \(error)")
                 return
             }
-            // Обработка ответа от сервера, если необходимо
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Ошибка: Ответ от сервера не является HTTPURLResponse")
+                return
+            }
+            
+            if httpResponse.statusCode <=  200 {
+                // Очищаем только объекты типа Logs из CoreData
+                self.clearLogsFromCoreData()
+            } else {
+                print("Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
+            }
         }
         task.resume()
+    }
+
+    private func clearLogsFromCoreData() {
+        let context = CoreDataStack.shared.viewContext
+        let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+        
+        do {
+            let logs = try context.fetch(fetchRequest)
+            
+            for log in logs {
+                context.delete(log)
+            }
+            
+            try context.save()
+            print("Logs успешно удалены из CoreData")
+        } catch {
+            print("Ошибка при удалении Logs из CoreData: \(error)")
+        }
     }
 }
