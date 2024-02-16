@@ -334,7 +334,7 @@ fileprivate class _baseCallback: DeviceCallback {
          let timeUrl  = URL(string: ("http://192.168.133.246" + "/logs/sdk/save"))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "POST"
-//         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
+         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
          urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.httpBody = data
