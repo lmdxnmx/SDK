@@ -366,7 +366,7 @@ fileprivate class _baseCallback: DeviceCallback {
  
         do {
             let objects = try context.fetch(fetchRequest)
-            DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(String(describing:objects.count)")
+            DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count))")
             for object in objects {
                 self.postResource(identifier:object.title!,data:Data(object.body!.utf8))
             if let title = object.title {
