@@ -22,7 +22,6 @@ fileprivate class _baseCallback: DeviceCallback {
 
  class InternetManager{
     internal var baseAddress: String
-    internal var apiAddress: String
     //Url's variabls
     internal var urlGateWay: URL
     //Encoded login/password
@@ -42,12 +41,11 @@ fileprivate class _baseCallback: DeviceCallback {
     
      internal init(login: String, password: String, debug: Bool, callback: DeviceCallback) {
         self.auth = Data((login + ":" + password).utf8).base64EncodedString()
-        apiAddress = "/gateway/iiot/api/Observation/data"
         if(!debug){
             baseAddress = "https://ppma.ru"
         }
         else{ baseAddress = "http://test.ppma.ru" }
-        self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
+        self.urlGateWay = URL(string: (self.baseAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
          if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
@@ -121,7 +119,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
     
     internal func postResource(identifier: UUID, data: Data) {
-        var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
+        var urlRequest: URLRequest = URLRequest(url: self.baseAddress + "/gateway/iiot/api/Observation/data")
         
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
@@ -212,7 +210,7 @@ fileprivate class _baseCallback: DeviceCallback {
     }
     
     internal func postResource(data: Data) {
-        var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
+        var urlRequest: URLRequest = URLRequest(url: self.baseAddress + "/gateway/iiot/api/Observation/data")
         
         var identifier = UUID();
         urlRequest.httpMethod = "POST"
@@ -333,7 +331,7 @@ fileprivate class _baseCallback: DeviceCallback {
         task.resume()
     }
      internal func sendLogsToServer(data: Data) {
-         var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
+         var urlRequest: URLRequest = URLRequest(url: self.baseAddress + "/logs/sdk/save")
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
          urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
