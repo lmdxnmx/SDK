@@ -55,7 +55,14 @@ import CoreData
                  
                  // Используем асинхронное выполнение на защищенном сериализаторе для безопасного доступа к словарю
                  serialQueue.async {
-                     logsDataDictionary[dateString] = log.log ?? ""
+                     if let logText = log.log,
+                        let logData = logText.data(using: .utf8),
+                        let decodedLogText = String(data: logData, encoding: .utf8) {
+                         logsDataDictionary[dateString] = decodedLogText
+                     } else {
+                         // Если не удалось сконвертировать в UTF-8, можно использовать оригинальный текст лога
+                         logsDataDictionary[dateString] = log.log ?? ""
+                     }
                  }
              }
              
@@ -75,6 +82,7 @@ import CoreData
              DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении данных из CoreData: \(error)")
          }
      }
+
 
     public func clearLogsFromCoreData() {
         let context = CoreDataStack.shared.viewContext
