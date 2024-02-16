@@ -67,7 +67,7 @@ import CoreData
          }
      }
 
-    private func clearLogsFromCoreData() {
+    public func clearLogsFromCoreData() {
         let context = CoreDataStack.shared.viewContext
         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
         
