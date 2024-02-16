@@ -82,7 +82,7 @@ import CoreData
                     CoreDataStack.shared.viewContext.delete(objectData)
                 }
             } catch let error {
-                print("Detele all data in \(entity) error :", error)
+                print("Detele all data error :", error)
             }
      }
 
