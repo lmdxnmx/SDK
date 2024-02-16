@@ -10,7 +10,7 @@ import CoreData
 
  class LogService{
     public func addLogs(text:String){
-        DeviceService.getInstance().ls.addLogs(text)
+        DeviceService.getInstance().ls.addLogs(text:text)
         let context = CoreDataStack.shared.viewContext
         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
         do{
@@ -20,9 +20,9 @@ import CoreData
             do {
                 try context.save()
             } catch {
-                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
+                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
             }}catch{
-                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
+                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
             }
     }
     public func removeLogs(){
@@ -58,12 +58,12 @@ import CoreData
                      // Отправка данных на сервер
                      DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
                  } catch {
-                     DeviceService.getInstance().ls.addLogs("Ошибка при подготовке данных для отправки на сервер: \(error)")
+                     DeviceService.getInstance().ls.addLogs(text:"Ошибка при подготовке данных для отправки на сервер: \(error)")
                  }
              }
              
          } catch {
-             DeviceService.getInstance().ls.addLogs("Ошибка при получении данных из CoreData: \(error)")
+             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении данных из CoreData: \(error)")
          }
      }
 
@@ -79,9 +79,9 @@ import CoreData
             }
             
             try context.save()
-            DeviceService.getInstance().ls.addLogs("Logs успешно удалены из CoreData")
+            DeviceService.getInstance().ls.addLogs(text:"Logs успешно удалены из CoreData")
         } catch {
-            DeviceService.getInstance().ls.addLogs("Ошибка при удалении Logs из CoreData: \(error)")
+            DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении Logs из CoreData: \(error)")
         }
     }
 }

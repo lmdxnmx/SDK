@@ -56,7 +56,7 @@ public class DeviceService {
     internal init(){
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
                  let storedUUID = UUID(uuidString: storedUUIDString) {
-            DeviceService.getInstance().ls.addLogs(storedUUID, storedUUID.uuidString)
+            DeviceService.getInstance().ls.addLogs(text:storedUUID, storedUUID.uuidString)
               } else {
                   let newUUID = UUID()
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
@@ -187,7 +187,7 @@ public class DeviceService {
             let count = results.count
            return count
         } catch {
-            DeviceService.getInstance().ls.addLogs("Ошибка при выполнении запроса fetch: \(error)")
+            DeviceService.getInstance().ls.addLogs(text:"Ошибка при выполнении запроса fetch: \(error)")
             return 0
         }
        return 0;
