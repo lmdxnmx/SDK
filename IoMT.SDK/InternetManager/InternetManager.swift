@@ -337,7 +337,8 @@ fileprivate class _baseCallback: DeviceCallback {
          urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
          urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-         urlRequest.httpBody = data
+         let jsonString = String(data: data, encoding: .utf8)
+         urlRequest.httpBody = jsonString
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (responseData, response, error) in
              if let error = error {
