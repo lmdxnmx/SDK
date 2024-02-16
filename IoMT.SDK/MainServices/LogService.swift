@@ -53,7 +53,6 @@ import CoreData
              var logsDataDictionary = [String: String]()
              let dateFormatter = ISO8601DateFormatter()
              for log in logs {
-                 print(log)
                  if let date = log.date {
                      let dateString = dateFormatter.string(from: date) // Преобразуем дату в строку
 
@@ -97,14 +96,18 @@ import CoreData
                      guard let objectData = object as? NSManagedObject else { continue }
                      backgroundContext.delete(objectData)
                  }
+                 
                  // Сохраняем изменения в фоновом контексте
                  try backgroundContext.save()
-                 print("Logs cleared")
+                 
+                 // Выводим сообщение об успешном удалении логов
+                 print("Logs cleared successfully")
              } catch let error {
                  print("Delete all data error :", error)
              }
          }
      }
+
 
 
 
