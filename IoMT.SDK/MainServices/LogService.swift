@@ -70,7 +70,7 @@ import CoreData
              serialQueue.sync {
                  do {
                      let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
-                     
+                     print(jsonData)
                      // Отправка данных на сервер
                      DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
                  } catch {
