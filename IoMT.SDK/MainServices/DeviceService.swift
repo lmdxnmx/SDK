@@ -56,7 +56,6 @@ public class DeviceService {
     internal init(){
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
                  let storedUUID = UUID(uuidString: storedUUIDString) {
-            DeviceService.getInstance().ls.addLogs(text:storedUUID, storedUUID.uuidString)
               } else {
                   let newUUID = UUID()
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
