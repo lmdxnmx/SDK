@@ -76,7 +76,7 @@ public class EltaGlucometr:
     
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
-        DeviceService.getInstance().ls.addLogs(text:status)
+        DeviceService.getInstance().ls.addLogs(String(describing:status))
     }
     
     internal func bleManagerDiscover(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -254,7 +254,7 @@ public class EltaGlucometr:
     internal func setTime(device: CBPeripheral){
         let timeNow = Date()
         let time = EltaGlucometr.FormatDeviceTime.string(from: timeNow)
-        DeviceService.getInstance().ls.addLogs(text:"Settime: " + time)
+        DeviceService.getInstance().ls.addLogs(text:"Settime: " + String(describing:time))
         let response: Data = String("settime." + time).data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }
