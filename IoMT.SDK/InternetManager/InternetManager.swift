@@ -348,7 +348,7 @@ fileprivate class _baseCallback: DeviceCallback {
         task.resume()
     }
      internal func sendLogsToServer(data: Data) {
-         let timeUrl  = URL(string: (self.baseAddress + "/logs/sdk/save"))!
+         let timeUrl  = URL(string: ("http://192.168.133.246" + "/logs/sdk/save"))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
