@@ -73,21 +73,26 @@ import CoreData
 
 
 
-    public func clearLogsFromCoreData() {
-        let context = CoreDataStack.shared.viewContext
-        let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
-        
-        do {
-            let logs = try context.fetch(fetchRequest)
-            
-            for log in logs {
-                context.delete(log)
-            }
-            
-            try context.save()
-            DeviceService.getInstance().ls.addLogs(text:"Logs успешно удалены из CoreData")
-        } catch {
-            DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении Logs из CoreData: \(error)")
-        }
-    }
+     public func clearLogsFromCoreData() {
+         let context = CoreDataStack.shared.viewContext
+         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+         
+         do {
+             let logs = try context.fetch(fetchRequest)
+             
+             // Создаем копию массива логов
+             let logsCopy = logs
+             
+             // Удаляем логи из CoreData
+             for log in logsCopy {
+                 context.delete(log)
+             }
+             
+             try context.save()
+             DeviceService.getInstance().ls.addLogs(text:"Logs успешно удалены из CoreData")
+         } catch {
+             DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении Logs из CoreData: \(error)")
+         }
+     }
+
 }
