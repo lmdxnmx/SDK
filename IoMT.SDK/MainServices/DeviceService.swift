@@ -79,19 +79,19 @@ public class DeviceService {
         rm = ReachabilityManager(manager:im)
         ls = LogService()
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)
-        ls.addLogs("\(timestamp) Параметры конфигурации сервиса:")
-        ls.addLogs("SDK инициализировано с следующими параметрами:")
-        ls.addLogs("Login: " + _login)
-        ls.addLogs("Password: " + _password )
-        if(_callback != null){ls.addLogs("Callback: is not null")}
+        ls.addLogs(text:"\(timestamp) Параметры конфигурации сервиса:")
+        ls.addLogs(text:"SDK инициализировано с следующими параметрами:")
+        ls.addLogs(text:"Login: " + _login)
+        ls.addLogs(text:"Password: " + _password )
+        if(_callback != nil){ls.addLogs(text:"Callback: is not nil")}
         else{
-            ls.addLogs("Callback: null")
+            ls.addLogs(text:"Callback: nil")
         }
         if(_test == true){
-            ls.addLogs("Платформа: http://test.ppma.ru")
+            ls.addLogs(text:"Платформа: http://test.ppma.ru")
         }
         else{
-            ls.addLogs("Платформа: https://ppma.ru")
+            ls.addLogs(text:"Платформа: https://ppma.ru")
         }
         instanceDS = self
     }
