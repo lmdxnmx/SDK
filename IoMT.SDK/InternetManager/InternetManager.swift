@@ -62,27 +62,44 @@ fileprivate class _baseCallback: DeviceCallback {
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
-    @objc func contextDidChange(_ notification: Notification) {
-        guard let userInfo = notification.userInfo else { return }
-        
-        if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, !updatedObjects.isEmpty {
-       
-        }
-        
-        if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
-            if(self.timer == nil && self.isCoreDataNotEmpty() == true){
-                self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-                self.sendDataToServer()
-            }
-        }
-        
-        if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
-            
-            if(self.isCoreDataNotEmpty() == false && self.timer != nil){
-                self.stopTimer()
-            }
-        }
-    }
+     @objc func contextDidChange(_ notification: Notification) {
+         guard let userInfo = notification.userInfo else { return }
+         
+         if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, !updatedObjects.isEmpty {
+             // Обработка обновленных объектов
+         }
+         
+         if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
+             // Обработка вставленных объектов
+             for object in insertedObjects {
+                 // Проверяем тип объекта
+                 guard let entity = object.entity as? NSEntityDescription, entity.name == "Entity" else {
+                     continue
+                 }
+                 
+                 // Действия, если объект типа Entity
+                 if self.timer == nil && self.isCoreDataNotEmpty() {
+                     self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+                     self.sendDataToServer()
+                 }
+             }
+         }
+         
+         if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
+             // Обработка удаленных объектов
+             for object in deletedObjects {
+                 // Проверяем тип объекта
+                 guard let entity = object.entity as? NSEntityDescription, entity.name == "Entity" else {
+                     continue
+                 }
+                 
+                 // Действия, если объект типа Entity
+                 if !self.isCoreDataNotEmpty() && self.timer != nil {
+                     self.stopTimer()
+                 }
+             }
+         }
+     }
 
     
     func isCoreDataNotEmpty() -> Bool {
