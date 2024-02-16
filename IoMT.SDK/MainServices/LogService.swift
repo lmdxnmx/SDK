@@ -80,8 +80,8 @@ import CoreData
          do {
              let logs = try context.fetch(fetchRequest)
              
-             // Создаем копию массива логов
-             let logsCopy = logs
+             // Создаем копию массива логов для безопасного удаления
+             let logsCopy = Array(logs)
              
              // Удаляем логи из CoreData
              for log in logsCopy {
@@ -94,5 +94,6 @@ import CoreData
              DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении Logs из CoreData: \(error)")
          }
      }
+
 
 }
