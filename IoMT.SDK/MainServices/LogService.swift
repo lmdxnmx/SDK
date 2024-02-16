@@ -62,10 +62,15 @@ import CoreData
              // Ожидание завершения асинхронных операций и подготовка данных для отправки на сервер
              serialQueue.sync {
                  do {
-                     let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
+                     let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [.prettyPrinted])
                      
-                     // Отправка данных на сервер
-                     DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
+                     // Преобразуем данные в строку, используя кодировку UTF-8
+                     if let jsonString = String(data: jsonData, encoding: .utf8) {
+                         // Отправка данных на сервер
+                         DeviceService.getInstance().im.sendLogsToServer(data: jsonString)
+                     } else {
+                         DeviceService.getInstance().ls.addLogs(text:"Ошибка при преобразовании данных в строку с кодировкой UTF-8")
+                     }
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text:"Ошибка при подготовке данных для отправки на сервер: \(error)")
                  }
