@@ -76,7 +76,7 @@ public class EltaGlucometr:
     
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
-        DeviceService.getInstance().ls.addLogs(String(describing:status))
+        DeviceService.getInstance().ls.addLogs(text:String(describing:status))
     }
     
     internal func bleManagerDiscover(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
