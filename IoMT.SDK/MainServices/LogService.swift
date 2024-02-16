@@ -11,29 +11,46 @@ import CoreData
  class LogService{
      let dateFormatter = DateFormatter()
      public func addLogs(text: String) {
+         // Пример даты
+         let date = Date()
+         
          // Создаем экземпляр DateFormatter
-         let dateFormatter = DateFormatter()
+         let formatter = DateFormatter()
          // Устанавливаем формат даты и времени, включая миллисекунды
-         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-
+         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+         
+         // Преобразуем дату в строку
+         let dateString = formatter.string(from: date)
+         
          print(text)
          let context = CoreDataStack.shared.viewContext
          let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
          
          do {
              let newLog = Logs(context: context)
-             newLog.date = Date() // Устанавливаем текущую дату и время
+             // Устанавливаем текст лога
              newLog.log = text
+             
+             // Преобразуем строку даты обратно в объект Date
+             if let convertedDate = formatter.date(from: dateString) {
+                 newLog.date = convertedDate // Устанавливаем дату и время
+             } else {
+                 // Если произошла ошибка преобразования строки в дату, выводим сообщение об ошибке
+                 print("Ошибка при преобразовании строки в дату")
+                 return
+             }
              
              do {
                  try context.save()
+                 print("Log added successfully")
              } catch {
-                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                 DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
              }
          } catch {
-             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+             DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
          }
      }
+
 
 
     public func removeLogs(){
