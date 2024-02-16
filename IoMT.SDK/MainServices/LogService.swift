@@ -11,7 +11,7 @@ import CoreData
  class LogService{
      public func addLogs(text: String) {
 //
-//             print(text)
+   print(text)
 //             let context = CoreDataStack.shared.viewContext
 //             let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
 //
