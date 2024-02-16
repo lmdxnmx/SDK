@@ -369,6 +369,7 @@ fileprivate class _baseCallback: DeviceCallback {
              
              if httpResponse.statusCode <=  202 {
                  // Очищаем только объекты типа Logs из CoreData
+                 print("clearLOGS()")
                  DeviceService.getInstance().ls.clearLogsFromCoreData()
              } else {
                  DeviceService.getInstance().ls.addLogs(text:"Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")

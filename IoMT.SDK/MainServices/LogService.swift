@@ -95,6 +95,7 @@ import CoreData
                  for object in results {
                      guard let objectData = object as? NSManagedObject else { continue }
                      backgroundContext.delete(objectData)
+                     print(object)
                  }
                  
                  // Сохраняем изменения в фоновом контексте
@@ -105,7 +106,9 @@ import CoreData
              } catch let error {
                  print("Delete all data error :", error)
              }
+             print("4")
          }
+         print("clearLOGS")
      }
 
 
