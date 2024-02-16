@@ -359,27 +359,29 @@ fileprivate class _baseCallback: DeviceCallback {
          }
          task.resume()
      }
-    @objc func sendDataToServer() {
-        DispatchQueue.main.async {
-        let context = CoreDataStack.shared.persistentContainer.viewContext
-        let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
- 
-        do {
-            let objects = try context.fetch(fetchRequest)
-            DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count))")
-            for object in objects {
-                self.postResource(identifier:object.title!,data:Data(object.body!.utf8))
-            if let title = object.title {
-                DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(title)")
-            } else {
-                DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: <нет значения>")
-            }
-            }
-        } catch {
-            DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении объектов из Core Data: \(error)")
-        }
-        
-            self.increaseInterval()}
-        }
+     @objc func sendDataToServer() {
+         DispatchQueue.main.async {
+             let context = CoreDataStack.shared.persistentContainer.viewContext
+             let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+             
+             do {
+                 let objects = try context.fetch(fetchRequest)
+                 DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count))")
+                 for object in objects {
+                     // Проверяем, существует ли у объекта свойство title
+                     guard let title = object.title else {
+                         DeviceService.getInstance().ls.addLogs(text: "Ошибка: У объекта нет свойства title")
+                         continue
+                     }
+                     self.postResource(identifier: title, data: Data(object.body!.utf8))
+                     DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(title)")
+                 }
+             } catch {
+                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
+             }
+             
+             self.increaseInterval()
+         }
+     }
     
 }
