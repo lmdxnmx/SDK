@@ -43,45 +43,38 @@ import CoreData
 
          do {
              let logs = try context.fetch(fetchRequest)
-             
+
              // Создаем защищенный сериализатор диспетчера
              let serialQueue = DispatchQueue(label: "com.example.app.serialQueue")
-             
+
              // Собираем все логи в словарь данных
              var logsDataDictionary = [String: String]()
              let dateFormatter = ISO8601DateFormatter()
              for log in logs {
-                 let dateString = dateFormatter.string(from: log.date ?? Date()) // Преобразуем дату в строку
-                 
-                 // Используем асинхронное выполнение на защищенном сериализаторе для безопасного доступа к словарю
-                 serialQueue.async {
-                     if let logText = log.log,
-                        let logData = logText.data(using: .utf8),
-                        let decodedLogText = String(data: logData, encoding: .utf8) {
-                         logsDataDictionary[dateString] = decodedLogText
-                     } else {
-                         // Если не удалось сконвертировать в UTF-8, можно использовать оригинальный текст лога
-                         logsDataDictionary[dateString] = log.log ?? ""
+                 if let date = log.date {
+                     let dateString = dateFormatter.string(from: date) // Преобразуем дату в строку
+
+                     if let logText = log.log {
+                         logsDataDictionary[dateString] = logText
+                         print(logText)
                      }
                  }
              }
-             
-             // Ожидание завершения асинхронных операций и подготовка данных для отправки на сервер
-             serialQueue.sync {
-                 do {
-                     let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
-                     print(jsonData)
-                     // Отправка данных на сервер
-                     DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
-                 } catch {
-                     DeviceService.getInstance().ls.addLogs(text:"Ошибка при подготовке данных для отправки на сервер: \(error)")
-                 }
+
+             // Подготавливаем данные для отправки на сервер
+             do {
+                 let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
+                 // Отправка данных на сервер
+                 DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
+             } catch {
+                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при подготовке данных для отправки на сервер: \(error)")
              }
-             
+
          } catch {
-             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении данных из CoreData: \(error)")
+             DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении данных из CoreData: \(error)")
          }
      }
+
 
 
     public func clearLogsFromCoreData() {
