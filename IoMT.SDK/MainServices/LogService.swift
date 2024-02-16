@@ -76,7 +76,7 @@ import CoreData
          let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
             fetchRequest.returnsObjectsAsFaults = false
             do {
-                let results = try dCoreDataStack.shared.viewContext.fetch(fetchRequest)
+                let results = try CoreDataStack.shared.viewContext.fetch(fetchRequest)
                 for object in results {
                     guard let objectData = object as? NSManagedObject else {continue}
                     CoreDataStack.shared.viewContext.delete(objectData)
