@@ -119,8 +119,8 @@ fileprivate class _baseCallback: DeviceCallback {
 
     
     internal func postResource(identifier: UUID, data: Data) {
-        var urlRequest: URLRequest = URLRequest(url: self.baseAddress + "/gateway/iiot/api/Observation/data")
-        
+        let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
+        var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -210,8 +210,8 @@ fileprivate class _baseCallback: DeviceCallback {
     }
     
     internal func postResource(data: Data) {
-        var urlRequest: URLRequest = URLRequest(url: self.baseAddress + "/gateway/iiot/api/Observation/data")
-        
+        let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
+        var urlRequest: URLRequest = URLRequest(url: timeUrl)
         var identifier = UUID();
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
@@ -306,7 +306,7 @@ fileprivate class _baseCallback: DeviceCallback {
     
     
     internal func getTime(serial: String){
-        let timeUrl  = URL(string: (self.baseAddress + self.apiAddress + "?serial=\(serial)&type=effectiveDateTime"))!
+        let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data" + "?serial=\(serial)&type=effectiveDateTime"))!
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "GET"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
@@ -331,7 +331,8 @@ fileprivate class _baseCallback: DeviceCallback {
         task.resume()
     }
      internal func sendLogsToServer(data: Data) {
-         var urlRequest: URLRequest = URLRequest(url: self.baseAddress + "/logs/sdk/save")
+         let timeUrl  = URL(string: (self.baseAddress + "/logs/sdk/save"))!
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
          urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
