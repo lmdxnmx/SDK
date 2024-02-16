@@ -56,13 +56,13 @@ public class DeviceService {
     internal init(){
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
                  let storedUUID = UUID(uuidString: storedUUIDString) {
-            print(storedUUID, storedUUID.uuidString)
+            DeviceService.getInstance().ls.addLogs(storedUUID, storedUUID.uuidString)
               } else {
                   let newUUID = UUID()
                   UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
               }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
-        ls = LogService(debug: _test)
+        ls = LogService()
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
         instanceDS = self
@@ -75,11 +75,24 @@ public class DeviceService {
         _password = password
         _callback = callbackFunction
         _test = debug
- 
-        
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager:im)
-        ls = LogService(debug: _test)
+        ls = LogService()
+        let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)
+        ls.addLogs("\(timestamp) Параметры конфигурации сервиса:")
+        ls.addLogs("SDK инициализировано с следующими параметрами:")
+        ls.addLogs("Login: " + _login)
+        ls.addLogs("Password: " + _password )
+        if(_callback != null){ls.addLogs("Callback: is not null")}
+        else{
+            ls.addLogs("Callback: null")
+        }
+        if(_test == true){
+            ls.addLogs("Платформа: http://test.ppma.ru")
+        }
+        else{
+            ls.addLogs("Платформа: https://ppma.ru")
+        }
         instanceDS = self
     }
     
@@ -174,7 +187,7 @@ public class DeviceService {
             let count = results.count
            return count
         } catch {
-            print("Ошибка при выполнении запроса fetch: \(error)")
+            DeviceService.getInstance().ls.addLogs("Ошибка при выполнении запроса fetch: \(error)")
             return 0
         }
        return 0;

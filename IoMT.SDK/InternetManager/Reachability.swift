@@ -25,7 +25,7 @@ class ReachabilityManager {
         do {
             try reachability.startNotifier()
         } catch {
-            print("Could not start reachability notifier")
+            DeviceService.getInstance().ls.addLogs("Could not start reachability notifier")
         }
     }
     
@@ -36,25 +36,25 @@ class ReachabilityManager {
     
     @objc func reachabilityChanged(_ notification: Notification) {
         guard let reachability = notification.object as? Reachability else {
-            print("Invalid reachability object")
+            DeviceService.getInstance().ls.addLogs("Invalid reachability object")
             DeviceService.getInstance().ls.addLogs(text: "Invalid reachability object")
             return
         }
         
         switch reachability.connection {
         case .none:
-            print("Network unreachable")
+            DeviceService.getInstance().ls.addLogs("Network unreachable")
             DeviceService.getInstance().ls.addLogs(text: "Network unreachable")
         case .wifi:
             DeviceService.getInstance().ls.addLogs(text: "Wifi enable")
-            print("Wifi enable")
+            DeviceService.getInstance().ls.addLogs("Wifi enable")
             self.im.dropTimer()
         case .cellular:
             DeviceService.getInstance().ls.addLogs(text: "Network reachable via cellular data")
-            print("Network reachable via cellular data")
+            DeviceService.getInstance().ls.addLogs("Network reachable via cellular data")
             self.im.dropTimer()
         default:
-            print("Unknown network status")
+            DeviceService.getInstance().ls.addLogs("Unknown network status")
             DeviceService.getInstance().ls.addLogs(text: "Unknown network status")
         }
     }

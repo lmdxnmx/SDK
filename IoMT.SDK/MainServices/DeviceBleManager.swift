@@ -22,16 +22,16 @@ internal class DeviceBleManager :
     }
     
     internal func scanDevices(){
-        print("Start Scan")
+        DeviceService.getInstance().ls.addLogs("Start Scan")
         scanedDevice.removeAll()
         manager.scanAllDevices()
         Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) {
             timer in
-            print("Stop Scan")
+            DeviceService.getInstance().ls.addLogs("Stop Scan")
             self.manager.stopScan()
             timer.invalidate()
-            print("postScannedDeivce Delegate")
-            self.scanedDevice.forEach { dev in print(dev.deviceName) }
+            DeviceService.getInstance().ls.addLogs("postScannedDeivce Delegate")
+            self.scanedDevice.forEach { dev in DeviceService.getInstance().ls.addLogs(dev.deviceName) }
         }
     }
     
@@ -47,11 +47,11 @@ internal class DeviceBleManager :
     
     //ScanningDelegates:
     internal func scanningStatus(status: Int) {
-            print(status)
+            DeviceService.getInstance().ls.addLogs(status)
     }
     
     internal func bleManagerDiscover(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber){
-        print("deviceDiscover")
+        DeviceService.getInstance().ls.addLogs("deviceDiscover")
         if let deviceName = peripheral.name {
             scanedDevice.insert(ScanedDevice(deviceName: deviceName, deviceObject: peripheral) )
         }
@@ -59,69 +59,69 @@ internal class DeviceBleManager :
     
     //ConnectionDelegates
     internal func bleManagerConnectionFail (_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        print(peripheral)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDidConnect(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print(peripheral)
+        DeviceService.getInstance().ls.addLogs(peripheral)
     }
     
     internal func bleManagerDisConect(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print(peripheral)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     //ServiceDiscoverDelegate
     internal func bleManagerDiscoverService (_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        print(peripheral)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDiscoverCharacteristics (_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?){
-        print(peripheral)
-        print(service)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(service)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDiscoverDescriptors (_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?){
-        print(peripheral)
-        print(characteristic)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(characteristic)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDidUpdateValueForChar(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print(peripheral)
-        print(characteristic)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(characteristic)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDidWriteValueForChar(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        print(peripheral)
-        print(characteristic)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(characteristic)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDidUpdateValueForDesc(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?) {
-        print(peripheral)
-        print(descriptor)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(descriptor)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDidWriteValueForDesc(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?){
-        print(peripheral)
-        print(descriptor)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(descriptor)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func bleManagerDidUpdateNotificationState(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        print(peripheral)
-        print(characteristic)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(characteristic)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal func postBLEConnectionStatus(status:Int) {
-        print(status)
+        DeviceService.getInstance().ls.addLogs(status)
     }
     
     internal func postScannedDevices(scannedDevices: NSArray){
@@ -129,9 +129,9 @@ internal class DeviceBleManager :
     }
     
     internal func bleManagerReadRSSIValue(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
-        print(peripheral)
-        print(RSSI)
-        print(error!)
+        DeviceService.getInstance().ls.addLogs(peripheral)
+        DeviceService.getInstance().ls.addLogs(RSSI)
+        DeviceService.getInstance().ls.addLogs(error!)
     }
     
     internal struct ScanedDevice: Hashable{

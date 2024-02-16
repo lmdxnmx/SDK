@@ -76,7 +76,7 @@ public class EltaGlucometr:
     
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
-        print(status)
+        DeviceService.getInstance().ls.addLogs(status)
     }
     
     internal func bleManagerDiscover(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -209,7 +209,7 @@ public class EltaGlucometr:
                 peripheral.discoverCharacteristics(nil, for: service)
             }
         } else {
-            print("No services found")
+            DeviceService.getInstance().ls.addLogs("No services found")
         }
     }
     internal func bleManagerDiscoverCharacteristics (_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
@@ -227,7 +227,7 @@ public class EltaGlucometr:
     }
     internal func bleManagerDiscoverDescriptors(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?)
     {
-        print("bleManagerDiscoverDescriptors")
+        DeviceService.getInstance().ls.addLogs("bleManagerDiscoverDescriptors")
     }
     
     internal func setPin(device: CBPeripheral){
@@ -254,7 +254,7 @@ public class EltaGlucometr:
     internal func setTime(device: CBPeripheral){
         let timeNow = Date()
         let time = EltaGlucometr.FormatDeviceTime.string(from: timeNow)
-        print("Settime: " + time)
+        DeviceService.getInstance().ls.addLogs("Settime: " + time)
         let response: Data = String("settime." + time).data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }

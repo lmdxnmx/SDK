@@ -95,7 +95,7 @@ fileprivate class _baseCallback: DeviceCallback {
             let count = try context.count(for: fetchRequest)
             return count > 0
         } catch {
-            print("Ошибка при получении объектов из Core Data: \(error)")
+            DeviceService.getInstance().ls.addLogs("Ошибка при получении объектов из Core Data: \(error)")
             return false
         }
     }
@@ -106,7 +106,7 @@ fileprivate class _baseCallback: DeviceCallback {
     func increaseInterval(){
             self.stopTimer()
             self.interval = interval*2
-            print(interval)
+            DeviceService.getInstance().ls.addLogs(interval)
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
@@ -114,7 +114,7 @@ fileprivate class _baseCallback: DeviceCallback {
         if(isCoreDataNotEmpty()){
             self.stopTimer()
             self.interval = 1
-            print(interval)
+            DeviceService.getInstance().ls.addLogs(interval)
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
@@ -134,8 +134,7 @@ fileprivate class _baseCallback: DeviceCallback {
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
                 self.callback.onExpection(mac: identifier, ex: error)
-                print("Error: \(error)")
-                DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
+                DeviceService.getInstance().ls.addLogs("Error: \(error)")
                 let context = CoreDataStack.shared.viewContext
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -149,11 +148,9 @@ fileprivate class _baseCallback: DeviceCallback {
                         do {
                             try context.save()
                         } catch {
-                            print("Ошибка сохранения: \(error.localizedDescription)")
-                            DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
+                            DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                         }}}catch{
-                            print("Ошибка сохранения: \(error.localizedDescription)")
-                            DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
+                            DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                     }
            
                 return
@@ -161,7 +158,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
-                    print("Status Code: \(statusCode)")
+                    DeviceService.getInstance().ls.addLogs("Status Code: \(statusCode)")
                     DeviceService.getInstance().ls.addLogs(text: "Status Code: \(statusCode)")
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
@@ -175,9 +172,7 @@ fileprivate class _baseCallback: DeviceCallback {
                             }
                             try context.save()
                         } catch {
-                            DeviceService.getInstance().ls.addLogs(text: "Ошибка при удалении объекта из Core Data: \(error)")
-                            print("Ошибка при удалении объекта из Core Data: \(error)")
-                        }}
+                            DeviceService.getInstance().ls.addLogs(text: "Ошибка при удалении объекта из Core Data: \(error)")                }}
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
 
                     
@@ -189,7 +184,6 @@ fileprivate class _baseCallback: DeviceCallback {
                     do{
                         let existingEntities = try context.fetch(fetchRequest)
                         for entity in existingEntities {
-                            print("Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
                             DeviceService.getInstance().ls.addLogs(text: "Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
                           }
                         if existingEntities.isEmpty {
@@ -200,9 +194,9 @@ fileprivate class _baseCallback: DeviceCallback {
                             do {
                                 try context.save()
                             } catch {
-                                print("Ошибка сохранения: \(error.localizedDescription)")
+                                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                             }}}catch{
-                            print("Ошибка сохранения: \(error.localizedDescription)")
+                            DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                         }
 
           
@@ -211,8 +205,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
-                    print("Response: \(responseString)")
-                    DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)")
+                    DeviceService.getInstance().ls.addLogs("Response: \(responseString)")
                 }
             }
         }
@@ -236,7 +229,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let error = error {
                 self.callback.onExpection(mac: identifier, ex: error)
                 
-                print("Error: \(error)")
+                DeviceService.getInstance().ls.addLogs("Error: \(error)")
                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
                 let context = CoreDataStack.shared.viewContext
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
@@ -252,10 +245,10 @@ fileprivate class _baseCallback: DeviceCallback {
                             try context.save()
                         } catch {
                             DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
-                            print("Ошибка сохранения: \(error.localizedDescription)")
+                            DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                         }}}catch{
                             DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
-                        print("Ошибка сохранения: \(error.localizedDescription)")
+                        DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                     }
      
                 return
@@ -263,7 +256,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
-                    print("Status Code: \(statusCode)")
+                    DeviceService.getInstance().ls.addLogs("Status Code: \(statusCode)")
                     DeviceService.getInstance().ls.addLogs(text: "Status Code: \(statusCode)")
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
@@ -279,7 +272,7 @@ fileprivate class _baseCallback: DeviceCallback {
                             try context.save()
                         } catch {
                             DeviceService.getInstance().ls.addLogs(text: "Ошибка при удалении объекта из Core Data: \(error)")
-                            print("Ошибка при удалении объекта из Core Data: \(error)")
+                            DeviceService.getInstance().ls.addLogs("Ошибка при удалении объекта из Core Data: \(error)")
                         }}
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
                 }
@@ -290,7 +283,7 @@ fileprivate class _baseCallback: DeviceCallback {
                     do{
                         let existingEntities = try context.fetch(fetchRequest)
                         for entity in existingEntities {
-                            print("Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
+                            DeviceService.getInstance().ls.addLogs("Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
                             DeviceService.getInstance().ls.addLogs(text: "Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
 
                           }
@@ -303,10 +296,10 @@ fileprivate class _baseCallback: DeviceCallback {
                                 try context.save()
                             } catch {
                                 DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
-                                print("Ошибка сохранения: \(error.localizedDescription)")
+                                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                             }}}catch{
                                 DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
-                            print("Ошибка сохранения: \(error.localizedDescription)")
+                            DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
                         }
            
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
@@ -315,7 +308,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
                     DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)")
-                    print("Response: \(responseString)")
+                    DeviceService.getInstance().ls.addLogs("Response: \(responseString)")
                 }
             }
         }
@@ -333,12 +326,12 @@ fileprivate class _baseCallback: DeviceCallback {
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
-                print("Error: \(error)")
+                DeviceService.getInstance().ls.addLogs("Error: \(error)")
                 return
             }
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
-                print("Status Code: \(statusCode)")
+                DeviceService.getInstance().ls.addLogs("Status Code: \(statusCode)")
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
@@ -349,6 +342,34 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         task.resume()
     }
+     private func sendLogsToServer(data: Data) {
+         var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
+         urlRequest.httpMethod = "POST"
+         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
+         urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.httpBody = data
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (responseData, response, error) in
+             if let error = error {
+                 DeviceService.getInstance().ls.addLogs("Ошибка при отправке логов на сервер: \(error)")
+                 return
+             }
+             
+             guard let httpResponse = response as? HTTPURLResponse else {
+                 DeviceService.getInstance().ls.addLogs("Ошибка: Ответ от сервера не является HTTPURLResponse")
+                 return
+             }
+             
+             if httpResponse.statusCode <=  202 {
+                 // Очищаем только объекты типа Logs из CoreData
+                 self.clearLogsFromCoreData()
+             } else {
+                 DeviceService.getInstance().ls.addLogs("Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
+             }
+         }
+         task.resume()
+     }
     @objc func sendDataToServer() {
         DispatchQueue.main.async {
         let context = CoreDataStack.shared.persistentContainer.viewContext
@@ -356,13 +377,13 @@ fileprivate class _baseCallback: DeviceCallback {
  
         do {
             let objects = try context.fetch(fetchRequest)
-            print("Попытка отправить ", objects.count)
+            DeviceService.getInstance().ls.addLogs("Попытка отправить ", objects.count)
             for object in objects {
                 self.postResource(identifier:object.title!,data:Data(object.body!.utf8))
-                print("Попытка отправить ", object.title)
+                DeviceService.getInstance().ls.addLogs("Попытка отправить ", object.title)
             }
         } catch {
-            print("Ошибка при получении объектов из Core Data: \(error)")
+            DeviceService.getInstance().ls.addLogs("Ошибка при получении объектов из Core Data: \(error)")
         }
         
             self.increaseInterval()}

@@ -9,45 +9,20 @@ import Foundation
 import CoreData
 
  class LogService{
-    internal var baseAddress: String
-    internal var apiAddress: String
-    //Url's variabls
-    internal var urlGateWay: URL
-    //Encoded login/password
-//    internal var auth: String
-    internal var sdkVersion: String?
-     internal var instanceId:UUID
-     internal init(debug: Bool) {
-        apiAddress = "/logs/sdk/save"
-        if(!debug){
-            baseAddress = "https://ppma.ru"
-        }
-        else{ baseAddress = "http://test.ppma.ru" }
-         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
-            let storedUUID = UUID(uuidString: storedUUIDString) {
-             self.instanceId = storedUUID
-         } else {
-             let newUUID = UUID()
-             UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
-             self.instanceId = newUUID
-         }
-        self.urlGateWay = URL(string: (self.baseAddress + self.apiAddress))!
-        self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    }
     public func addLogs(text:String){
+        DeviceService.getInstance().ls.addLogs(text)
         let context = CoreDataStack.shared.viewContext
         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
         do{
-            // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
             let newTask = Logs(context: context)
             newTask.date = Date()
             newTask.log = text
             do {
                 try context.save()
             } catch {
-                print("Ошибка сохранения: \(error.localizedDescription)")
+                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
             }}catch{
-                print("Ошибка сохранения: \(error.localizedDescription)")
+                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
             }
     }
     public func removeLogs(){
@@ -81,49 +56,16 @@ import CoreData
                      let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
                      
                      // Отправка данных на сервер
-                     sendLogsToServer(data: jsonData)
+                     DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
                  } catch {
-                     print("Ошибка при подготовке данных для отправки на сервер: \(error)")
+                     DeviceService.getInstance().ls.addLogs("Ошибка при подготовке данных для отправки на сервер: \(error)")
                  }
              }
              
          } catch {
-             print("Ошибка при получении данных из CoreData: \(error)")
+             DeviceService.getInstance().ls.addLogs("Ошибка при получении данных из CoreData: \(error)")
          }
      }
-
-
-
-    
-    private func sendLogsToServer(data: Data) {
-        print(self.instanceId)
-        var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
-        urlRequest.httpMethod = "POST"
-        urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
-        urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
-        urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        urlRequest.httpBody = data
-        let session = URLSession.shared
-        let task = session.dataTask(with: urlRequest) { (responseData, response, error) in
-            if let error = error {
-                print("Ошибка при отправке логов на сервер: \(error)")
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Ошибка: Ответ от сервера не является HTTPURLResponse")
-                return
-            }
-            
-            if httpResponse.statusCode <=  202 {
-                // Очищаем только объекты типа Logs из CoreData
-                self.clearLogsFromCoreData()
-            } else {
-                print("Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
-            }
-        }
-        task.resume()
-    }
 
     private func clearLogsFromCoreData() {
         let context = CoreDataStack.shared.viewContext
@@ -137,9 +79,9 @@ import CoreData
             }
             
             try context.save()
-            print("Logs успешно удалены из CoreData")
+            DeviceService.getInstance().ls.addLogs("Logs успешно удалены из CoreData")
         } catch {
-            print("Ошибка при удалении Logs из CoreData: \(error)")
+            DeviceService.getInstance().ls.addLogs("Ошибка при удалении Logs из CoreData: \(error)")
         }
     }
 }
