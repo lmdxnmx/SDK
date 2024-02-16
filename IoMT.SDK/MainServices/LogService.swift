@@ -16,13 +16,13 @@ import CoreData
          // Устанавливаем формат даты и времени, включая миллисекунды
          dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
 
-         print(text)
+         var date:String = dateFormatter.string(from: Date())
          let context = CoreDataStack.shared.viewContext
          let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
          
          do {
              let newLog = Logs(context: context)
-             newLog.date = dateFormatter.string(from: Date()) // Устанавливаем текущую дату и время
+             newLog.date = date // Устанавливаем текущую дату и время
              newLog.log = text
              
              do {
