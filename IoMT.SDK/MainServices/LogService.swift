@@ -9,26 +9,32 @@ import Foundation
 import CoreData
 
  class LogService{
+     let dateFormatter = DateFormatter()
      public func addLogs(text: String) {
+         // Создаем экземпляр DateFormatter
+         let dateFormatter = DateFormatter()
+         // Устанавливаем формат даты и времени, включая миллисекунды
+         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
 
-             print(text)
-             let context = CoreDataStack.shared.viewContext
-             let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+         print(text)
+         let context = CoreDataStack.shared.viewContext
+         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+         
+         do {
+             let newLog = Logs(context: context)
+             newLog.date = Date() // Устанавливаем текущую дату и время
+             newLog.log = text
              
              do {
-                 let newTask = Logs(context: context)
-                 newTask.date = Date()
-                 newTask.log = text // Присваиваем строковое значение logText свойству log
-                 do {
-                     try context.save()
-                 } catch {
-                     DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
-                 }
+                 try context.save()
              } catch {
                  DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
              }
-        
+         } catch {
+             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+         }
      }
+
 
     public func removeLogs(){
         
