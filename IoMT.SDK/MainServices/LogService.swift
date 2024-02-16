@@ -9,17 +9,16 @@ import Foundation
 import CoreData
 
  class LogService{
-     public func addLogs(text: Any) {
-         if let logText = text as? String {
-             // Преобразование типа Any в String успешно выполнено
-             print(logText)
+     public func addLogs(text: String) {
+
+             print(text)
              let context = CoreDataStack.shared.viewContext
              let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
              
              do {
                  let newTask = Logs(context: context)
                  newTask.date = Date()
-                 newTask.log = logText // Присваиваем строковое значение logText свойству log
+                 newTask.log = text // Присваиваем строковое значение logText свойству log
                  do {
                      try context.save()
                  } catch {
@@ -28,10 +27,7 @@ import CoreData
              } catch {
                  DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
              }
-         } else {
-             // Не удалось преобразовать значение к типу String
-             print("Ошибка: Значение не может быть приведено к типу String")
-         }
+        
      }
 
     public func removeLogs(){

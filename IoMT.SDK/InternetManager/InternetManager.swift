@@ -104,7 +104,7 @@ fileprivate class _baseCallback: DeviceCallback {
     func increaseInterval(){
             self.stopTimer()
             self.interval = interval*2
-            DeviceService.getInstance().ls.addLogs(text:interval)
+        DeviceService.getInstance().ls.addLogs(text:String(describing:interval))
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
@@ -366,10 +366,10 @@ fileprivate class _baseCallback: DeviceCallback {
  
         do {
             let objects = try context.fetch(fetchRequest)
-            DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(objects.count)")
+            DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(String(describing:objects.count)")
             for object in objects {
                 self.postResource(identifier:object.title!,data:Data(object.body!.utf8))
-                DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(object.title)")
+                DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(String(describing:objects.title)")
             }
         } catch {
             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении объектов из Core Data: \(error)")
