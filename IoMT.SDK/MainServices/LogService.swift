@@ -73,17 +73,30 @@ import CoreData
 
 
      public func clearLogsFromCoreData() {
-         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
-            fetchRequest.returnsObjectsAsFaults = false
-            do {
-                let results = try CoreDataStack.shared.viewContext.fetch(fetchRequest)
-                for object in results {
-                    guard let objectData = object as? NSManagedObject else {continue}
-                    CoreDataStack.shared.viewContext.delete(objectData)
-                }
-            } catch let error {
-                print("Detele all data error :", error)
-            }
+         // Создаем фоновую очередь
+         let backgroundQueue = DispatchQueue.global(qos: .background)
+         
+         // Помещаем выполнение создания фонового MOC в фоновую очередь
+         backgroundQueue.async {
+             // Создаем фоновый MOC
+             let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+             backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+             
+             // Начинаем обработку удаления логов
+             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
+             fetchRequest.returnsObjectsAsFaults = false
+             do {
+                 let results = try backgroundContext.fetch(fetchRequest)
+                 for object in results {
+                     guard let objectData = object as? NSManagedObject else { continue }
+                     backgroundContext.delete(objectData)
+                 }
+                 // Сохраняем изменения в фоновом контексте
+                 try backgroundContext.save()
+             } catch let error {
+                 print("Delete all data error :", error)
+             }
+         }
      }
 
 
