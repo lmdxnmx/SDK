@@ -9,22 +9,31 @@ import Foundation
 import CoreData
 
  class LogService{
-    public func addLogs(text:Any){
-        print(text)
-        let context = CoreDataStack.shared.viewContext
-        let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
-        do{
-            let newTask = Logs(context: context)
-            newTask.date = Date()
-            newTask.log = text
-            do {
-                try context.save()
-            } catch {
-                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
-            }}catch{
-                DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
-            }
-    }
+     public func addLogs(text: Any) {
+         if let logText = text as? String {
+             // Преобразование типа Any в String успешно выполнено
+             print(logText)
+             let context = CoreDataStack.shared.viewContext
+             let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+             
+             do {
+                 let newTask = Logs(context: context)
+                 newTask.date = Date()
+                 newTask.log = logText // Присваиваем строковое значение logText свойству log
+                 do {
+                     try context.save()
+                 } catch {
+                     DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
+                 }
+             } catch {
+                 DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
+             }
+         } else {
+             // Не удалось преобразовать значение к типу String
+             print("Ошибка: Значение не может быть приведено к типу String")
+         }
+     }
+
     public func removeLogs(){
         
     }
@@ -58,12 +67,12 @@ import CoreData
                      // Отправка данных на сервер
                      DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
                  } catch {
-                     DeviceService.getInstance().ls.addLogs("Ошибка при подготовке данных для отправки на сервер: \(error)")
+                     DeviceService.getInstance().ls.addLogs(text:"Ошибка при подготовке данных для отправки на сервер: \(error)")
                  }
              }
              
          } catch {
-             DeviceService.getInstance().ls.addLogs("Ошибка при получении данных из CoreData: \(error)")
+             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении данных из CoreData: \(error)")
          }
      }
 
@@ -79,9 +88,9 @@ import CoreData
             }
             
             try context.save()
-            DeviceService.getInstance().ls.addLogs("Logs успешно удалены из CoreData")
+            DeviceService.getInstance().ls.addLogs(text:"Logs успешно удалены из CoreData")
         } catch {
-            DeviceService.getInstance().ls.addLogs("Ошибка при удалении Logs из CoreData: \(error)")
+            DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении Logs из CoreData: \(error)")
         }
     }
 }

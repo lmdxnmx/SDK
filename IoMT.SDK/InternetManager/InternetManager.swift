@@ -332,7 +332,7 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         task.resume()
     }
-     private func sendLogsToServer(data: Data) {
+     internal func sendLogsToServer(data: Data) {
          var urlRequest: URLRequest = URLRequest(url: self.urlGateWay)
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
@@ -367,7 +367,7 @@ fileprivate class _baseCallback: DeviceCallback {
  
         do {
             let objects = try context.fetch(fetchRequest)
-            DeviceService.getInstance().ls.addLogs(text:"Попытка отправить ", objects.count)
+            DeviceService.getInstance().ls.addLogs(text:"Попытка отправить " + objects.count)
             for object in objects {
                 self.postResource(identifier:object.title!,data:Data(object.body!.utf8))
                 DeviceService.getInstance().ls.addLogs(text:"Попытка отправить " + object.title)
