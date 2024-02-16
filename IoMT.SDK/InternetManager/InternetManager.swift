@@ -159,7 +159,6 @@ fileprivate class _baseCallback: DeviceCallback {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
                     DeviceService.getInstance().ls.addLogs(text:"Status Code: \(statusCode)")
-                    DeviceService.getInstance().ls.addLogs(text:: "Status Code: \(statusCode)")
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                     
@@ -184,7 +183,7 @@ fileprivate class _baseCallback: DeviceCallback {
                     do{
                         let existingEntities = try context.fetch(fetchRequest)
                         for entity in existingEntities {
-                            DeviceService.getInstance().ls.addLogs(text:: "Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
+                            DeviceService.getInstance().ls.addLogs(text: "Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
                           }
                         if existingEntities.isEmpty {
                             // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
@@ -230,7 +229,6 @@ fileprivate class _baseCallback: DeviceCallback {
                 self.callback.onExpection(mac: identifier, ex: error)
                 
                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                DeviceService.getInstance().ls.addLogs(text:: "Error: \(error)")
                 let context = CoreDataStack.shared.viewContext
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -255,7 +253,6 @@ fileprivate class _baseCallback: DeviceCallback {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
                     DeviceService.getInstance().ls.addLogs(text:"Status Code: \(statusCode)")
-                    DeviceService.getInstance().ls.addLogs(text:: "Status Code: \(statusCode)")
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                     
@@ -269,7 +266,6 @@ fileprivate class _baseCallback: DeviceCallback {
                             }
                             try context.save()
                         } catch {
-                            DeviceService.getInstance().ls.addLogs(text:: "Ошибка при удалении объекта из Core Data: \(error)")
                             DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении объекта из Core Data: \(error)")
                         }}
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
@@ -282,7 +278,6 @@ fileprivate class _baseCallback: DeviceCallback {
                         let existingEntities = try context.fetch(fetchRequest)
                         for entity in existingEntities {
                             DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
-                            DeviceService.getInstance().ls.addLogs(text:: "Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
 
                           }
                         if existingEntities.isEmpty {
@@ -293,10 +288,8 @@ fileprivate class _baseCallback: DeviceCallback {
                             do {
                                 try context.save()
                             } catch {
-                                DeviceService.getInstance().ls.addLogs(text:: "Ошибка сохранения: \(error.localizedDescription)")
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }}}catch{
-                                DeviceService.getInstance().ls.addLogs(text:: "Ошибка сохранения: \(error.localizedDescription)")
                             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                         }
            
@@ -305,7 +298,6 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
-                    DeviceService.getInstance().ls.addLogs(text:: "Response: \(responseString)")
                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                 }
             }
@@ -361,7 +353,7 @@ fileprivate class _baseCallback: DeviceCallback {
              
              if httpResponse.statusCode <=  202 {
                  // Очищаем только объекты типа Logs из CoreData
-                 self.clearLogsFromCoreData()
+                 DeviceService.getInstance().ls.clearLogsFromCoreData()
              } else {
                  DeviceService.getInstance().ls.addLogs(text:"Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
              }
