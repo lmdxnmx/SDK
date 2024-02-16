@@ -369,7 +369,11 @@ fileprivate class _baseCallback: DeviceCallback {
             DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(String(describing:objects.count)")
             for object in objects {
                 self.postResource(identifier:object.title!,data:Data(object.body!.utf8))
-                DeviceService.getInstance().ls.addLogs(text:"Попытка отправить: \(String(describing:objects.title)")
+            if let title = object.title {
+                DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(title)")
+            } else {
+                DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: <нет значения>")
+            }
             }
         } catch {
             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении объектов из Core Data: \(error)")
