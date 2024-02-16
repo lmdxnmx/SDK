@@ -122,7 +122,7 @@ fileprivate class _baseCallback: DeviceCallback {
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "POST"
-        urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
+        urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         //urlRequest
         urlRequest.httpBody = data
