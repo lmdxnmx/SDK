@@ -23,10 +23,10 @@ import CoreData
                  do {
                      try context.save()
                  } catch {
-                     DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
+                     DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                  }
              } catch {
-                 DeviceService.getInstance().ls.addLogs("Ошибка сохранения: \(error.localizedDescription)")
+                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
              }
          } else {
              // Не удалось преобразовать значение к типу String
