@@ -112,7 +112,7 @@ fileprivate class _baseCallback: DeviceCallback {
         if(isCoreDataNotEmpty()){
             self.stopTimer()
             self.interval = 1
-            DeviceService.getInstance().ls.addLogs(text:interval)
+            DeviceService.getInstance().ls.addLogs(text:String(describing:interval))
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
