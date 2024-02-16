@@ -99,6 +99,7 @@ import CoreData
                  }
                  // Сохраняем изменения в фоновом контексте
                  try backgroundContext.save()
+                 print("Logs cleared")
              } catch let error {
                  print("Delete all data error :", error)
              }
