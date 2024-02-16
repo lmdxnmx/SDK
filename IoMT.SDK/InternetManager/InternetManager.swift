@@ -214,7 +214,7 @@ fileprivate class _baseCallback: DeviceCallback {
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         var identifier = UUID();
         urlRequest.httpMethod = "POST"
-        urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
+        urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         let jsonString = String(data: data, encoding: .utf8)
         urlRequest.httpBody = data
@@ -331,7 +331,7 @@ fileprivate class _baseCallback: DeviceCallback {
         task.resume()
     }
      internal func sendLogsToServer(data: Data) {
-         let timeUrl  = URL(string: ("http://192.168.133.246" + "/logs/sdk/save"))!
+         let timeUrl  = URL(string: (self.baseAddress + "/logs/sdk/save"))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
