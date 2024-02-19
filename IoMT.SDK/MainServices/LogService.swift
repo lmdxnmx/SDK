@@ -26,7 +26,7 @@ import CoreData
                  newLog.log = text
                  
                  do {
-                     try context.save()
+                     try backgroundContext.save()
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
                  }
