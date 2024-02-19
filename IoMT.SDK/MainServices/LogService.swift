@@ -55,7 +55,7 @@ import CoreData
              fetchRequest.returnsObjectsAsFaults = false
              
              do {
-                 let logs = try context.fetch(fetchRequest)
+                 let logs = try backgroundContext.fetch(fetchRequest)
                  
                  // Создаем словарь для хранения данных о логах
                  var logsDataDictionary = [String: String]()
