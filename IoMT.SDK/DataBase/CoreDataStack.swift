@@ -15,13 +15,7 @@ class CoreDataStack {
     // Ленивая инициализация persistentContainer
     lazy var persistentContainer: PersistentContainer = {
         // Создание NSPersistentContainer с именем вашей модели данных
-        let container = PersistentContainer(name: "Observation")
-        
-        // Добавляем настройки для автоматической миграции
-        let description = NSPersistentStoreDescription()
-        description.shouldMigrateStoreAutomatically = true
-        description.shouldInferMappingModelAutomatically = true
-        container.persistentStoreDescriptions = [description]
+        let container = PersistentContainer(name: "Observation-1")
         
         // Загрузка persistent store для данного контейнера
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -33,7 +27,6 @@ class CoreDataStack {
         
         return container
     }()
-
     
     // Контекст для работы с данными в основной очереди
     var viewContext: NSManagedObjectContext {
