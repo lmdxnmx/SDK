@@ -58,7 +58,7 @@ import CoreData
                  let logs = try backgroundContext.fetch(fetchRequest)
                  
                  // Создаем словарь для хранения данных о логах
-                 var logsDataDictionary = [String: String]()
+                 var logsDataDictionary = [String: String] = [:]
                  let dateFormatter = ISO8601DateFormatter()
                  
                  // Заполняем словарь данными о логах
