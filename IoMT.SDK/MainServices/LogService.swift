@@ -11,6 +11,7 @@ import CoreData
  class LogService{
      let dateFormatter = DateFormatter()
      public func addLogs(text: String) {
+         print(text)
          // Создаем фоновую очередь
          let backgroundQueue = DispatchQueue.global(qos: .background)
          
