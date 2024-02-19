@@ -50,7 +50,7 @@ import CoreData
          fetchRequest.returnsObjectsAsFaults = false
 
          do {
-             let logs = try context.fetch(fetchRequest)
+             let logs = try backgroundContext.fetch(fetchRequest)
 
              // Создаем защищенный сериализатор диспетчера
              let serialQueue = DispatchQueue(label: "com.example.app.serialQueue")
