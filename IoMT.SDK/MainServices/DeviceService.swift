@@ -190,6 +190,9 @@ public class DeviceService {
     public func sendLogs(){
         ls.sendLogs();
     }
+    public func clearLogs(){
+        ls.clearLogsFromCoreData();
+    }
     
 }
 
