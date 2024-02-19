@@ -16,10 +16,11 @@ import CoreData
          
          // Помещаем выполнение добавления логов в фоновую очередь
          backgroundQueue.async {
-             let context = CoreDataStack.shared.viewContext
+             let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+             backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
              
              do {
-                 let newLog = Logs(context: context)
+                 let newLog = Logs(context: backgroundContext)
                  newLog.date = Date()
                  newLog.id = UUID()
                  newLog.log = text
