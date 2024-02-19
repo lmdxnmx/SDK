@@ -54,8 +54,8 @@ import CoreData
              var logsDataDictionary = [String: String]()
              let dateFormatter = ISO8601DateFormatter()
              for log in logs {
-                 if let date = log.date {
-                     let dateD = dateFormatter.date(from:date)!
+                 if let date = log.date,
+                    let dateD = dateFormatter.date(from: date) {
                      let dateString = dateFormatter.string(from: dateD)
 
                      if let logText = log.log {
@@ -77,6 +77,7 @@ import CoreData
              DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении данных из CoreData: \(error)")
          }
      }
+
 
 
      public func clearLogsFromCoreData() {
