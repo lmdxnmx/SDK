@@ -16,7 +16,7 @@ extension Logs {
         return NSFetchRequest<Logs>(entityName: "Logs")
     }
 
-    @NSManaged public var date: Date?
+    @NSManaged public var date: String?
     @NSManaged public var log: String?
 
 }
