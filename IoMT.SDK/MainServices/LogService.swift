@@ -55,7 +55,8 @@ import CoreData
              let dateFormatter = ISO8601DateFormatter()
              for log in logs {
                  if let date = log.date {
-                     let dateString = date // Преобразуем дату в строку
+                     let dateD = dateFormatter.date(from:date)!
+                     let dateString = dateFormatter.string(from: dateD)
 
                      if let logText = log.log {
                          logsDataDictionary[dateString] = logText
