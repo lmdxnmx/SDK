@@ -47,11 +47,9 @@ import CoreData
 
              // Собираем все логи в словарь данных
              var logsDataDictionary = [String: String]()
-             let dateFormatter = ISO8601DateFormatter()
              for log in logs {
-                 if let date = log.date,
-                    let dateD = dateFormatter.date(from: date) {
-                     let dateString = dateFormatter.string(from: dateD)
+                 if let date = log.date{
+                     let dateString = dateFormatter.string(from: date)
 
                      if let logText = log.log {
                          logsDataDictionary[dateString] = logText
