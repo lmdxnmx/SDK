@@ -44,13 +44,11 @@ import CoreData
     }
      public func sendLogs() {
          
-         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-         backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
-         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
-         fetchRequest.returnsObjectsAsFaults = false
+         let context = CoreDataStack.shared.viewContext
+         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
 
          do {
-             let logs = try backgroundContext.fetch(fetchRequest)
+             let logs = try context.fetch(fetchRequest)
 
              // Создаем защищенный сериализатор диспетчера
              let serialQueue = DispatchQueue(label: "com.example.app.serialQueue")
