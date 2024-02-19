@@ -393,7 +393,6 @@ fileprivate class _baseCallback: DeviceCallback {
                          continue
                      }
                      self.postResource(identifier: title, data: Data(object.body!.utf8))
-                     DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(title)")
                  }
              } catch {
                  DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
