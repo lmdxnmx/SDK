@@ -17,6 +17,12 @@ class CoreDataStack {
         // Создание NSPersistentContainer с именем вашей модели данных
         let container = PersistentContainer(name: "Observation")
         
+        // Добавляем настройки для автоматической миграции
+        let description = NSPersistentStoreDescription()
+        description.shouldMigrateStoreAutomatically = true
+        description.shouldInferMappingModelAutomatically = true
+        container.persistentStoreDescriptions = [description]
+        
         // Загрузка persistent store для данного контейнера
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -27,6 +33,7 @@ class CoreDataStack {
         
         return container
     }()
+
     
     // Контекст для работы с данными в основной очереди
     var viewContext: NSManagedObjectContext {
