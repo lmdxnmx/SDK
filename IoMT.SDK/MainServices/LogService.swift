@@ -43,49 +43,45 @@ import CoreData
         
     }
      public func sendLogs() {
-         // Создаем фоновую очередь
-         let backgroundQueue = DispatchQueue.global(qos: .background)
          
-         // Помещаем выполнение отправки логов на сервер в фоновую очередь
-         backgroundQueue.async {
-             let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-             backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
-             
-             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
-             fetchRequest.returnsObjectsAsFaults = false
-             
-             do {
-                 let logs = try backgroundContext.fetch(fetchRequest)
-                 
-                 // Создаем словарь для хранения данных о логах
-                 var logsDataDictionary = Dictionary<String, String>()
-                 let dateFormatter = ISO8601DateFormatter()
-                 
-                 // Заполняем словарь данными о логах
-                 for log in logs {
-                     if let date = log.date, let logText = log.log {
-                         let dateString = dateFormatter.string(from: date)
+         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+         backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
+         fetchRequest.returnsObjectsAsFaults = false
+
+         do {
+             let logs = try context.fetch(fetchRequest)
+
+             // Создаем защищенный сериализатор диспетчера
+             let serialQueue = DispatchQueue(label: "com.example.app.serialQueue")
+
+             // Собираем все логи в словарь данных
+             var logsDataDictionary = [String: String]()
+             let dateFormatter = ISO8601DateFormatter()
+             for log in logs {
+                 if let date = log.date {
+                     let dateString = dateFormatter.string(from: date)
+
+                     if let logText = log.log {
                          logsDataDictionary[dateString] = logText
                      }
                  }
-                 
-                 // Подготавливаем данные для отправки на сервер
-                 do {
-                     let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
-                     
-                     print(logsDataDictionary)
-                     // Отправляем данные на сервер
-                     DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
-                 } catch {
-                     print("Ошибка при подготовке или отправке данных на сервер: \(error)")
-                 }
-                 
-             } catch {
-                 print("Ошибка при получении данных из CoreData: \(error)")
              }
+
+             // Подготавливаем данные для отправки на сервер
+             do {
+                 let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
+                 // Отправка данных на сервер
+                 print(logsDataDictionary)
+                 DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
+             } catch {
+                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при подготовке данных для отправки на сервер: \(error)")
+             }
+
+         } catch {
+             DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении данных из CoreData: \(error)")
          }
      }
-
 
 
 
