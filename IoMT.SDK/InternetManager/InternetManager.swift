@@ -121,7 +121,6 @@ fileprivate class _baseCallback: DeviceCallback {
     func increaseInterval(){
             self.stopTimer()
             self.interval = interval*2
-        DeviceService.getInstance().ls.addLogs(text:String(describing:interval))
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
@@ -386,7 +385,7 @@ fileprivate class _baseCallback: DeviceCallback {
              
              do {
                  let objects = try context.fetch(fetchRequest)
-                 DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count))")
+                 DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
                  for object in objects {
                      // Проверяем, существует ли у объекта свойство title
                      guard let title = object.title else {
