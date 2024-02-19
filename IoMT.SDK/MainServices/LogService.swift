@@ -50,20 +50,17 @@ import CoreData
          backgroundQueue.async {
              let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
              backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
-             let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
+             
+             let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest() // Используем тип Logs
              fetchRequest.returnsObjectsAsFaults = false
 
              do {
                  let logs = try backgroundContext.fetch(fetchRequest)
 
-                 // Создаем защищенный сериализатор диспетчера
-
-
-                 // Собираем все логи в словарь данных
+                 // Создаем словарь для хранения данных о логах
                  var logsDataDictionary = [String: String]()
                  let dateFormatter = ISO8601DateFormatter()
                  for log in logs {
-                     print(log)
                      if let date = log.date {
                          let dateString = dateFormatter.string(from: date)
 
@@ -80,14 +77,15 @@ import CoreData
                      print(logsDataDictionary)
                      DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
                  } catch {
-                     DeviceService.getInstance().ls.addLogs(text: "Ошибка при подготовке данных для отправки на сервер: \(error)")
+                     print("Ошибка при подготовке или отправке данных на сервер: \(error)")
                  }
 
              } catch {
-                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении данных из CoreData: \(error)")
+                 print("Ошибка при получении данных из CoreData: \(error)")
              }
          }
      }
+
 
 
 
