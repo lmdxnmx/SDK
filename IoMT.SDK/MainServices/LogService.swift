@@ -59,7 +59,9 @@ import CoreData
 
                  // Создаем словарь для хранения данных о логах
                  var logsDataDictionary = [String: String]()
-                 let dateFormatter = ISO8601DateFormatter()
+                 let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+                            dateFormatter.locale = Locale(identifier: "en_US_POSIX") // Устанавливаем локаль для форматирования
                  for log in logs {
                      if let date = log.date {
                          let dateString = dateFormatter.string(from: date)
