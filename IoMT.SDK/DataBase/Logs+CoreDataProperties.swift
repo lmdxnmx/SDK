@@ -17,7 +17,8 @@ extension Logs {
     }
 
     @NSManaged public var log: String?
-    @NSManaged public var date: String?
+    @NSManaged public var id: UUID?
+    @NSManaged public var date: Date?
 
 }
 

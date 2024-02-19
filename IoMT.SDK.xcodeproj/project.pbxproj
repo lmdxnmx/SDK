@@ -12,11 +12,11 @@
 		7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */; };
 		7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDE02B7B7ABF00BACD76 /* Reachability.swift */; };
 		7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDEA2B7DE3D800BACD76 /* LogService.swift */; };
-		7382DDF52B833CD100BACD76 /* Observation-1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDF32B833CD100BACD76 /* Observation-1.xcdatamodeld */; };
 		7382DE122B8340DF00BACD76 /* Logs+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE0B2B8340DF00BACD76 /* Logs+CoreDataProperties.swift */; };
 		7382DE132B8340DF00BACD76 /* Entity+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE0F2B8340DF00BACD76 /* Entity+CoreDataClass.swift */; };
 		7382DE142B8340DF00BACD76 /* Logs+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE102B8340DF00BACD76 /* Logs+CoreDataClass.swift */; };
 		7382DE152B8340DF00BACD76 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE112B8340DF00BACD76 /* Entity+CoreDataProperties.swift */; };
+		7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,11 +53,11 @@
 		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7382DDE02B7B7ABF00BACD76 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		7382DDEA2B7DE3D800BACD76 /* LogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogService.swift; sourceTree = "<group>"; };
-		7382DDF42B833CD100BACD76 /* Observation-1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-1.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE0B2B8340DF00BACD76 /* Logs+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Logs+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7382DE0F2B8340DF00BACD76 /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7382DE102B8340DF00BACD76 /* Logs+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Logs+CoreDataClass.swift"; sourceTree = "<group>"; };
 		7382DE112B8340DF00BACD76 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,7 +111,7 @@
 				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
 				2F21315D2AB858B7007F8FD2 /* InternetManager */,
 				1EA0FA9986DA08BC689D011F /* Pods */,
-				7382DDF32B833CD100BACD76 /* Observation-1.xcdatamodeld */,
+				7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */,
 			);
 			path = IoMT.SDK;
 			sourceTree = "<group>";
@@ -261,8 +261,8 @@
 				7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */,
 				7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */,
 				2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */,
-				7382DDF52B833CD100BACD76 /* Observation-1.xcdatamodeld in Sources */,
 				7382DE142B8340DF00BACD76 /* Logs+CoreDataClass.swift in Sources */,
+				7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */,
 				7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */,
 				2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */,
 				7382DE132B8340DF00BACD76 /* Entity+CoreDataClass.swift in Sources */,
@@ -444,13 +444,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		7382DDF32B833CD100BACD76 /* Observation-1.xcdatamodeld */ = {
+		7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				7382DDF42B833CD100BACD76 /* Observation-1.xcdatamodel */,
+				7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */,
 			);
-			currentVersion = 7382DDF42B833CD100BACD76 /* Observation-1.xcdatamodel */;
-			path = "Observation-1.xcdatamodeld";
+			currentVersion = 7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */;
+			path = "Observation-2.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
