@@ -2,7 +2,7 @@
 //  Logs+CoreDataProperties.swift
 //  IoMT.SDK
 //
-//  Created by Никита on 15.02.2024.
+//  Created by Никита on 19.02.2024.
 //
 //
 
@@ -16,8 +16,8 @@ extension Logs {
         return NSFetchRequest<Logs>(entityName: "Logs")
     }
 
-    @NSManaged public var date: String?
     @NSManaged public var log: String?
+    @NSManaged public var date: String?
 
 }
 
