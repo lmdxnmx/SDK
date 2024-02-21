@@ -59,6 +59,7 @@ fileprivate class _baseCallback: DeviceCallback {
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
         if self.isCoreDataNotEmpty() {
+            self.stopTimer()
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
@@ -80,6 +81,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  // Действия, если объект типа Entity
                  if self.timer == nil && self.isCoreDataNotEmpty() {
                      print("hat")
+                     self.stopTimer()
                      self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
                      self.sendDataToServer()
                  }
