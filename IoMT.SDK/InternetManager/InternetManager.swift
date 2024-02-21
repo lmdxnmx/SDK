@@ -192,34 +192,29 @@ fileprivate class _baseCallback: DeviceCallback {
                     
                 }
                 else{
-                    let context = CoreDataStack.shared.viewContext
-                    let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
-                    do{
-                        if(statusCode != 400 && statusCode != 401 && statusCode != 403){
-                            let context = CoreDataStack.shared.viewContext
-                            let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                            fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
-                            do{
-                                let existingEntities = try context.fetch(fetchRequest)
-                                for entity in existingEntities {
-                                    DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
-                                    
-                                }
-                                if existingEntities.isEmpty {
-                                    // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
-                                    let newTask = Entity(context: context)
-                                    newTask.title = identifier
-                                    newTask.body = jsonString
-                                    do {
-                                        try context.save()
-                                    } catch {
-                                        DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
-                                    }}}catch{
-                                        DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
-                                    }}
-
-          
+                    if(statusCode != 400 && statusCode != 401 && statusCode != 403){
+                        let context = CoreDataStack.shared.viewContext
+                        let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                        fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
+                        do{
+                        let existingEntities = try context.fetch(fetchRequest)
+                        for entity in existingEntities {
+                            DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
+                            
+                        }
+                        if existingEntities.isEmpty {
+                            // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
+                            let newTask = Entity(context: context)
+                            newTask.title = identifier
+                            newTask.body = jsonString
+                            do {
+                                try context.save()
+                            } catch {
+                                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                            }}}catch{
+                                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                            }
+                }
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -298,24 +293,24 @@ fileprivate class _baseCallback: DeviceCallback {
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
                         do{
-                            let existingEntities = try context.fetch(fetchRequest)
-                            for entity in existingEntities {
-                                DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
-                                
+                        let existingEntities = try context.fetch(fetchRequest)
+                        for entity in existingEntities {
+                            DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
+                            
+                        }
+                        if existingEntities.isEmpty {
+                            // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
+                            let newTask = Entity(context: context)
+                            newTask.title = identifier
+                            newTask.body = jsonString
+                            do {
+                                try context.save()
+                            } catch {
+                                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                            }}}catch{
+                                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
-                            if existingEntities.isEmpty {
-                                // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
-                                let newTask = Entity(context: context)
-                                newTask.title = identifier
-                                newTask.body = jsonString
-                                do {
-                                    try context.save()
-                                } catch {
-                                    DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
-                                }}}catch{
-                                    DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
-                                }}
-           
+                }
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
