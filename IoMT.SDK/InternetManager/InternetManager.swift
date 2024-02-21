@@ -58,7 +58,7 @@ fileprivate class _baseCallback: DeviceCallback {
          }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
-        if self.isCoreDataNotEmpty() {
+         if (self.isCoreDataNotEmpty() && self.timer == nil) {
             self.stopTimer()
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
