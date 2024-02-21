@@ -233,7 +233,7 @@ fileprivate class _baseCallback: DeviceCallback {
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         var identifier = UUID();
         urlRequest.httpMethod = "POST"
-        urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
+        urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         let jsonString = String(data: data, encoding: .utf8)
         urlRequest.httpBody = data
