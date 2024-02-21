@@ -80,7 +80,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  // Действия, если объект типа Entity
                  if self.timer == nil && self.isCoreDataNotEmpty() {
                      self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-                     self.sendDataToServer()
+                    
                  }
              }
          }
@@ -192,7 +192,7 @@ fileprivate class _baseCallback: DeviceCallback {
                     
                 }
                 else{
-                    if(statusCode != 400 && statusCode != 401 && statusCode != 403){
+                    if(statusCode != 400  && statusCode != 403){
                         let context = CoreDataStack.shared.viewContext
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -288,7 +288,7 @@ fileprivate class _baseCallback: DeviceCallback {
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
                 }
                 else{
-                    if(statusCode != 400 && statusCode != 401 && statusCode != 403){
+                    if(statusCode != 400  && statusCode != 403){
                         let context = CoreDataStack.shared.viewContext
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
