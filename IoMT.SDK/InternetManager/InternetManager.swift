@@ -176,7 +176,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
-                    DeviceService.getInstance().ls.addLogs(text:"Status Code: \(statusCode)")
+
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                     
@@ -195,7 +195,7 @@ fileprivate class _baseCallback: DeviceCallback {
                     
                 }
                 else{
-                    if(statusCode != 400  && statusCode != 403){
+                    if(statusCode != 400 && statusCode != 401  && statusCode != 403){
                         let context = CoreDataStack.shared.viewContext
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -272,7 +272,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
-                    DeviceService.getInstance().ls.addLogs(text:"Status Code: \(statusCode)")
+
                     let context = CoreDataStack.shared.persistentContainer.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                     
@@ -291,7 +291,7 @@ fileprivate class _baseCallback: DeviceCallback {
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
                 }
                 else{
-                    if(statusCode != 400  && statusCode != 403){
+                    if(statusCode != 400 && statusCode != 401  && statusCode != 403){
                         let context = CoreDataStack.shared.viewContext
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -342,7 +342,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
-                DeviceService.getInstance().ls.addLogs(text:"Status Code: \(statusCode)")
+                
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
