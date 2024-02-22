@@ -138,7 +138,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
     
     internal func postResource(identifier: UUID, data: Data) {
-        print(data)
+
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
         print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
@@ -148,7 +148,7 @@ fileprivate class _baseCallback: DeviceCallback {
         //urlRequest
         urlRequest.httpBody = data
         let jsonString = String(data: data, encoding: .utf8)
-        print(jsonString)
+   
         
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
@@ -233,7 +233,6 @@ fileprivate class _baseCallback: DeviceCallback {
     }
     
     internal func postResource(data: Data) {
-        print(data)
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
         print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
