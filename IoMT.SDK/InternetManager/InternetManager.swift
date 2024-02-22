@@ -328,7 +328,65 @@ fileprivate class _baseCallback: DeviceCallback {
         
     }
     
-    
+     internal func postResource(data: Data,bundle:Bool) {
+         let timeUrl  = URL(string: ("http://192.168.181.246" + "/gateway/iiot/api/Observation/data"))!
+         print(timeUrl)
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
+         var identifier = UUID();
+         urlRequest.httpMethod = "POST"
+         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.httpBody = data
+         let jsonString = String(data: data, encoding: .utf8)
+         var result = urlRequest.allHTTPHeaderFields;
+         
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 self.callback.onExpection(mac: identifier, ex: error)
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+             }
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if(statusCode <= 202){
+                     let context = CoreDataStack.shared.persistentContainer.viewContext
+                        
+                        // Создайте запросы для всех сущностей вашей модели данных
+                        let entityNames = CoreDataStack.shared.persistentContainer.managedObjectModel.entities.map { $0.name! }
+                        
+                        for entityName in entityNames {
+                            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+                            
+                            // Удалите все объекты для каждой сущности
+                            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                            
+                            do {
+                                try context.execute(deleteRequest)
+                            } catch {
+                                print("Ошибка при удалении объектов для сущности \(entityName): \(error)")
+                            }
+                        }
+                        
+                        // Сохраните контекст после удаления всех объектов
+                        do {
+                            try context.save()
+                        } catch {
+                            print("Ошибка при сохранении контекста после очистки Core Data: \(error)")
+                        }
+                 }
+                 else{
+                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
+                 }
+             }
+             if let responseData = data {
+                 if let responseString = String(data: responseData, encoding: .utf8) {
+                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                 }
+             }
+         }
+         task.resume()
+         
+     }
     internal func getTime(serial: String){
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data" + "?serial=\(serial)&type=effectiveDateTime"))!
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
