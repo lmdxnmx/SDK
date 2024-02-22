@@ -20,8 +20,7 @@ internal class BundleTemplate {
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: bundleData, options: [])
-            print(jsonData)
-            print(bundleData)
+            print(String(data: jsonData,encoding: .utf8))
             DeviceService.getInstance().im.postResource(data: jsonData)
         } catch {
             print("Ошибка кодирования данных в JSON: \(error.localizedDescription)")
