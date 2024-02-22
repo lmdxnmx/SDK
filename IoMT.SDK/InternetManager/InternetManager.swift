@@ -351,22 +351,19 @@ fileprivate class _baseCallback: DeviceCallback {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202){
                      let context = CoreDataStack.shared.persistentContainer.viewContext
+                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
 
-                     // Create a fetch request for the desired entity
-                     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
-
-                     // Create a batch delete request with the fetch request
-                     let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-
-                     do {
-                         // Execute the batch delete request
-                         try context.execute(deleteRequest)
-                         
-                         // Save the context after deleting all objects
-                         try context.save()
-                     } catch {
-                         print("Error clearing Core Data: \(error)")
-                     }
+                     
+                     if(self.isCoreDataNotEmpty()){
+                         do {
+                             let objects = try context.fetch(fetchRequest)
+                             for object in objects {
+                                 context.delete(object)
+                             }
+                             try context.save()
+                         } catch {
+                             DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении объекта из Core Data: \(error)")
+                         }}
 
                  }
                  else{
