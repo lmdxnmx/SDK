@@ -152,7 +152,9 @@ public class DeviceService {
         if(instanceDS == nil) { return; }
         if(connectClass is EltaGlucometr){
             let postData = FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)
-            im.postResource(data: postData!)
+            if let postData = postData {
+                BundleTemplate.ApplyObservation(dataArray: [postData])
+            }
         }
     }
     

@@ -240,7 +240,6 @@ fileprivate class _baseCallback: DeviceCallback {
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        let jsonString = String(data: data, encoding: .utf8)
         urlRequest.httpBody = data
         
         var result = urlRequest.allHTTPHeaderFields;
@@ -390,16 +389,25 @@ fileprivate class _baseCallback: DeviceCallback {
              let context = CoreDataStack.shared.persistentContainer.viewContext
              let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
              
+             var dataArray: [Data] = [] // Массив для сбора данных
+             
              do {
                  let objects = try context.fetch(fetchRequest)
                  DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
                  for object in objects {
-                     // Проверяем, существует ли у объекта свойство title
-                     guard let title = object.title else {
-                         DeviceService.getInstance().ls.addLogs(text: "Ошибка: У объекта нет свойства title")
+                     guard let body = object.body?.data(using: .utf8) else {
+                         DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
                          continue
                      }
-                     self.postResource(identifier: title, data: Data(object.body!.utf8))
+                     dataArray.append(body) // Добавляем данные в массив
+                 }
+                 
+                 // Передаем массив данных в функцию ApplyObservation
+                 if let resultData = BundleTemplate.ApplyObservation(dataArray: dataArray) {
+                     // Здесь можно использовать полученные данные resultData
+                     // Например, отправить их на сервер
+                 } else {
+                     DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать данные в формат Bundle")
                  }
              } catch {
                  DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
@@ -408,6 +416,7 @@ fileprivate class _baseCallback: DeviceCallback {
              self.increaseInterval()
          }
      }
+
 
 
     
