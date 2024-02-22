@@ -7,8 +7,8 @@ internal class BundleTemplate {
         
         for data in dataArray {
             if let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                if let entry = jsonData["entry"] as? [[String: Any]] {
-                    entryArray.append(contentsOf: entry)
+                if let resource = jsonData["resource"] as? [[String: Any]] {
+                    entryArray.append(contentsOf: resource)
                 }
             }
         }
