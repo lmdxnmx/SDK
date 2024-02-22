@@ -332,7 +332,7 @@ fileprivate class _baseCallback: DeviceCallback {
                          backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                          
                          // Начинаем обработку удаления логов
-                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
+                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
                          fetchRequest.returnsObjectsAsFaults = false
                          do {
                              let results = try backgroundContext.fetch(fetchRequest)
