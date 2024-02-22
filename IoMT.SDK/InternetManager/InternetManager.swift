@@ -241,7 +241,7 @@ fileprivate class _baseCallback: DeviceCallback {
         urlRequest.addValue("Basic " + "dXNlcjpwYXNzd29yZA==", forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = data
-        
+        let jsonString = String(data: data, encoding: .utf8)
         var result = urlRequest.allHTTPHeaderFields;
         
         let session = URLSession.shared
@@ -403,12 +403,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  
                  // Передаем массив данных в функцию ApplyObservation
-                 if let resultData = BundleTemplate.ApplyObservation(dataArray: dataArray) {
-                     // Здесь можно использовать полученные данные resultData
-                     // Например, отправить их на сервер
-                 } else {
-                     DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать данные в формат Bundle")
-                 }
+                 BundleTemplate.ApplyObservation(dataArray: dataArray)
              } catch {
                  DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
              }
