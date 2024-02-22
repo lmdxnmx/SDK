@@ -323,22 +323,36 @@ fileprivate class _baseCallback: DeviceCallback {
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202){
-                     let context = CoreDataStack.shared.persistentContainer.viewContext
-                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-
+                     let backgroundQueue = DispatchQueue.global(qos: .background)
                      
-                     if(self.isCoreDataNotEmpty()){
+                     // Помещаем выполнение создания фонового MOC в фоновую очередь
+                     backgroundQueue.async {
+                         // Создаем фоновый MOC
+                         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                         backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+                         
+                         // Начинаем обработку удаления логов
+                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
+                         fetchRequest.returnsObjectsAsFaults = false
                          do {
-                             let objects = try context.fetch(fetchRequest)
-                             for object in objects {
-                                 context.delete(object)
+                             let results = try backgroundContext.fetch(fetchRequest)
+                             for object in results {
+                                 guard let objectData = object as? NSManagedObject else { continue }
+                                 backgroundContext.delete(objectData)
                              }
-                             try context.save()
-                         } catch {
-                             DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении объекта из Core Data: \(error)")
-                         }}
-
-                 }
+                             
+                             // Сохраняем изменения в фоновом контексте
+                             try backgroundContext.save()
+                             self.stopTimer()
+                             self.interval = 1 
+                             // Выводим сообщение об успешном удалении логов
+                            
+                         } catch let error {
+                             print("Delete all data error :", error)
+                         }
+    
+                     }
+                  
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }
