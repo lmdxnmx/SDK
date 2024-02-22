@@ -180,19 +180,7 @@ fileprivate class _baseCallback: DeviceCallback {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
 
-                    let context = CoreDataStack.shared.persistentContainer.viewContext
-                    let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                    
-                    fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
-                    if(self.isCoreDataNotEmpty()){
-                        do {
-                            let objects = try context.fetch(fetchRequest)
-                            for object in objects {
-                                context.delete(object)
-                            }
-                            try context.save()
-                        } catch {
-                            DeviceService.getInstance().ls.addLogs(text: "Ошибка при удалении объекта из Core Data: \(error)")                }}
+
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
 
                     
@@ -274,22 +262,6 @@ fileprivate class _baseCallback: DeviceCallback {
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
                 if(statusCode <= 202){
-
-                    let context = CoreDataStack.shared.persistentContainer.viewContext
-                    let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                    
-                    fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
-                    
-                    if(self.isCoreDataNotEmpty()){
-                        do {
-                            let objects = try context.fetch(fetchRequest)
-                            for object in objects {
-                                context.delete(object)
-                            }
-                            try context.save()
-                        } catch {
-                            DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении объекта из Core Data: \(error)")
-                        }}
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
                 }
                 else{
