@@ -396,6 +396,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
                  for object in objects {
                      if let body = object.body?.data(using: .utf8) {
+                         print(body)
                          dataArray.append(body) // Добавляем данные в массив
                      } else {
                          DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
