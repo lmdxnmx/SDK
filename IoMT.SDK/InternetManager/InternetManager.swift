@@ -332,7 +332,7 @@ fileprivate class _baseCallback: DeviceCallback {
                          backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                          
                          // Начинаем обработку удаления логов
-                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
+                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Logs")
                          fetchRequest.returnsObjectsAsFaults = false
                          do {
                              let results = try backgroundContext.fetch(fetchRequest)
@@ -343,16 +343,17 @@ fileprivate class _baseCallback: DeviceCallback {
                              
                              // Сохраняем изменения в фоновом контексте
                              try backgroundContext.save()
+                             
                              self.stopTimer()
                              self.interval = 1
-                             // Выводим сообщение об успешном удалении логов
-                            
                          } catch let error {
                              print("Delete all data error :", error)
                          }
-    
+
                      }
-                  
+
+
+                 }
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }
