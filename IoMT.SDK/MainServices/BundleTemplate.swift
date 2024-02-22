@@ -7,7 +7,7 @@ internal class BundleTemplate {
         
         for data in dataArray {
             if let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                entryArray.append(jsonData)
+                entryArray.append(contentsOf: jsonData)
             }
         }
         
@@ -24,4 +24,5 @@ internal class BundleTemplate {
             print("Ошибка кодирования данных в JSON: \(error.localizedDescription)")
         }
     }
+
 }
