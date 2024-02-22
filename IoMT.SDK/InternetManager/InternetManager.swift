@@ -395,11 +395,11 @@ fileprivate class _baseCallback: DeviceCallback {
                  let objects = try context.fetch(fetchRequest)
                  DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
                  for object in objects {
-                     guard let body = object.body?.data(using: .utf8) else {
+                     if let body = object.body?.data(using: .utf8) {
+                         dataArray.append(body) // Добавляем данные в массив
+                     } else {
                          DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
-                         continue
                      }
-                     dataArray.append(body) // Добавляем данные в массив
                  }
                  
                  // Передаем массив данных в функцию ApplyObservation
