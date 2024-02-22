@@ -350,29 +350,23 @@ fileprivate class _baseCallback: DeviceCallback {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202){
                      let context = CoreDataStack.shared.persistentContainer.viewContext
-                        
-                        // Создайте запросы для всех сущностей вашей модели данных
-                        let entityNames = CoreDataStack.shared.persistentContainer.managedObjectModel.entities.map { $0.name! }
-                        
-                        for entityName in entityNames {
-                            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-                            
-                            // Удалите все объекты для каждой сущности
-                            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-                            
-                            do {
-                                try context.execute(deleteRequest)
-                            } catch {
-                                print("Ошибка при удалении объектов для сущности \(entityName): \(error)")
-                            }
-                        }
-                        
-                        // Сохраните контекст после удаления всех объектов
-                        do {
-                            try context.save()
-                        } catch {
-                            print("Ошибка при сохранении контекста после очистки Core Data: \(error)")
-                        }
+
+                     // Create a fetch request for the desired entity
+                     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
+
+                     // Create a batch delete request with the fetch request
+                     let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+                     do {
+                         // Execute the batch delete request
+                         try context.execute(deleteRequest)
+                         
+                         // Save the context after deleting all objects
+                         try context.save()
+                     } catch {
+                         print("Error clearing Core Data: \(error)")
+                     }
+
                  }
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
