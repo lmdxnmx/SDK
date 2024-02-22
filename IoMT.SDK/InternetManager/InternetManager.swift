@@ -100,6 +100,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  // Действия, если объект типа Entity
                  if !self.isCoreDataNotEmpty() && self.timer != nil {
                      self.stopTimer()
+                     self.interval = 1
                  }
              }
          }
