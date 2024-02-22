@@ -323,21 +323,27 @@ fileprivate class _baseCallback: DeviceCallback {
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202){
-                     let context = CoreDataStack.shared.persistentContainer.viewContext
-                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-
+                     let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                     backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                      
-                     if(self.isCoreDataNotEmpty()){
-                         do {
-                             let objects = try context.fetch(fetchRequest)
-                             for object in objects {
-                                 context.delete(object)
-                             }
-                             try context.save()
-                         } catch {
-                             DeviceService.getInstance().ls.addLogs(text:"Ошибка при удалении объекта из Core Data: \(error)")
-                         }}
-
+                     // Начинаем обработку удаления логов
+                     let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
+                     fetchRequest.returnsObjectsAsFaults = false
+                     do {
+                         let results = try backgroundContext.fetch(fetchRequest)
+                         for object in results {
+                             guard let objectData = object as? NSManagedObject else { continue }
+                             backgroundContext.delete(objectData)
+                         }
+                         
+                         // Сохраняем изменения в фоновом контексте
+                         try backgroundContext.save()
+                         
+                         // Выводим сообщение об успешном удалении логов
+                         print("Logs cleared successfully")
+                     } catch let error {
+                         print("Delete all data error :", error)
+                     }
                  }
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
