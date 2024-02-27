@@ -303,7 +303,7 @@ fileprivate class _baseCallback: DeviceCallback {
     }
     
      internal func postResource(data: Data,bundle:Bool) {
-         let timeUrl  = URL(string: ("http://192.168.181.246" + "/gateway/iiot/api/Observation/data"))!
+         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
          print(timeUrl)
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          var identifier = UUID();
