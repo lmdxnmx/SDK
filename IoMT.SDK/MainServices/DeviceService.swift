@@ -161,7 +161,7 @@ public class DeviceService {
         if(connectClass is EltaGlucometr){
             var identifier = UUID();
             let postData = FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)
-      
+            let jsonString = String(data: postData, encoding: .utf8)
             let context = CoreDataStack.shared.viewContext
             let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -171,7 +171,7 @@ public class DeviceService {
                     // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
                     let newTask = Entity(context: context)
                     newTask.title = identifier
-                    newTask.body = postData
+                    newTask.body = jsonString
                     do {
                         try context.save()
                     } catch {
