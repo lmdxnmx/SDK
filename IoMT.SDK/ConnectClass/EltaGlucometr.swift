@@ -57,7 +57,6 @@ public class EltaGlucometr:
     }
     
     override public func connect(device: CBPeripheral) {
-        print("START SEARCH")
         EltaGlucometr.activeExecute = true
         manager.connectionDelegate = self
         _identifer = device.identifier
@@ -70,6 +69,7 @@ public class EltaGlucometr:
     override public func search(timeout: UInt32) {
         manager.scaningDelegate = self
         manager.scanAllDevices()
+        print("START SEARCH")
         sleep(timeout)
         manager.stopScan()
         callback?.searchedDevices(peripherals: peripherals)
