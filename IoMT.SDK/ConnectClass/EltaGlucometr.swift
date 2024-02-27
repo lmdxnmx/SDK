@@ -57,6 +57,7 @@ public class EltaGlucometr:
     }
     
     override public func connect(device: CBPeripheral) {
+        print("START SEARCH")
         EltaGlucometr.activeExecute = true
         manager.connectionDelegate = self
         _identifer = device.identifier
