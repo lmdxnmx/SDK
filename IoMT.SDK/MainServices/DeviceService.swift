@@ -72,7 +72,7 @@ public class DeviceService {
         BLEManager.getSharedBLEManager().initCentralManager(queue: nil, options: nil)
         _login = login
         _password = password
-        _callback = callbackFunction ?? _baseCallback() 
+        _callback = callbackFunction ?? _baseCallback()
         _test = debug
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
         rm = ReachabilityManager(manager: im)
@@ -83,7 +83,7 @@ public class DeviceService {
         SDK инициализировано с следующими параметрами:
         Login: \(_login)
         Password: \(_password)
-        Callback: \(_callback != nil ? "is not nil" : "nil")
+        Callback: \(callbackFunction != nil ? "is not nil" : "nil")
         Платформа: \(_test ? "http://test.ppma.ru" : "https://ppma.ru")
         """
         ls.addLogs(text: logs)
