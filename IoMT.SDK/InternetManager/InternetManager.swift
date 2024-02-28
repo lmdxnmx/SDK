@@ -440,6 +440,7 @@ fileprivate class _baseCallback: DeviceCallback {
      }
      @objc func sendDataToServer() {
          DispatchQueue.main.async {
+             self.stopTimer()
              let context = CoreDataStack.shared.persistentContainer.viewContext
              let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
              
