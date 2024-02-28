@@ -72,35 +72,34 @@ fileprivate class _baseCallback: DeviceCallback {
          if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, !updatedObjects.isEmpty {
              // Обработка обновленных объектов
          }
-
+         
          // В вашем методе обработки уведомлений contextDidChange:
          if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
              // Обработка вставленных объектов
-             for object in insertedObjects {
-                 // Проверяем тип объекта
-                 guard let entity = object.entity as? NSEntityDescription, entity.name == "Entity" else {
-                     continue
-                 }
+             
+             // Устанавливаем флаг, чтобы предотвратить создание дублирующихся таймеров
+             if self.timer == nil && self.isCoreDataNotEmpty() && !self.timerIsScheduled {
+                 self.timerIsScheduled = true
                  
-                 // Действия, если объект типа Entity
-                 if self.timer == nil && self.isCoreDataNotEmpty() && !self.timerIsScheduled {
-                     // Отмечаем, что таймер уже запланирован
-                     self.timerIsScheduled = true
-                     
-                     // Отменяем предыдущий таймер, если он существует
-                     self.stopTimer()
-                     
-                     // Создаем и запускаем таймер только если его нет
-                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                         self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
-                         self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
+                 // Отменяем предыдущий таймер, если он существует
+                 self.stopTimer()
+                 
+                 // Создаем и запускаем таймер только если его нет
+                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                     // Проверяем, были ли вставлены новые объекты после задержки
+                     if let insertedObjectsAfterDelay = (notification.userInfo?[NSInsertedObjectsKey] as? Set<NSManagedObject>), !insertedObjectsAfterDelay.isEmpty {
+                         // Объекты были вставлены, поэтому не нужно запускать таймер
+                         self.timerIsScheduled = false // Сбрасываем флаг
+                         return
                      }
                      
-                     // Выходим из цикла после создания первого таймера
-                     break
+                     // Таймер запускается, так как не было вставлено новых объектов в течение задержки
+                     self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
+                     self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
                  }
              }
          }
+     
 
 
 

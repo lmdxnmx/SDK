@@ -180,6 +180,54 @@ public class DeviceService {
                 }
         }
     }
+    public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
+        if instanceDS == nil { return }
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        let dispatchQueue = DispatchQueue(label: "com.example.yourapp.processObservations", attributes: .concurrent)
+        
+        dispatchQueue.async {
+            for observation in observations {
+                let (serial, model, time, value) = observation
+                
+                if connectClass is EltaGlucometr {
+                    var identifier = UUID()
+                    if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
+                        let context = CoreDataStack.shared.viewContext
+                        let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                        fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
+                        
+                        do {
+                            let existingEntities = try context.fetch(fetchRequest)
+                            if existingEntities.isEmpty {
+                                // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
+                                let newTask = Entity(context: context)
+                                newTask.title = identifier
+                                newTask.body = jsonString
+                                
+                                do {
+                                    try context.save()
+                                } catch {
+                                    DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                                }
+                            }
+                        } catch {
+                            DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+            
+            semaphore.signal()
+        }
+        
+        // Ждем, пока все 1000 измерений будут обработаны и записаны в контекст CoreData
+        _ = semaphore.wait(timeout: .distantFuture)
+        
+        // Запускаем таймер после того, как все измерения будут записаны
+        // Здесь вы можете добавить вашу логику запуска таймера
+    }
+
 
     
     ///Отправка данных будет производиться на тестовую площадку <test.ppma.ru>
