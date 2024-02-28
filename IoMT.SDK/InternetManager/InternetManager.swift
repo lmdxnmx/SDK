@@ -38,6 +38,8 @@ fileprivate class _baseCallback: DeviceCallback {
     }
     var timer: Timer? = nil
     var interval: TimeInterval = 1
+
+     private var timerIsScheduled = false
     
      internal init(login: String, password: String, debug: Bool, callback: DeviceCallback) {
         self.auth = Data((login + ":" + password).utf8).base64EncodedString()
@@ -63,13 +65,15 @@ fileprivate class _baseCallback: DeviceCallback {
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
+     
      @objc func contextDidChange(_ notification: Notification) {
          guard let userInfo = notification.userInfo else { return }
          
          if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, !updatedObjects.isEmpty {
              // Обработка обновленных объектов
          }
-         
+
+         // В вашем методе обработки уведомлений contextDidChange:
          if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
              // Обработка вставленных объектов
              for object in insertedObjects {
@@ -79,21 +83,26 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  
                  // Действия, если объект типа Entity
-                 if self.timer == nil && self.isCoreDataNotEmpty() {
+                 if self.timer == nil && self.isCoreDataNotEmpty() && !self.timerIsScheduled {
+                     // Отмечаем, что таймер уже запланирован
+                     self.timerIsScheduled = true
+                     
                      // Отменяем предыдущий таймер, если он существует
                      self.stopTimer()
                      
-                     // Добавляем задержку перед запуском таймера
+                     // Создаем и запускаем таймер только если его нет
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                         // Создаем и запускаем таймер
                          self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
-                         
-                         // Также вызываем sendDataToServer() немедленно после запуска таймера
-                         self.sendDataToServer()
+                         self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
                      }
+                     
+                     // Выходим из цикла после создания первого таймера
+                     break
                  }
              }
          }
+
+
 
          
          if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
