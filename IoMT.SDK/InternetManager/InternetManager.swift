@@ -338,7 +338,7 @@ fileprivate class _baseCallback: DeviceCallback {
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
-                 if(statusCode <= 202){
+                 if(statusCode <= 202 || statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 207){
                      let backgroundQueue = DispatchQueue.global(qos: .background)
                      
                      // Помещаем выполнение создания фонового MOC в фоновую очередь
