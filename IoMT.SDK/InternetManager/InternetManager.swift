@@ -97,7 +97,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
          
          if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
-             print("delete")
+
              // Обработка удаленных объектов
              for object in deletedObjects {
                  // Проверяем тип объекта
