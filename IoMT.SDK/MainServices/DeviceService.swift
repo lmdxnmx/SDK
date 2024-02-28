@@ -68,14 +68,14 @@ public class DeviceService {
     }
     
     ///Создание объекта с указанием авторизационных данных и функции обратного вызова для получения текущего состояния работы сервиса
-    public init(login: String, password: String, callbackFunction: DeviceCallback, debug: Bool){
+    public init(login: String, password: String, callbackFunction: DeviceCallback? = nil, debug: Bool) {
         BLEManager.getSharedBLEManager().initCentralManager(queue: nil, options: nil)
         _login = login
         _password = password
-        _callback = callbackFunction
+        _callback = callbackFunction ?? _baseCallback() 
         _test = debug
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
-        rm = ReachabilityManager(manager:im)
+        rm = ReachabilityManager(manager: im)
         ls = LogService()
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)
         let logs = """
@@ -86,11 +86,10 @@ public class DeviceService {
         Callback: \(_callback != nil ? "is not nil" : "nil")
         Платформа: \(_test ? "http://test.ppma.ru" : "https://ppma.ru")
         """
-
         ls.addLogs(text: logs)
         instanceDS = self
     }
-    
+
     ///Изменение авторизационных данных при работе сервиса
     public func changeCredentials(login: String, password: String){
         _login = login
