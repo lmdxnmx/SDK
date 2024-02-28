@@ -160,7 +160,8 @@ public class DeviceService {
         if(instanceDS == nil) { return; }
         if(connectClass is EltaGlucometr){
             var identifier = UUID();
-            let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value), encoding: .utf8)
+            let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
+
             let context = CoreDataStack.shared.viewContext
             let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
