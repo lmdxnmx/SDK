@@ -82,7 +82,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  if self.timer == nil && self.isCoreDataNotEmpty() {
         
                      self.stopTimer()
-                     self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+                     self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
                      self.sendDataToServer()
                  }
              }
