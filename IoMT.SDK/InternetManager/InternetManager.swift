@@ -80,13 +80,21 @@ fileprivate class _baseCallback: DeviceCallback {
                  
                  // Действия, если объект типа Entity
                  if self.timer == nil && self.isCoreDataNotEmpty() {
-        
+                     // Отменяем предыдущий таймер, если он существует
                      self.stopTimer()
-                     self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-                     self.sendDataToServer()
+                     
+                     // Добавляем задержку перед запуском таймера
+                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                         // Создаем и запускаем таймер
+                         self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
+                         
+                         // Также вызываем sendDataToServer() немедленно после запуска таймера
+                         self.sendDataToServer()
+                     }
                  }
              }
          }
+
          
          if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
              print("delete")
