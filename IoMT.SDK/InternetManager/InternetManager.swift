@@ -470,9 +470,9 @@ fileprivate class _baseCallback: DeviceCallback {
              } catch {
                  DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
              }
-       
+             self.increaseInterval()
          }
-         self.increaseInterval()
+   
      }
 
 
