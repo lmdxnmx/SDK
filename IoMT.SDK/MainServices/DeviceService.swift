@@ -159,7 +159,7 @@ public class DeviceService {
         guard connectClass is EltaGlucometr else { return }
 
         // Получаем дату из UserDefaults
-        if let savedDate = UserDefaults.standard.object(forKey: "SavedDate") as? Date {
+        if let savedDate = UserDefaults.standard.object(forKey: serial) as? Date {
             // Сравниваем даты
             if time > savedDate {
                 // Делаем запрос
@@ -186,13 +186,13 @@ public class DeviceService {
                 }
 
                 // Обновляем дату в UserDefaults
-                UserDefaults.standard.set(time, forKey: "SavedDate")
+                UserDefaults.standard.set(time, forKey: serial)
             }else{
                 DeviceService.getInstance().ls.addLogs(text:"Эти измерения уже были")
             }
         } else {
             // Если дата отсутствует в UserDefaults, записываем её и выходим из функции
-            UserDefaults.standard.set(time, forKey: "SavedDate")
+            UserDefaults.standard.set(time, forKey: serial)
         }
     }
 
