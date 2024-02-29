@@ -91,6 +91,7 @@ fileprivate class _baseCallback: DeviceCallback {
                      self.stopTimer()
                      
                      // Создаем и запускаем таймер только если его нет
+                     print(insertedObjects)
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
                          self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
                          self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
