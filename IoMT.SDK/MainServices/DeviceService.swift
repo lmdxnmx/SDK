@@ -230,6 +230,9 @@ public class DeviceService {
             }
         }
     }
+    public func getLogs() -> [Logs] {
+        return ls.getLogs()
+    }
 
     
     ///Отправка данных будет производиться на тестовую площадку <test.ppma.ru>

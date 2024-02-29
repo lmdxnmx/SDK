@@ -39,9 +39,20 @@ import CoreData
 
 
 
-    public func removeLogs(){
-        
-    }
+     public func getLogs() -> [Logs] {
+         var logs: [Logs] = []
+         let context = CoreDataStack.shared.persistentContainer.viewContext
+         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
+         
+         do {
+             logs = try context.fetch(fetchRequest)
+         } catch {
+             print("Ошибка при получении логов из CoreData: \(error)")
+         }
+         
+         return logs
+     }
+
      public func sendLogs() {
          // Создаем фоновую очередь
          let backgroundQueue = DispatchQueue.global(qos: .background)
