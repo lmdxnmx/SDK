@@ -340,9 +340,8 @@ fileprivate class _baseCallback: DeviceCallback {
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202 || statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 207){
-                     self.stopTimer()
-                     self.interval = 1
                      let backgroundQueue = DispatchQueue.global(qos: .background)
+                     
                      // Помещаем выполнение создания фонового MOC в фоновую очередь
                      backgroundQueue.async {
                          // Создаем фоновый MOC
@@ -362,6 +361,8 @@ fileprivate class _baseCallback: DeviceCallback {
                              // Сохраняем изменения в фоновом контексте
                              try backgroundContext.save()
                              
+                             self.stopTimer()
+                             self.interval = 1
                          } catch let error {
                              print("Delete all data error :", error)
                          }
@@ -466,12 +467,16 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  
                  for dataSubArray in dataArray {
-                     BundleTemplate.ApplyObservation(dataArray: dataSubArray)
-                 }
-             } catch {
-                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
-             }
-             self.increaseInterval()
+                        BundleTemplate.ApplyObservation(dataArray: dataSubArray) { success in
+                            if !success {
+                                // Если данные не были успешно отправлены, увеличиваем интервал и запускаем таймер
+                                self.increaseInterval()
+                            }
+                        }
+                    }
+                } catch {
+                    DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
+                }
          }
    
      }
