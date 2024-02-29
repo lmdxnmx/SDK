@@ -168,7 +168,7 @@ fileprivate class _baseCallback: DeviceCallback {
         //urlRequest
         urlRequest.httpBody = data
         let jsonString = String(data: data, encoding: .utf8)
-   
+    
         
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { (data, response, error) in

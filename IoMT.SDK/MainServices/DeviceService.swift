@@ -154,32 +154,46 @@ public class DeviceService {
             im.postResource(data: postData!)
         }
     }
-    public func applyObservation(connectClass: ConnectClass, serial: String, model: String, time: Date, value: Double)
-    {
-        if(instanceDS == nil) { return; }
-        if(connectClass is EltaGlucometr){
-            var identifier = UUID();
-            let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
+    public func applyObservation(connectClass: ConnectClass, serial: String, model: String, time: Date, value: Double) {
+        guard let instanceDS = instanceDS else { return }
+        guard connectClass is EltaGlucometr else { return }
 
-            let context = CoreDataStack.shared.viewContext
-            let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
-            do{
-                let existingEntities = try context.fetch(fetchRequest)
-                if existingEntities.isEmpty {
-                    // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
-                    let newTask = Entity(context: context)
-                    newTask.title = identifier
-                    newTask.body = jsonString
-                    do {
-                        try context.save()
-                    } catch {
-                        DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
-                    }}}catch{
+        // Получаем дату из UserDefaults
+        if let savedDate = UserDefaults.standard.object(forKey: "SavedDate") as? Date {
+            // Сравниваем даты
+            if time > savedDate {
+                // Делаем запрос
+                let identifier = UUID()
+                let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
+
+                let context = CoreDataStack.shared.viewContext
+                let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
+                do {
+                    let existingEntities = try context.fetch(fetchRequest)
+                    if existingEntities.isEmpty {
+                        let newTask = Entity(context: context)
+                        newTask.title = identifier
+                        newTask.body = jsonString
+                        do {
+                            try context.save()
+                        } catch {
+                            DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                        }
+                    }
+                } catch {
                     DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                 }
+
+                // Обновляем дату в UserDefaults
+                UserDefaults.standard.set(time, forKey: "SavedDate")
+            }
+        } else {
+            // Если дата отсутствует в UserDefaults, записываем её и выходим из функции
+            UserDefaults.standard.set(time, forKey: "SavedDate")
         }
     }
+
     public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
         if instanceDS == nil { return }
         
