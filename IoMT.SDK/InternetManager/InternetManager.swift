@@ -109,7 +109,6 @@ fileprivate class _baseCallback: DeviceCallback {
          if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
 
              // Обработка удаленных объектов
-             print(deletedObjects)
              for object in deletedObjects {
                  // Проверяем тип объекта
                  guard let entity = object.entity as? NSEntityDescription, entity.name == "Entity" else {
@@ -118,7 +117,6 @@ fileprivate class _baseCallback: DeviceCallback {
                  
                  // Действия, если объект типа Entity
                  if !self.isCoreDataNotEmpty() && self.timer != nil {
-                     print(object)
                      self.stopTimer()
                      self.interval = 1
                  }
