@@ -137,6 +137,7 @@ fileprivate class _baseCallback: DeviceCallback {
         }
     }
     func stopTimer() {
+        print("stop")
         self.timer?.invalidate()
         self.timer = nil
     }
