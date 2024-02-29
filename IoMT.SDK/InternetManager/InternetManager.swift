@@ -37,7 +37,7 @@ fileprivate class _baseCallback: DeviceCallback {
         return sharedManager!
     }
     var timer: Timer? = nil
-    var interval: TimeInterval = 1
+    var interval: TimeInterval = 2
 
      private var timerIsScheduled = false
     
@@ -117,7 +117,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  // Действия, если объект типа Entity
                  if !self.isCoreDataNotEmpty() && self.timer != nil {
                      self.stopTimer()
-                     self.interval = 1
+                     self.interval = 2
                  }
              }
          }
@@ -149,7 +149,7 @@ fileprivate class _baseCallback: DeviceCallback {
     func dropTimer(){
         if(isCoreDataNotEmpty()){
             self.stopTimer()
-            self.interval = 1
+            self.interval = 2
             DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
@@ -335,7 +335,7 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                 self.increaseInterval()
+            
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
@@ -362,7 +362,7 @@ fileprivate class _baseCallback: DeviceCallback {
                              try backgroundContext.save()
                              
                              self.stopTimer()
-                             self.interval = 1
+                             self.interval = 2
                          } catch let error {
                              print("Delete all data error :", error)
                          }
@@ -373,12 +373,12 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
-                     self.increaseInterval()
                  }
              }
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
                      DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                     
                  }
              }
          }
@@ -472,7 +472,7 @@ fileprivate class _baseCallback: DeviceCallback {
              } catch {
                  DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
              }
-            
+             self.increaseInterval()
          }
    
      }
