@@ -137,7 +137,7 @@ fileprivate class _baseCallback: DeviceCallback {
         }
     }
     func stopTimer() {
-        print("stop")
+
         self.timer?.invalidate()
         self.timer = nil
     }
@@ -443,37 +443,42 @@ fileprivate class _baseCallback: DeviceCallback {
      }
      @objc func sendDataToServer() {
          DispatchQueue.main.async {
-             let context = CoreDataStack.shared.persistentContainer.viewContext
-             let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-             
-             var dataArray: [[Data]] = [] // Массив массивов для сбора данных
-             
-             do {
-                 let objects = try context.fetch(fetchRequest)
-                 DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
+             if(isCoreDataNotEmpty()){
+                 let context = CoreDataStack.shared.persistentContainer.viewContext
+                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                  
-                 var currentArray: [Data] = [] // Текущий массив данных
+                 var dataArray: [[Data]] = [] // Массив массивов для сбора данных
                  
-                 for (index, object) in objects.enumerated() {
-                     if let body = object.body?.data(using: .utf8) {
-                         currentArray.append(body) // Добавляем данные в текущий массив
-                     } else {
-                         DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
+                 do {
+                     let objects = try context.fetch(fetchRequest)
+                     DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
+                     
+                     var currentArray: [Data] = [] // Текущий массив данных
+                     
+                     for (index, object) in objects.enumerated() {
+                         if let body = object.body?.data(using: .utf8) {
+                             currentArray.append(body) // Добавляем данные в текущий массив
+                         } else {
+                             DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
+                         }
+                         
+                         if currentArray.count == 35 || index == objects.count - 1 {
+                             dataArray.append(currentArray)
+                             currentArray = []
+                         }
                      }
                      
-                     if currentArray.count == 35 || index == objects.count - 1 {
-                         dataArray.append(currentArray)
-                         currentArray = []
+                     for dataSubArray in dataArray {
+                         BundleTemplate.ApplyObservation(dataArray: dataSubArray)
                      }
+                 } catch {
+                     DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-                 
-                 for dataSubArray in dataArray {
-                     BundleTemplate.ApplyObservation(dataArray: dataSubArray)
-                 }
-             } catch {
-                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
+                 self.increaseInterval()
+             }else{
+                 self.stopTimer()
+                 self.interval = 1;
              }
-             self.increaseInterval()
          }
    
      }
