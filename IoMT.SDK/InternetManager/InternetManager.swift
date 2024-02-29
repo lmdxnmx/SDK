@@ -37,7 +37,7 @@ fileprivate class _baseCallback: DeviceCallback {
         return sharedManager!
     }
     var timer: Timer? = nil
-    var interval: TimeInterval = 2
+    var interval: TimeInterval = 1
 
      private var timerIsScheduled = false
     
@@ -117,7 +117,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  // Действия, если объект типа Entity
                  if !self.isCoreDataNotEmpty() && self.timer != nil {
                      self.stopTimer()
-                     self.interval = 2
+                     self.interval = 1
                  }
              }
          }
@@ -149,7 +149,7 @@ fileprivate class _baseCallback: DeviceCallback {
     func dropTimer(){
         if(isCoreDataNotEmpty()){
             self.stopTimer()
-            self.interval = 2
+            self.interval = 1
             DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
@@ -340,8 +340,9 @@ fileprivate class _baseCallback: DeviceCallback {
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202 || statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 207){
+                     self.stopTimer()
+                     self.interval = 1
                      let backgroundQueue = DispatchQueue.global(qos: .background)
-                     
                      // Помещаем выполнение создания фонового MOC в фоновую очередь
                      backgroundQueue.async {
                          // Создаем фоновый MOC
@@ -361,8 +362,6 @@ fileprivate class _baseCallback: DeviceCallback {
                              // Сохраняем изменения в фоновом контексте
                              try backgroundContext.save()
                              
-                             self.stopTimer()
-                             self.interval = 2
                          } catch let error {
                              print("Delete all data error :", error)
                          }
