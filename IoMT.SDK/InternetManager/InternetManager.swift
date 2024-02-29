@@ -443,7 +443,7 @@ fileprivate class _baseCallback: DeviceCallback {
      }
      @objc func sendDataToServer() {
          DispatchQueue.main.async {
-             if(isCoreDataNotEmpty()){
+             if(self.isCoreDataNotEmpty()){
                  let context = CoreDataStack.shared.persistentContainer.viewContext
                  let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                  
