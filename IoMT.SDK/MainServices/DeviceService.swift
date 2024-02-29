@@ -187,6 +187,8 @@ public class DeviceService {
 
                 // Обновляем дату в UserDefaults
                 UserDefaults.standard.set(time, forKey: "SavedDate")
+            }else{
+                DeviceService.getInstance().ls.addLogs(text:"Эти измерения уже были")
             }
         } else {
             // Если дата отсутствует в UserDefaults, записываем её и выходим из функции
