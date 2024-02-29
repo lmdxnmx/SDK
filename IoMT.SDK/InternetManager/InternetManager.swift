@@ -467,16 +467,12 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  
                  for dataSubArray in dataArray {
-                        BundleTemplate.ApplyObservation(dataArray: dataSubArray) { success in
-                            if !success {
-                                // Если данные не были успешно отправлены, увеличиваем интервал и запускаем таймер
-                                self.increaseInterval()
-                            }
-                        }
-                    }
-                } catch {
-                    DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
-                }
+                     BundleTemplate.ApplyObservation(dataArray: dataSubArray)
+                 }
+             } catch {
+                 DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
+             }
+             self.increaseInterval()
          }
    
      }
