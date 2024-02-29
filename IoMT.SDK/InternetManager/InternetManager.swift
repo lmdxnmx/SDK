@@ -335,6 +335,7 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 self.increaseInterval()
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
@@ -372,6 +373,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
+                     self.increaseInterval()
                  }
              }
              if let responseData = data {
@@ -470,7 +472,7 @@ fileprivate class _baseCallback: DeviceCallback {
              } catch {
                  DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
              }
-             self.increaseInterval()
+            
          }
    
      }
