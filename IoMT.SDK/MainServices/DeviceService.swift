@@ -252,7 +252,6 @@ public class DeviceService {
    public func getCountOfEntities() -> Int {
         let context = CoreDataStack.shared.viewContext
         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
-       ls.addLogs(text: "ffaffafgeorov")
         do {
             // Выполняем запрос fetch и получаем массив объектов
             let results = try context.fetch(fetchRequest)
