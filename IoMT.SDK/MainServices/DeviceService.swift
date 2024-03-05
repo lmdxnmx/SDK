@@ -195,8 +195,47 @@ public class DeviceService {
             UserDefaults.standard.set(time, forKey: serial)
         }
     }
+    public func applyObservation(connectClass: ConnectClass,id:UUID ,serial: String, model: String, time: Date, value: Double) {
+        guard let instanceDS = instanceDS else { return }
+        guard connectClass is EltaGlucometr else { return }
 
-    public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
+        // Получаем дату из UserDefaults
+        if let savedDate = UserDefaults.standard.object(forKey: serial) as? Date {
+            // Сравниваем даты
+            if time > savedDate {
+                // Делаем запрос
+                let identifier = UUID()
+                let jsonString = String(data: FhirTemplate.Glucometer(serial: serial,id:id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
+
+                let context = CoreDataStack.shared.viewContext
+                let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
+                do {
+                    let existingEntities = try context.fetch(fetchRequest)
+                    if existingEntities.isEmpty {
+                        let newTask = Entity(context: context)
+                        newTask.title = identifier
+                        newTask.body = jsonString
+                        do {
+                            try context.save()
+                        } catch {
+                            DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                        }
+                    }
+                } catch {
+                    DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                }
+
+                // Обновляем дату в UserDefaults
+                UserDefaults.standard.set(time, forKey: serial)
+            }else{
+                DeviceService.getInstance().ls.addLogs(text:"Эти измерения уже были")
+            }
+        } else {
+            // Если дата отсутствует в UserDefaults, записываем её и выходим из функции
+            UserDefaults.standard.set(time, forKey: serial)
+        }
+    }    public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
         if instanceDS == nil { return }
         
         for observation in observations {
@@ -314,6 +353,4 @@ public struct Measurements{
     public func get(atr: Atributes) -> Any?{
         return data[atr]
     }
-    
 }
-
