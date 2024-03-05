@@ -235,7 +235,8 @@ public class DeviceService {
             // Если дата отсутствует в UserDefaults, записываем её и выходим из функции
             UserDefaults.standard.set(time, forKey: serial)
         }
-    }    public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
+    }
+    public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
         if instanceDS == nil { return }
         
         for observation in observations {

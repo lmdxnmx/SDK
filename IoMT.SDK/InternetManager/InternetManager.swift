@@ -239,7 +239,7 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         task.resume()
     }
-    f    internal func postResource(data: Data) {
+       internal func postResource(data: Data) {
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
         print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
