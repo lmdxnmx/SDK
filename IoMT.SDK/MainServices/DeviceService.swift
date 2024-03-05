@@ -209,12 +209,12 @@ public class DeviceService {
 
                 let context = CoreDataStack.shared.viewContext
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
+                fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
                 do {
                     let existingEntities = try context.fetch(fetchRequest)
                     if existingEntities.isEmpty {
                         let newTask = Entity(context: context)
-                        newTask.title = identifier
+                        newTask.title = id
                         newTask.body = jsonString
                         do {
                             try context.save()
@@ -236,7 +236,7 @@ public class DeviceService {
             UserDefaults.standard.set(time, forKey: serial)
         }
     }
-    public func applyObservation(connectClass: ConnectClass, observations: [(serial: String, model: String, time: Date, value: Double)]) {
+    public func applyObservation(connectClass: ConnectClass, observations: [(id:UUID, serial: String, model: String, time: Date, value: Double)]) {
         if instanceDS == nil { return }
         
         for observation in observations {
@@ -244,17 +244,17 @@ public class DeviceService {
             
             if connectClass is EltaGlucometr {
                 var identifier = UUID()
-                if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
+                if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, id:id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
                     let context = CoreDataStack.shared.viewContext
                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
+                    fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
                     
                     do {
                         let existingEntities = try context.fetch(fetchRequest)
                         if existingEntities.isEmpty {
                             // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
                             let newTask = Entity(context: context)
-                            newTask.title = identifier
+                            newTask.title = id
                             newTask.body = jsonString
                             
                             do {
