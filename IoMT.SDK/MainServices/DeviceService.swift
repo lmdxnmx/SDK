@@ -240,7 +240,7 @@ public class DeviceService {
         if instanceDS == nil { return }
         
         for observation in observations {
-            let (serial, model, time, value) = observation
+            let (id,serial, model, time, value) = observation
             
             if connectClass is EltaGlucometr {
                 var identifier = UUID()
