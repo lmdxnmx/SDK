@@ -141,15 +141,28 @@ fileprivate class _baseCallback: DeviceCallback {
 //            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
-    func dropTimer(){
-        if(isCoreDataNotEmpty()){
-//            self.stopTimer()
-            self.interval = 1
-            DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
-            self.scheduleSendDataToServer()
-//            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-        }
-    }
+     func dropTimer() {
+         // Удаляем все задачи из очереди
+         sendQueue.sync {
+             sendQueue.suspend() // Приостанавливаем выполнение очереди
+             sendQueue.removeAll() // Удаляем все задачи из очереди
+             sendQueue.resume() // Возобновляем выполнение очереди
+         }
+         
+         // Добавляем новую задачу в очередь
+         sendQueue.async {
+             // Проверяем, есть ли данные в CoreData
+             if self.isCoreDataNotEmpty() {
+                 // Если есть данные, сбрасываем интервал и перезапускаем таймер
+                 self.interval = 1
+                 self.scheduleSendDataToServer()
+                 DeviceService.getInstance().ls.addLogs(text: "Таймер сброшен")
+             } else {
+                 // Если данных нет, останавливаем таймер
+                 self.stopTimer()
+             }
+         }
+     }
 
     
     internal func postResource(identifier: UUID, data: Data) {
@@ -187,7 +200,6 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-                self.scheduleSendDataToServer()
                 return
             }
             if let httpResponse = response as? HTTPURLResponse {
@@ -222,7 +234,7 @@ fileprivate class _baseCallback: DeviceCallback {
                             }}}catch{
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
-                        self.scheduleSendDataToServer()
+                     
                 }
            
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
