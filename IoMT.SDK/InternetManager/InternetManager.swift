@@ -481,6 +481,7 @@ fileprivate class _baseCallback: DeviceCallback {
              }else{
                  self.stopTimer()
                  self.interval = 1;
+                 print("dropTime")
              }
          }
    
