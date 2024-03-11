@@ -66,12 +66,6 @@ fileprivate class _baseCallback: DeviceCallback {
          }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
-         if (self.isCoreDataNotEmpty() && self.timer == nil) {
-            //self.stopTimer()
-            //self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-             self.interval = 1;
-             self.scheduleSendDataToServer()
-        }
     }
      
      @objc func contextDidChange(_ notification: Notification) {
@@ -384,8 +378,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
 
                  }
-                 else{
-                     print("TESTfunc")
+                 else{ß
                      self.scheduleSendDataToServer()
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }

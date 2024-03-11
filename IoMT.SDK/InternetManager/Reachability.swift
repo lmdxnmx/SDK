@@ -1,6 +1,5 @@
 import Foundation
 import Reachability
-
 class ReachabilityManager {
 
     
@@ -46,10 +45,14 @@ class ReachabilityManager {
             DeviceService.getInstance().ls.addLogs(text:"Network unreachable")
         case .wifi:
             DeviceService.getInstance().ls.addLogs(text:"Wifi enable")
-            self.im.dropTimer()
+            if(self.im.isCoreDataNotEmpty()){
+                self.im.dropTimer()
+            }
         case .cellular:
             DeviceService.getInstance().ls.addLogs(text:"Network reachable via cellular data")
-            self.im.dropTimer()
+            if(self.im.isCoreDataNotEmpty()){
+                self.im.dropTimer()
+            }
         default:
             DeviceService.getInstance().ls.addLogs(text:"Unknown network status")
         }
