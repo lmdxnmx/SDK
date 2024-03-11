@@ -477,11 +477,10 @@ fileprivate class _baseCallback: DeviceCallback {
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-                 
+                 self.stopTimer()
              }else{
                  self.stopTimer()
                  self.interval = 1;
-                 print("dropTime")
              }
          }
    
