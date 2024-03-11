@@ -85,10 +85,10 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  
                  
-                 if self.isCoreDataNotEmpty() {
+                 if self.isCoreDataNotEmpty() && self.timerIsScheduled == false {
 
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-
+                         self.timerIsScheduled = true
                         self.scheduleSendDataToServer()
                      }
 
@@ -360,7 +360,7 @@ fileprivate class _baseCallback: DeviceCallback {
                              // Сохраняем изменения в фоновом контексте
                              try backgroundContext.save()
                              
-                             self.stopTimer()
+                             self.timerIsScheduled = false
                              self.interval = 1
                          } catch let error {
                              print("Delete all data error :", error)
@@ -475,7 +475,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  self.increaseInterval()
              }else{
-                 self.stopTimer()
+                 self.timerIsScheduled = false
                  self.interval = 1;
              }
          }
