@@ -21,6 +21,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
 
  class InternetManager{
+     private let sendQueue = DispatchQueue(label: "com.example.sendDataQueue", qos: .utility)
     internal var baseAddress: String
     //Url's variabls
     internal var urlGateWay: URL
@@ -61,8 +62,10 @@ fileprivate class _baseCallback: DeviceCallback {
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
          if (self.isCoreDataNotEmpty() && self.timer == nil) {
-            self.stopTimer()
-            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+            //self.stopTimer()
+            //self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+             self.interval = 1;
+             self.scheduleSendDataToServer()
         }
     }
      
@@ -92,8 +95,9 @@ fileprivate class _baseCallback: DeviceCallback {
                      
                      // Создаем и запускаем таймер только если его нет
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-                         self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
-                         self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
+                         //self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
+                        // self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
+                        self.scheduleSendDataToServer()
                      }
                      
                      // Выходим из цикла после создания первого таймера
@@ -102,7 +106,11 @@ fileprivate class _baseCallback: DeviceCallback {
              }
          }
 
-
+         func scheduleSendDataToServer() {
+                 sendQueue.asyncAfter(deadline: .now() + interval) { [weak self] in
+                     self?.sendDataToServer()
+                 }
+             }
 
          
          if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
@@ -142,17 +150,18 @@ fileprivate class _baseCallback: DeviceCallback {
         self.timer = nil
     }
     func increaseInterval(){
-            self.stopTimer()
+//            self.stopTimer()
             self.interval = interval*2
-            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+//            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
     func dropTimer(){
         if(isCoreDataNotEmpty()){
-            self.stopTimer()
+//            self.stopTimer()
             self.interval = 1
             DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
-            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+            self.scheduleSendDataToServer()
+//            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
 
@@ -192,7 +201,8 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-           
+                self.increaseInterval()
+                self.scheduleSendDataToServer()
                 return
             }
             if let httpResponse = response as? HTTPURLResponse {
@@ -228,6 +238,8 @@ fileprivate class _baseCallback: DeviceCallback {
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
                 }
+                    self.increaseInterval()
+                    self.scheduleSendDataToServer()
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -274,7 +286,8 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                         DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-     
+                self.increaseInterval()
+                self.scheduleSendDataToServer()
                 return
             }
             if let httpResponse = response as? HTTPURLResponse {
@@ -306,6 +319,8 @@ fileprivate class _baseCallback: DeviceCallback {
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
                 }
+                    self.increaseInterval()
+                    self.scheduleSendDataToServer()
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -335,7 +350,8 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-            
+                 self.increaseInterval()
+                 self.scheduleSendDataToServer()
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
@@ -372,6 +388,8 @@ fileprivate class _baseCallback: DeviceCallback {
 
                  }
                  else{
+                     self.increaseInterval()
+                     self.scheduleSendDataToServer()
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }
              }
@@ -473,7 +491,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-                 self.increaseInterval()
+              
              }else{
                  self.stopTimer()
                  self.interval = 1;
