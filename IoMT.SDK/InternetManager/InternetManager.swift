@@ -21,7 +21,6 @@ fileprivate class _baseCallback: DeviceCallback {
 
 
  class InternetManager{
-     private let sendQueue = DispatchQueue(label: "com.example.sendDataQueue", qos: .utility)
     internal var baseAddress: String
     //Url's variabls
     internal var urlGateWay: URL
@@ -37,11 +36,6 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         return sharedManager!
     }
-     func scheduleSendDataToServer() {
-             sendQueue.asyncAfter(deadline: .now() + interval) { [weak self] in
-                 self?.sendDataToServer()
-             }
-         }
     var timer: Timer? = nil
     var interval: TimeInterval = 1
 
@@ -66,13 +60,17 @@ fileprivate class _baseCallback: DeviceCallback {
          }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
+         if (self.isCoreDataNotEmpty() && self.timer == nil) {
+            self.stopTimer()
+            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+        }
     }
      
      @objc func contextDidChange(_ notification: Notification) {
          guard let userInfo = notification.userInfo else { return }
          
          if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, !updatedObjects.isEmpty {
-             // Обработ	ка обновленных объектов
+             // Обработка обновленных объектов
          }
 
          // В вашем методе обработки уведомлений contextDidChange:
@@ -84,18 +82,26 @@ fileprivate class _baseCallback: DeviceCallback {
                      continue
                  }
                  
-                 
-                 if self.isCoreDataNotEmpty() && self.timerIsScheduled == false {
+                 // Действия, если объект типа Entity
+                 if self.timer == nil && self.isCoreDataNotEmpty() && !self.timerIsScheduled {
+                     // Отмечаем, что таймер уже запланирован
                      self.timerIsScheduled = true
+                     
+                     // Отменяем предыдущий таймер, если он существует
+                     self.stopTimer()
+                     
+                     // Создаем и запускаем таймер только если его нет
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-                         
-                        self.scheduleSendDataToServer()
+                         self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
+                         self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
                      }
-
+                     
+                     // Выходим из цикла после создания первого таймера
                      break
                  }
              }
          }
+
 
 
          
@@ -136,35 +142,19 @@ fileprivate class _baseCallback: DeviceCallback {
         self.timer = nil
     }
     func increaseInterval(){
-//            self.stopTimer()
+            self.stopTimer()
             self.interval = interval*2
-//            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
     
     }
-     func dropTimer() {
-         // Приостанавливаем выполнение очереди
-         sendQueue.suspend()
-
-         // Удаляем все задачи, ожидающие выполнения
-         sendQueue.removeAll()
-
-         // Возобновляем выполнение очереди
-         sendQueue.resume()
-
-         // Добавляем новую задачу в очередь
-         sendQueue.async {
-             // Проверяем, есть ли данные в CoreData
-             if self.isCoreDataNotEmpty() {
-                 // Если есть данные, сбрасываем интервал и перезапускаем таймер
-                 self.interval = 1
-                 self.scheduleSendDataToServer()
-                 DeviceService.getInstance().ls.addLogs(text: "Таймер сброшен")
-             } else {
-                 // Если данных нет, останавливаем таймер
-                 self.stopTimer()
-             }
-         }
-     }
+    func dropTimer(){
+        if(isCoreDataNotEmpty()){
+            self.stopTimer()
+            self.interval = 1
+            DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
+            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
+        }
+    }
 
     
     internal func postResource(identifier: UUID, data: Data) {
@@ -202,6 +192,7 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
+           
                 return
             }
             if let httpResponse = response as? HTTPURLResponse {
@@ -236,9 +227,7 @@ fileprivate class _baseCallback: DeviceCallback {
                             }}}catch{
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
-                     
                 }
-           
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -285,7 +274,7 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                         DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-                self.scheduleSendDataToServer()
+     
                 return
             }
             if let httpResponse = response as? HTTPURLResponse {
@@ -316,9 +305,7 @@ fileprivate class _baseCallback: DeviceCallback {
                             }}}catch{
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
-                        self.scheduleSendDataToServer()
                 }
-     
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -348,7 +335,8 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                 self.scheduleSendDataToServer()
+                 self.increaseInterval()
+            
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
@@ -374,7 +362,7 @@ fileprivate class _baseCallback: DeviceCallback {
                              // Сохраняем изменения в фоновом контексте
                              try backgroundContext.save()
                              
-                             self.timerIsScheduled = false
+                             self.stopTimer()
                              self.interval = 1
                          } catch let error {
                              print("Delete all data error :", error)
@@ -385,8 +373,8 @@ fileprivate class _baseCallback: DeviceCallback {
 
                  }
                  else{
-                     self.scheduleSendDataToServer()
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
+                     self.increaseInterval()
                  }
              }
              if let responseData = data {
@@ -487,9 +475,9 @@ fileprivate class _baseCallback: DeviceCallback {
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-                 self.increaseInterval()
+         
              }else{
-                 self.timerIsScheduled = false
+                 self.stopTimer()
                  self.interval = 1;
              }
          }
