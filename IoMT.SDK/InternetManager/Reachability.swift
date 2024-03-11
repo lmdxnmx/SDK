@@ -45,14 +45,11 @@ class ReachabilityManager {
             DeviceService.getInstance().ls.addLogs(text:"Network unreachable")
         case .wifi:
             DeviceService.getInstance().ls.addLogs(text:"Wifi enable")
-            if(self.im.isCoreDataNotEmpty()){
-                self.im.dropTimer()
-            }
+            
+            self.im.dropTimer()
         case .cellular:
             DeviceService.getInstance().ls.addLogs(text:"Network reachable via cellular data")
-            if(self.im.isCoreDataNotEmpty()){
-                self.im.dropTimer()
-            }
+            self.im.dropTimer()
         default:
             DeviceService.getInstance().ls.addLogs(text:"Unknown network status")
         }
