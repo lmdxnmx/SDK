@@ -201,7 +201,6 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                             DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-                self.increaseInterval()
                 self.scheduleSendDataToServer()
                 return
             }
@@ -238,7 +237,6 @@ fileprivate class _baseCallback: DeviceCallback {
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
                 }
-                    self.increaseInterval()
                     self.scheduleSendDataToServer()
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
@@ -286,7 +284,6 @@ fileprivate class _baseCallback: DeviceCallback {
                         }}}catch{
                         DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-                self.increaseInterval()
                 self.scheduleSendDataToServer()
                 return
             }
@@ -319,7 +316,6 @@ fileprivate class _baseCallback: DeviceCallback {
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
                 }
-                    self.increaseInterval()
                     self.scheduleSendDataToServer()
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
@@ -350,7 +346,6 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                 self.increaseInterval()
                  self.scheduleSendDataToServer()
              }
              if let httpResponse = response as? HTTPURLResponse {
@@ -388,7 +383,6 @@ fileprivate class _baseCallback: DeviceCallback {
 
                  }
                  else{
-                     self.increaseInterval()
                      self.scheduleSendDataToServer()
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }
@@ -491,7 +485,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-              
+                 self.increaseInterval()
              }else{
                  self.stopTimer()
                  self.interval = 1;
