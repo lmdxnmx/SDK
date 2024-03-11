@@ -142,13 +142,15 @@ fileprivate class _baseCallback: DeviceCallback {
     
     }
      func dropTimer() {
-         // Удаляем все задачи из очереди
-         sendQueue.sync {
-             sendQueue.suspend() // Приостанавливаем выполнение очереди
-             sendQueue.removeAll() // Удаляем все задачи из очереди
-             sendQueue.resume() // Возобновляем выполнение очереди
-         }
-         
+         // Приостанавливаем выполнение очереди
+         sendQueue.suspend()
+
+         // Удаляем все задачи, ожидающие выполнения
+         sendQueue.removeAll()
+
+         // Возобновляем выполнение очереди
+         sendQueue.resume()
+
          // Добавляем новую задачу в очередь
          sendQueue.async {
              // Проверяем, есть ли данные в CoreData
