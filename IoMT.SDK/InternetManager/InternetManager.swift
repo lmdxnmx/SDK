@@ -236,8 +236,9 @@ fileprivate class _baseCallback: DeviceCallback {
                             }}}catch{
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
+                        self.scheduleSendDataToServer()
                 }
-                    self.scheduleSendDataToServer()
+           
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -315,8 +316,9 @@ fileprivate class _baseCallback: DeviceCallback {
                             }}}catch{
                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                             }
+                        self.scheduleSendDataToServer()
                 }
-                    self.scheduleSendDataToServer()
+     
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                 }
             }
@@ -346,7 +348,7 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                 self.scheduleSendDataToServer()
+              
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
