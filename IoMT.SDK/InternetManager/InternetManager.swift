@@ -84,13 +84,15 @@ fileprivate class _baseCallback: DeviceCallback {
                      continue
                  }
                  
-                 // Действия, если объект типа Entity
-                 if self.isCoreDataNotEmpty(){
+                 
+                 if self.isCoreDataNotEmpty() {
 
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-                         
-                        self.scheduleSendDataToServer()
 
+                        self.scheduleSendDataToServer()
+                     }
+
+                     break
                  }
              }
          }
