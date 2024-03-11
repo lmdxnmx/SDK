@@ -385,6 +385,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
                  }
                  else{
+                     print("TESTfunc")
                      self.scheduleSendDataToServer()
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }
