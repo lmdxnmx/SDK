@@ -86,9 +86,9 @@ fileprivate class _baseCallback: DeviceCallback {
                  
                  
                  if self.isCoreDataNotEmpty() && self.timerIsScheduled == false {
-
+                     self.timerIsScheduled = true
                      DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
-                         self.timerIsScheduled = true
+                         
                         self.scheduleSendDataToServer()
                      }
 
