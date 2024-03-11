@@ -37,6 +37,11 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         return sharedManager!
     }
+     func scheduleSendDataToServer() {
+             sendQueue.asyncAfter(deadline: .now() + interval) { [weak self] in
+                 self?.sendDataToServer()
+             }
+         }
     var timer: Timer? = nil
     var interval: TimeInterval = 1
 
@@ -106,11 +111,6 @@ fileprivate class _baseCallback: DeviceCallback {
              }
          }
 
-         func scheduleSendDataToServer() {
-                 sendQueue.asyncAfter(deadline: .now() + interval) { [weak self] in
-                     self?.sendDataToServer()
-                 }
-             }
 
          
          if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
