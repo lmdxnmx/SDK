@@ -46,7 +46,7 @@ fileprivate class _baseCallback: DeviceCallback {
         if(!debug){
             baseAddress = "https://ppma.ru"
         }
-        else{ baseAddress = "http://test.ppma.ru" }
+        else{ baseAddress = "https://dev.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
