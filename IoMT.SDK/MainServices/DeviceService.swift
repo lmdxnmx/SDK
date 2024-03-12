@@ -137,9 +137,7 @@ public class DeviceService {
         }
         self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
     }
-    public func disconnectDevice(connectClass: ConnectClass, device:DisplayPeripheral){
-        EltaGlucometr().cancelPeripheralConnection(peripheral:device.peripheral!)
-    }
+
     
     ///Поиск ble устройств, конечный список записывается в шаблон для подключения
     public func search(connectClass: ConnectClass, timeOut: UInt32){
