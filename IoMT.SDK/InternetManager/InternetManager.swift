@@ -335,7 +335,6 @@ fileprivate class _baseCallback: DeviceCallback {
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                 self.increaseInterval()
             
              }
              if let httpResponse = response as? HTTPURLResponse {
@@ -374,7 +373,6 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  else{
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
-                     self.increaseInterval()
                  }
              }
              if let responseData = data {
@@ -445,6 +443,7 @@ fileprivate class _baseCallback: DeviceCallback {
      @objc func sendDataToServer() {
          DispatchQueue.main.async {
              if(self.isCoreDataNotEmpty()){
+                 let dispatchGroup = DispatchGroup()
                  let context = CoreDataStack.shared.persistentContainer.viewContext
                  let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                  
@@ -470,12 +469,15 @@ fileprivate class _baseCallback: DeviceCallback {
                      }
                      
                      for dataSubArray in dataArray {
+                         dispatchGroup.enter()
                          BundleTemplate.ApplyObservation(dataArray: dataSubArray)
+                         dispatchGroup.leave()
                      }
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-         
+                 dispatchGroup.wait()
+                 self.increaseInterval()
              }else{
                  self.stopTimer()
                  self.interval = 1;
