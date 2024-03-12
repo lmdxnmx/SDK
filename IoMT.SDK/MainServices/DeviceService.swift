@@ -84,7 +84,7 @@ public class DeviceService {
         Login: \(_login)
         Password: \(_password)
         Callback: \(callbackFunction != nil ? "is not nil" : "nil")
-        Платформа: \(_test ? "http://test.ppma.ru" : "https://ppma.ru")
+        Платформа: \(_test ? "https://dev.ppma.ru" : "https://ppma.ru")
         """
         ls.addLogs(text: logs)
         instanceDS = self
