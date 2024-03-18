@@ -16,7 +16,7 @@ public class EltaGlucometr:
     ReadWirteCharteristicDelegate{
     
     internal var _identifer: UUID?
-
+    var serial:String = "";
     public var peripherals: [DisplayPeripheral] = []
     
     static var itter:Int = 0
@@ -61,8 +61,6 @@ public class EltaGlucometr:
         manager.connectionDelegate = self
         _identifer = device.identifier
         manager.connectPeripheralDevice(peripheral: device, options: nil)
-        sleep(25)
-        manager.disconnectPeripheralDevice(peripheral: device)
         EltaGlucometr.activeExecute = false
     }
     
@@ -100,6 +98,7 @@ public class EltaGlucometr:
     //DeviceConnectingDelegate
     internal func bleManagerConnectionFail(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         callback?.onExpection(mac: _identifer!, ex: error!)
+        
     }
     
     // This method will be triggered once device will be connected.
@@ -115,6 +114,7 @@ public class EltaGlucometr:
     // This method will be triggered once device will be disconnected.
     internal func bleManagerDisConect(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         callback?.onStatusDevice(mac: _identifer!, status: BluetoothStatus.ConnectDisconnect)
+        var observations: [(id:UUID,serial: String, model: String, time: Date, value: Double)] = []
         if(self.measurements == nil) { return; }
         let ret = self.measurements?.returnData()
         callback?.onDisconnect(mac: peripheral.identifier, data: ret!)
@@ -123,17 +123,15 @@ public class EltaGlucometr:
             let serial = self.measurements!.returnCharateristic(atribute: Atributes.SerialNumber) as! String
             let model = self.measurements!.returnCharateristic(atribute: Atributes.ModelNumber) as! String
             var measurements: Array<Measurements>
-            if(EltaGlucometr.lastDateMeasurements != nil){
-                measurements = (self.measurements?.returnMeasurements(offsetTime: EltaGlucometr.lastDateMeasurements!) as? Array<Measurements>)!
-            } else {
                 measurements = (self.measurements?.returnMeasurements() as? Array<Measurements>)!
-            }
             for measurement in measurements {
                 let time = measurement.get(atr: Atributes.TimeStamp) as! Date
                 let value = measurement.get(atr: Atributes.Glucose) as! Double
-                let postData = FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)
-                self.internetManager.postResource(identifier: peripheral.identifier, data: postData!)
+                let observation = (id:UUID(),serial: serial, model: model, time: time, value: value)
+                observations.append(observation)
             }
+            DeviceService.getInstance().applyObservation(connectClass: EltaGlucometr(), observations: observations)
+
             if(measurements.count == 0){
                 self.callback?.onSendData(mac: peripheral.identifier, status: PlatformStatus.NoDataSend)
             }
@@ -148,8 +146,11 @@ public class EltaGlucometr:
                 manager.disconnectPeripheralDevice(peripheral: peripheral)
             }
             if(resultStr.starts(with: "ser.")){
-                let serial = resultStr.replacingOccurrences(of: "ser.", with: "")
-                getLastTime(serial: serial)
+                serial = resultStr.replacingOccurrences(of: "ser.", with: "")
+                if(UserDefaults.standard.object(forKey: serial) == nil){
+                    getLastTime(serial: serial)
+                    sleep(2)
+                }
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.SerialNumber, value: serial)
                 self.measurements!.addInfo(atr: Atributes.SerialNumber, value: serial)
             }
@@ -164,6 +165,11 @@ public class EltaGlucometr:
                 let measurement = resultStr.replacingOccurrences(of: "rd", with: "")
                 if measurement.replacingOccurrences(of: "0", with: "").count == 0 {
                     manager.disconnectPeripheralDevice(peripheral: peripheral)
+                    if let centralManager = manager.centralManager {
+                        centralManager.cancelPeripheralConnection(peripheral)
+                    } else {
+                        print("Central manager is nil")
+                    }
                     EltaGlucometr.activeExecute = false
                     return
                 }
@@ -177,7 +183,19 @@ public class EltaGlucometr:
                 let timeStamp = EltaGlucometr.FormatDeviceTime.date(from: dateStr)!
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.TimeStamp, value: timeStamp)
                 m.add(atr: Atributes.TimeStamp, value: timeStamp)
-                
+                if(serial != ""){
+                    let savedDate = UserDefaults.standard.object(forKey: serial) as? Date
+
+                    if let savedDate = savedDate, savedDate >= timeStamp {
+                        manager.disconnectPeripheralDevice(peripheral: peripheral)
+                        if let centralManager = manager.centralManager {
+                            centralManager.cancelPeripheralConnection(peripheral)
+                        } else {
+                            print("Central manager is nil")
+                        }
+                        EltaGlucometr.activeExecute = false
+                    }
+                }
                 let temperature: Double = Double(temperatureStr)! / 10
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: temperature)
                 m.add(atr: Atributes.Temperature, value: temperature)

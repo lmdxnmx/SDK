@@ -60,10 +60,6 @@ fileprivate class _baseCallback: DeviceCallback {
          }
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
-         if (self.isCoreDataNotEmpty() && self.timer == nil) {
-            self.stopTimer()
-            self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
-        }
     }
      
      @objc func contextDidChange(_ notification: Notification) {
@@ -404,7 +400,7 @@ fileprivate class _baseCallback: DeviceCallback {
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
                     let time = EltaGlucometr.FormatPlatformTime.date(from: responseString)
-                    EltaGlucometr.lastDateMeasurements = time
+                    UserDefaults.standard.set(time, forKey: serial)
                 }
             }
         }
@@ -467,12 +463,11 @@ fileprivate class _baseCallback: DeviceCallback {
                              currentArray = []
                          }
                      }
-                     
+                     dispatchGroup.enter()
                      for dataSubArray in dataArray {
-                         dispatchGroup.enter()
                          BundleTemplate.ApplyObservation(dataArray: dataSubArray)
-                         dispatchGroup.leave()
                      }
+                     dispatchGroup.leave()
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }

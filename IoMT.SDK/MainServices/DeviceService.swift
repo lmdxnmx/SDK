@@ -238,22 +238,66 @@ public class DeviceService {
         }
     }
     public func applyObservation(connectClass: ConnectClass, observations: [(id: UUID, serial: String, model: String, time: Date, value: Double)]) {
-        if instanceDS == nil { return }
+        guard let instanceDS = instanceDS else { return }
         
         let context = CoreDataStack.shared.viewContext
         var entitiesToSave: [Entity] = [] // Массив для хранения объектов, которые нужно сохранить
+
         
-        for observation in observations {
-            let (id, serial, model, time, value) = observation
-            
-            if connectClass is EltaGlucometr {
-                if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, id:id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
-                    let entity = Entity(context: context)
-                    entity.title = id
-                    entity.body = jsonString
-                    entitiesToSave.append(entity)
+        guard let firstObservation = observations.first else { return }
+        var largestTime: Date? = firstObservation.time // Переменная для хранения наибольшего времени
+           let savedDate = UserDefaults.standard.object(forKey: firstObservation.serial) as? Date
+      
+        if savedDate != nil{
+            for observation in observations {
+                let (id, serial, model, time, value) = observation
+                
+                // Проверяем, что время наблюдения больше времени, хранящегося в UserDefaults для данного серийного номера
+                if let savedDate = savedDate, time > savedDate {
+                    
+                    if connectClass is EltaGlucometr {
+                        if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, id: id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
+                            let entity = Entity(context: context)
+                            entity.title = id
+                            entity.body = jsonString
+                            entitiesToSave.append(entity)
+
+                            if let currentLargestTime = largestTime, time > currentLargestTime {
+                                largestTime = time
+                            } else {
+                            }
+                        }
+                    }
+                    
                 }
             }
+            UserDefaults.standard.set(largestTime, forKey: firstObservation.serial)
+            
+        }
+        
+        // Если времени в UserDefaults нет, отправляем все измерения и устанавливаем время для последнего измерения как время в UserDefaults
+        if savedDate == nil {
+            for observation in observations {
+                let (id, serial, model, time, value) = observation
+                if connectClass is EltaGlucometr {
+                    if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, id: id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
+                        let entity = Entity(context: context)
+                        entity.title = id
+                        entity.body = jsonString
+                        entitiesToSave.append(entity)
+                        if let currentLargestTime = largestTime, time > currentLargestTime {
+                            largestTime = time
+                        } else {
+                      
+                        }
+                    }
+                }
+            }
+            // Устанавливаем время для последнего измерения как время в UserDefaults
+       print(largestTime)
+        
+                UserDefaults.standard.set(largestTime, forKey: firstObservation.serial)
+            
         }
         
         // Сохраняем все объекты из массива в контекст CoreData
@@ -263,6 +307,8 @@ public class DeviceService {
             DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
         }
     }
+
+
     public func getLogs() -> [Logs] {
         return ls.getLogs()
     }
