@@ -55,11 +55,11 @@ public class DeviceService {
     
     internal init(){
         if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
-                 let storedUUID = UUID(uuidString: storedUUIDString) {
-              } else {
-                  let newUUID = UUID()
-                  UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
-              }
+           let storedUUID = UUID(uuidString: storedUUIDString) {
+        } else {
+            let newUUID = UUID()
+            UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
+        }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
         ls = LogService()
         im = InternetManager(login: _login, password: _password, debug: _test, callback: _callback)
@@ -89,7 +89,7 @@ public class DeviceService {
         ls.addLogs(text: logs)
         instanceDS = self
     }
-
+    
     ///Изменение авторизационных данных при работе сервиса
     public func changeCredentials(login: String, password: String){
         _login = login
@@ -137,7 +137,7 @@ public class DeviceService {
         }
         self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
     }
-
+    
     public func connectToDevice(connectClass: ConnectClass, device: DisplayPeripheral, mail: String){
         connectClass.callback = self._callback
         let _identifier: UUID = device.peripheral!.identifier
@@ -189,7 +189,7 @@ public class DeviceService {
     public func applyObservation(connectClass: ConnectClass, serial: String, model: String, time: Date, value: Double) {
         guard let instanceDS = instanceDS else { return }
         guard connectClass is EltaGlucometr else { return }
-
+        
         // Получаем дату из UserDefaults
         if let savedDate = UserDefaults.standard.object(forKey: serial) as? Date {
             // Сравниваем даты
@@ -197,7 +197,7 @@ public class DeviceService {
                 // Делаем запрос
                 let identifier = UUID()
                 let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
-
+                
                 let context = CoreDataStack.shared.viewContext
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
@@ -216,7 +216,7 @@ public class DeviceService {
                 } catch {
                     DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                 }
-
+                
                 // Обновляем дату в UserDefaults
                 UserDefaults.standard.set(time, forKey: serial)
             }else{
@@ -230,7 +230,7 @@ public class DeviceService {
     public func applyObservation(connectClass: ConnectClass,id:UUID ,serial: String, model: String, time: Date, value: Double) {
         guard let instanceDS = instanceDS else { return }
         guard connectClass is EltaGlucometr else { return }
-
+        
         // Получаем дату из UserDefaults
         if let savedDate = UserDefaults.standard.object(forKey: serial) as? Date {
             // Сравниваем даты
@@ -238,7 +238,7 @@ public class DeviceService {
                 // Делаем запрос
                 let identifier = UUID()
                 let jsonString = String(data: FhirTemplate.Glucometer(serial: serial,id:id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
-
+                
                 let context = CoreDataStack.shared.viewContext
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
@@ -257,7 +257,7 @@ public class DeviceService {
                 } catch {
                     DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                 }
-
+                
                 // Обновляем дату в UserDefaults
                 UserDefaults.standard.set(time, forKey: serial)
             }else{
@@ -273,12 +273,12 @@ public class DeviceService {
         
         let context = CoreDataStack.shared.viewContext
         var entitiesToSave: [Entity] = [] // Массив для хранения объектов, которые нужно сохранить
-
+        
         
         guard let firstObservation = observations.first else { return }
         var largestTime: Date? = firstObservation.time // Переменная для хранения наибольшего времени
-           let savedDate = UserDefaults.standard.object(forKey: firstObservation.serial) as? Date
-      
+        let savedDate = UserDefaults.standard.object(forKey: firstObservation.serial) as? Date
+        
         if savedDate != nil{
             for observation in observations {
                 let (id, serial, model, time, value) = observation
@@ -292,7 +292,7 @@ public class DeviceService {
                             entity.title = id
                             entity.body = jsonString
                             entitiesToSave.append(entity)
-
+                            
                             if let currentLargestTime = largestTime, time > currentLargestTime {
                                 largestTime = time
                             } else {
@@ -319,15 +319,15 @@ public class DeviceService {
                         if let currentLargestTime = largestTime, time > currentLargestTime {
                             largestTime = time
                         } else {
-                      
+                            
                         }
                     }
                 }
             }
             // Устанавливаем время для последнего измерения как время в UserDefaults
-       print(largestTime)
-        
-                UserDefaults.standard.set(largestTime, forKey: firstObservation.serial)
+            print(largestTime)
+            
+            UserDefaults.standard.set(largestTime, forKey: firstObservation.serial)
             
         }
         
@@ -338,12 +338,12 @@ public class DeviceService {
             DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
         }
     }
-
-
+    
+    
     public func getLogs() -> [Logs] {
         return ls.getLogs()
     }
-
+    
     
     ///Отправка данных будет производиться на тестовую площадку <test.ppma.ru>
     public func toTest() {
@@ -359,7 +359,7 @@ public class DeviceService {
         rm = ReachabilityManager(manager:im)
         instanceDS = self
     }
-   public func getCountOfEntities() -> Int {
+    public func getCountOfEntities() -> Int {
         let context = CoreDataStack.shared.viewContext
         let fetchRequest: NSFetchRequest<Logs> = Logs.fetchRequest()
         do {
@@ -368,12 +368,12 @@ public class DeviceService {
             
             // Получаем количество объектов в массиве
             let count = results.count
-           return count
+            return count
         } catch {
             DeviceService.getInstance().ls.addLogs(text:"Ошибка при выполнении запроса fetch: \(error)")
             return 0
         }
-       return 0;
+        return 0;
     }
     public func sendLogs(){
         ls.sendLogs();
@@ -381,45 +381,46 @@ public class DeviceService {
     public func clearLogs(){
         ls.clearLogsFromCoreData();
     }
-
-///Структура для сохранения информации об устройтсве
-public struct DisplayPeripheral: Hashable {
-    public var peripheral: CBPeripheral?
-    public var lastRSSI: NSNumber?
-    public var isConnectable: Bool?
-    public var localName: String?
     
-    public func hash(into hasher: inout Hasher) { }
-
-    public static func == (lhs: DisplayPeripheral, rhs: DisplayPeripheral) -> Bool {
-        if (lhs.peripheral! == rhs.peripheral) { return true }
-        else { return false }
-    }
-    public init(peripheral: CBPeripheral? = nil, lastRSSI: NSNumber? = nil, isConnectable: Bool? = false, localName: String? = nil) {
-        self.peripheral = peripheral
-        self.lastRSSI = lastRSSI
-        self.isConnectable = isConnectable
-        self.localName = localName
-    }
-}
-
-///Структура для сохранения данных об измерениях
-public struct Measurements{
-    internal var data: [Atributes: Any] = [:]
-    
-    init() {
-        data = [Atributes: Any]()
+    ///Структура для сохранения информации об устройтсве
+    public struct DisplayPeripheral: Hashable {
+        public var peripheral: CBPeripheral?
+        public var lastRSSI: NSNumber?
+        public var isConnectable: Bool?
+        public var localName: String?
+        
+        public func hash(into hasher: inout Hasher) { }
+        
+        public static func == (lhs: DisplayPeripheral, rhs: DisplayPeripheral) -> Bool {
+            if (lhs.peripheral! == rhs.peripheral) { return true }
+            else { return false }
+        }
+        public init(peripheral: CBPeripheral? = nil, lastRSSI: NSNumber? = nil, isConnectable: Bool? = false, localName: String? = nil) {
+            self.peripheral = peripheral
+            self.lastRSSI = lastRSSI
+            self.isConnectable = isConnectable
+            self.localName = localName
+        }
     }
     
-    public mutating func add(atr: Atributes, value: Any){
-        data.updateValue(value, forKey: atr)
-    }
-    
-    public func get() -> [Atributes: Any]?{
-        return data
-    }
-    
-    public func get(atr: Atributes) -> Any?{
-        return data[atr]
+    ///Структура для сохранения данных об измерениях
+    public struct Measurements{
+        internal var data: [Atributes: Any] = [:]
+        
+        init() {
+            data = [Atributes: Any]()
+        }
+        
+        public mutating func add(atr: Atributes, value: Any){
+            data.updateValue(value, forKey: atr)
+        }
+        
+        public func get() -> [Atributes: Any]?{
+            return data
+        }
+        
+        public func get(atr: Atributes) -> Any?{
+            return data[atr]
+        }
     }
 }
