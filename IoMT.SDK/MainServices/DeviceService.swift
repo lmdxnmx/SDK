@@ -138,7 +138,38 @@ public class DeviceService {
         self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
     }
 
-    
+    public func connectToDevice(connectClass: ConnectClass, device: DisplayPeripheral, mail: String){
+        connectClass.callback = self._callback
+        let _identifier: UUID = device.peripheral!.identifier
+        if(connectClass is AndTonometr){
+            if(!AndTonometr.activeExecute) {
+                DispatchQueue.global().async {
+                    connectClass.connect(device: device.peripheral!)
+                }
+            }
+            else {
+                self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.Connected)
+            }
+            return
+        }
+        if(connectClass is EltaGlucometr){
+            if(connectClass.cred == nil){
+                self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.NotCorrectPin)
+            }else{
+                if(!EltaGlucometr.activeExecute) {
+                    DispatchQueue.global().async {
+                        EltaGlucometr.mail = mail;
+                        connectClass.connect(device: device.peripheral!)
+                    }
+                }
+                else {
+                    self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.Connected)
+                }
+            }
+            return
+        }
+        self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
+    }
     ///Поиск ble устройств, конечный список записывается в шаблон для подключения
     public func search(connectClass: ConnectClass, timeOut: UInt32){
         DispatchQueue.global().async {
@@ -350,8 +381,6 @@ public class DeviceService {
     public func clearLogs(){
         ls.clearLogsFromCoreData();
     }
-    
-}
 
 ///Структура для сохранения информации об устройтсве
 public struct DisplayPeripheral: Hashable {

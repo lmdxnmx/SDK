@@ -61,6 +61,7 @@ fileprivate class _baseCallback: DeviceCallback {
         sharedManager = self
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
     }
+     let dispatchGroup = DispatchGroup()
      
      @objc func contextDidChange(_ notification: Notification) {
          guard let userInfo = notification.userInfo else { return }
@@ -161,6 +162,8 @@ fileprivate class _baseCallback: DeviceCallback {
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+        urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
         //urlRequest
         urlRequest.httpBody = data
         let jsonString = String(data: data, encoding: .utf8)
@@ -242,6 +245,8 @@ fileprivate class _baseCallback: DeviceCallback {
         var identifier = UUID();
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
+        urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+        urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         urlRequest.httpBody = data
         let jsonString = String(data: data, encoding: .utf8)
@@ -315,36 +320,36 @@ fileprivate class _baseCallback: DeviceCallback {
         
     }
     
-     internal func postResource(data: Data,bundle:Bool) {
-         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
+     internal func postResource(data: Data, bundle: Bool) {
+         self.dispatchGroup.enter()
+         let timeUrl = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
-         var identifier = UUID();
+         var identifier = UUID()
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.httpBody = data
-         let jsonString = String(data: data, encoding: .utf8)
-         var result = urlRequest.allHTTPHeaderFields;
-         
+
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
+
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
-                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-            
+                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
              }
+
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
-                 if(statusCode <= 202 || statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 207){
+                 if (statusCode <= 202 || statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 207) {
+                     // В этом блоке ваша логика обработки успешного запроса
+
                      let backgroundQueue = DispatchQueue.global(qos: .background)
-                     
-                     // Помещаем выполнение создания фонового MOC в фоновую очередь
                      backgroundQueue.async {
-                         // Создаем фоновый MOC
                          let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
                          backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
-                         
-                         // Начинаем обработку удаления логов
+
                          let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
                          fetchRequest.returnsObjectsAsFaults = false
                          do {
@@ -353,40 +358,38 @@ fileprivate class _baseCallback: DeviceCallback {
                                  guard let objectData = object as? NSManagedObject else { continue }
                                  backgroundContext.delete(objectData)
                              }
-                             
-                             // Сохраняем изменения в фоновом контексте
                              try backgroundContext.save()
-                             
+
                              self.stopTimer()
                              self.interval = 1
                          } catch let error {
                              print("Delete all data error :", error)
                          }
-
                      }
 
-
-                 }
-                 else{
+                 } else {
                      self.callback.onSendData(mac: identifier, status: PlatformStatus.Failed)
                  }
              }
+
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
-                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
-                     
+                     DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)")
                  }
              }
+
+             self.dispatchGroup.leave() // Покидаем группу после обработки ответа
          }
          task.resume()
-         
      }
+
     internal func getTime(serial: String){
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data" + "?serial=\(serial)&type=effectiveDateTime"))!
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "GET"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
-        
+        urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+        urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
@@ -411,6 +414,7 @@ fileprivate class _baseCallback: DeviceCallback {
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
          urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.httpBody = data
@@ -439,7 +443,6 @@ fileprivate class _baseCallback: DeviceCallback {
      @objc func sendDataToServer() {
          DispatchQueue.main.async {
              if(self.isCoreDataNotEmpty()){
-                 let dispatchGroup = DispatchGroup()
                  let context = CoreDataStack.shared.persistentContainer.viewContext
                  let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                  
@@ -463,16 +466,15 @@ fileprivate class _baseCallback: DeviceCallback {
                              currentArray = []
                          }
                      }
-                     dispatchGroup.enter()
                      for dataSubArray in dataArray {
                          BundleTemplate.ApplyObservation(dataArray: dataSubArray)
                      }
-                     dispatchGroup.leave()
                  } catch {
                      DeviceService.getInstance().ls.addLogs(text: "Ошибка при получении объектов из Core Data: \(error)")
                  }
-                 dispatchGroup.wait()
-                 self.increaseInterval()
+                 self.dispatchGroup.notify(queue: .main) {
+                     self.increaseInterval()
+                 }
              }else{
                  self.stopTimer()
                  self.interval = 1;

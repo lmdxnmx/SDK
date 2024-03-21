@@ -7,7 +7,44 @@
 
 import Foundation
 import CoreBluetooth
+import CommonCrypto
 
+extension String {
+    var md5: [UInt8] {
+        let context = UnsafeMutablePointer<CC_MD5_CTX>.allocate(capacity: 1)
+        var digest = Array<UInt8>(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+        
+        CC_MD5_Init(context)
+        CC_MD5_Update(context, self, CC_LONG(lengthOfBytes(using: .utf8)))
+        CC_MD5_Final(&digest, context)
+        
+        context.deallocate()
+        
+        return digest
+    }
+}
+extension UUID{
+    init?(md5 bytes: [UInt8]) {
+        guard
+            bytes.count == CC_MD5_DIGEST_LENGTH
+        else { return nil }
+        
+        var bytes = bytes
+        bytes[6] &= 0x0f
+        bytes[6] |= 0x30
+        bytes[8] &= 0x3f
+        bytes[8] |= 0x80
+        
+        let uuid = (
+            bytes[0],  bytes[1],  bytes[2],  bytes[3],
+            bytes[4],  bytes[5],  bytes[6],  bytes[7],
+            bytes[8],  bytes[9],  bytes[10], bytes[11],
+            bytes[12], bytes[13], bytes[14], bytes[15]
+        )
+        
+        self.init(uuid: uuid)
+    }
+}
 public class EltaGlucometr:
     ConnectClass,
     DeviceScaningDelegate,
@@ -15,8 +52,12 @@ public class EltaGlucometr:
     ServicesDiscoveryDelegate,
     ReadWirteCharteristicDelegate{
     
+    
     internal var _identifer: UUID?
+    internal var _mac:String?
+    var peripheral: CBPeripheral?
     var serial:String = "";
+    static var mail:String = "";
     public var peripherals: [DisplayPeripheral] = []
     
     static var itter:Int = 0
@@ -30,7 +71,7 @@ public class EltaGlucometr:
     internal var internetManager: InternetManager = InternetManager.getManager()
     
     internal var measurements: Collector?
-    
+    var disconnectTimer: Timer? = nil
     public static var lastDateMeasurements: Date? = nil
     
     internal static let FormatPlatformTime: ISO8601DateFormatter = {
@@ -63,6 +104,7 @@ public class EltaGlucometr:
         manager.connectPeripheralDevice(peripheral: device, options: nil)
         EltaGlucometr.activeExecute = false
     }
+
     
     override public func search(timeout: UInt32) {
         manager.scaningDelegate = self
@@ -72,12 +114,43 @@ public class EltaGlucometr:
         manager.stopScan()
         callback?.searchedDevices(peripherals: peripherals)
     }
-    
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
         DeviceService.getInstance().ls.addLogs(text:String(describing:status))
     }
-    
+    func startDisconnectTimer() {
+        stopDisconnectTimer()
+        guard let peripheral = self.peripheral else {
+            return
+        }
+        disconnectTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: false) { [weak self] _ in
+            self?.manager.disconnectPeripheralDevice(peripheral: peripheral)
+            if let centralManager = self?.manager.centralManager {
+                centralManager.cancelPeripheralConnection(peripheral)
+            }
+        }
+    }
+
+     func stopDisconnectTimer() {
+         disconnectTimer?.invalidate()
+         disconnectTimer = nil
+     }
+
+     func resetDisconnectTimer() {
+         stopDisconnectTimer()
+         startDisconnectTimer()
+     }
+    func formatMACAddress(_ mac: String) -> String {
+        var formattedMAC = ""
+        for (index, char) in mac.enumerated() {
+            if index % 2 == 0 && index > 0 {
+                formattedMAC += ":"
+            }
+            formattedMAC.append(char)
+        }
+        return formattedMAC
+    }
+
     internal func bleManagerDiscover(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         if(peripheral.name != nil){
             for (index, foundPeripheral) in peripherals.enumerated() {
@@ -103,16 +176,23 @@ public class EltaGlucometr:
     
     // This method will be triggered once device will be connected.
     internal func bleManagerDidConnect(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        
         manager.discoveryDelegate = self
         manager.readWriteCharDelegate = self
         callback?.onStatusDevice(mac: _identifer!, status: BluetoothStatus.ConnectStart)
         peripheral.discoverServices(nil)
+        self.peripheral = peripheral
         EltaGlucometr.itter = 0
         self.measurements = Collector()
+        self.startDisconnectTimer()
     }
     
     // This method will be triggered once device will be disconnected.
     internal func bleManagerDisConect(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
+        self.stopDisconnectTimer()
         callback?.onStatusDevice(mac: _identifer!, status: BluetoothStatus.ConnectDisconnect)
         var observations: [(id:UUID,serial: String, model: String, time: Date, value: Double)] = []
         if(self.measurements == nil) { return; }
@@ -120,26 +200,57 @@ public class EltaGlucometr:
         callback?.onDisconnect(mac: peripheral.identifier, data: ret!)
         DispatchQueue.global().async {
             sleep(5)
-            let serial = self.measurements!.returnCharateristic(atribute: Atributes.SerialNumber) as! String
-            let model = self.measurements!.returnCharateristic(atribute: Atributes.ModelNumber) as! String
-            var measurements: Array<Measurements>
+            
+            if let serial = self.measurements!.returnCharateristic(atribute: Atributes.SerialNumber) as? String,let model =  self.measurements!.returnCharateristic(atribute: Atributes.ModelNumber) as? String{
+                var measurements: Array<Measurements>
                 measurements = (self.measurements?.returnMeasurements() as? Array<Measurements>)!
-            for measurement in measurements {
-                let time = measurement.get(atr: Atributes.TimeStamp) as! Date
-                let value = measurement.get(atr: Atributes.Glucose) as! Double
-                let observation = (id:UUID(),serial: serial, model: model, time: time, value: value)
-                observations.append(observation)
-            }
-            DeviceService.getInstance().applyObservation(connectClass: EltaGlucometr(), observations: observations)
-
-            if(measurements.count == 0){
-                self.callback?.onSendData(mac: peripheral.identifier, status: PlatformStatus.NoDataSend)
-            }
-        }
+                for measurement in measurements {
+                    let time = measurement.get(atr: Atributes.TimeStamp) as! Date
+                    let value = measurement.get(atr: Atributes.Glucose) as! Double
+                    let idTime = EltaGlucometr.FormatDeviceTime.string(from:time)
+                    if(EltaGlucometr.mail != ""){
+                        if let mac = self._mac {
+                            let concatenatedString = (EltaGlucometr.mail + mac + "\(idTime)").lowercased()
+                            let uuid = UUID(md5: concatenatedString.md5)
+                            let observation = (id:uuid!,serial: serial, model: model, time: time, value: value)
+                            observations.append(observation)
+                        }
+                    }
+                    else{
+                        let observation = (id:UUID(),serial: serial, model: model, time: time, value: value)
+                        observations.append(observation)
+                    }
+                }
+                
+                DeviceService.getInstance().applyObservation(connectClass: EltaGlucometr(), observations: observations)
+                
+                if(measurements.count == 0){
+                    self.callback?.onSendData(mac: peripheral.identifier, status: PlatformStatus.NoDataSend)
+                }
+            }else{
+                self.callback?.onSendData(mac: peripheral.identifier, status: PlatformStatus.Failed)
+    }}
+            
+            
+        
     }
     
     //ReadWirteCharteristicDelegate
     internal func bleManagerDidUpdateValueForChar(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
+        if(EltaGlucometr.itter > 999){
+            manager.disconnectPeripheralDevice(peripheral: peripheral)
+            if let centralManager = manager.centralManager {
+                centralManager.cancelPeripheralConnection(peripheral)
+            } else {
+                print("Central manager is nil")
+            }
+            EltaGlucometr.activeExecute = false
+            print("Disconnected by itter > 999")
+            return
+        }
         if let resultStr = String(data: characteristic.value!, encoding: .utf8) {
             if(resultStr.contains("enter pincode first")){
                 callback?.onStatusDevice(mac: peripheral.identifier, status: BluetoothStatus.NotCorrectPin)
@@ -153,6 +264,9 @@ public class EltaGlucometr:
                 }
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.SerialNumber, value: serial)
                 self.measurements!.addInfo(atr: Atributes.SerialNumber, value: serial)
+            }
+            if(resultStr.starts(with: "mac.")){
+                _mac = formatMACAddress(resultStr.replacingOccurrences(of: "mac.", with: ""))
             }
             if(resultStr.starts(with: "b")){
                 let data = resultStr.replacingOccurrences(of: "b", with: "").replacingOccurrences(of: "t", with: "").split(separator: ".")
@@ -171,6 +285,7 @@ public class EltaGlucometr:
                         print("Central manager is nil")
                     }
                     EltaGlucometr.activeExecute = false
+                    print("Disconnected by rd0")
                     return
                 }
                 let dateStr: String = String(measurement.prefix(12))
@@ -194,6 +309,8 @@ public class EltaGlucometr:
                             print("Central manager is nil")
                         }
                         EltaGlucometr.activeExecute = false
+                        print("Disconnected by cacheData")
+                        return
                     }
                 }
                 let temperature: Double = Double(temperatureStr)! / 10
@@ -207,18 +324,35 @@ public class EltaGlucometr:
                 self.measurements!.addMeasurements(Object: m)
                 EltaGlucometr.itter += 1
                 getRDS(device: peripheral)
+                resetDisconnectTimer()
             }
         }
     }
     
-    internal func bleManagerDidWriteValueForChar(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?){ }
+    internal func bleManagerDidWriteValueForChar(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?){
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
+    }
     
-    internal func bleManagerDidUpdateValueForDesc(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?){}
+    internal func bleManagerDidUpdateValueForDesc(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?){
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
+    }
     
-    internal func bleManagerDidWriteValueForDesc(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?){}
+    internal func bleManagerDidWriteValueForDesc(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?){
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
+    }
 
     //Обработчик:
-    internal func bleManagerDidUpdateNotificationState(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?){ }
+    internal func bleManagerDidUpdateNotificationState(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?){
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
+    }
     
     //ServicesDiscoveryDelegate
     internal func bleManagerDiscoverService (_ peripheral: CBPeripheral, didDiscoverServices error: Error?)
@@ -233,11 +367,15 @@ public class EltaGlucometr:
     }
     internal func bleManagerDiscoverCharacteristics (_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
     {
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
         rxtxService = service
         rxCharacteistic = rxtxService!.characteristics![0]
         txCharacteistic = rxtxService!.characteristics![1]
         peripheral.setNotifyValue(true, for: txCharacteistic!)
         setPin(device: peripheral)
+        getMac(device: peripheral)
         getSerial(device: peripheral)
         getDisplay(device: peripheral)
         setTime(device: peripheral)
@@ -246,6 +384,9 @@ public class EltaGlucometr:
     }
     internal func bleManagerDiscoverDescriptors(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: Error?)
     {
+        if let error = error{
+            callback?.onExpection(mac: peripheral.identifier, ex: error)
+        }
         DeviceService.getInstance().ls.addLogs(text:"bleManagerDiscoverDescriptors")
     }
     
@@ -269,7 +410,10 @@ public class EltaGlucometr:
         let response: Data = String("serial").data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }
-    
+    internal func getMac(device: CBPeripheral){
+        let response: Data = String("mac").data(using: .utf8)!
+        manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
+    }
     internal func setTime(device: CBPeripheral){
         let timeNow = Date()
         let time = EltaGlucometr.FormatDeviceTime.string(from: timeNow)

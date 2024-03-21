@@ -131,7 +131,6 @@ import CoreData
              } catch let error {
                  print("Delete all data error :", error)
              }
-             print("4")
          }
          print("clearLOGS")
      }
