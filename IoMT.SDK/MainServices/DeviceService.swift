@@ -381,7 +381,7 @@ public class DeviceService {
     public func clearLogs(){
         ls.clearLogsFromCoreData();
     }
-    
+}
     ///Структура для сохранения информации об устройтсве
     public struct DisplayPeripheral: Hashable {
         public var peripheral: CBPeripheral?
@@ -423,4 +423,4 @@ public class DeviceService {
             return data[atr]
         }
     }
-}
+
