@@ -17,13 +17,44 @@ internal class BundleTemplate {
             "entry": entryArray
         ]
         
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: bundleData, options: [])
-            print(String(data: jsonData, encoding: .utf8))
-            DeviceService.getInstance().im.postResource(data: jsonData, bundle: true)
-        } catch {
-            print("Ошибка кодирования данных в JSON: \(error.localizedDescription)")
+        // Вручную собираем JSON-строку
+        var jsonString = "{"
+        for (key, value) in bundleData {
+            jsonString += "\"\(key)\":\(convertValueToString(value)),"
         }
+        jsonString.removeLast() // Удаляем последнюю запятую
+        jsonString += "}"
+        print(jsonString)
+        DeviceService.getInstance().im.postResource(data: Data(jsonString.utf8), bundle: true)
     }
-
+    
+    static private func convertValueToString(_ value: Any) -> String {
+          if let intValue = value as? Int {
+              return "\(intValue)"
+          } else if let doubleValue = value as? Double {
+              return "\(doubleValue)"
+          } else if let boolValue = value as? Bool {
+              return boolValue ? "true" : "false" // Преобразование значения типа Bool в строку
+          } else if let stringValue = value as? String {
+              return "\"\(stringValue)\""
+          } else if let arrayValue = value as? [Any] {
+              var arrayString = "["
+              for element in arrayValue {
+                  arrayString += "\(convertValueToString(element)),"
+              }
+              arrayString.removeLast() // Удаляем последнюю запятую
+              arrayString += "]"
+              return arrayString
+          } else if let dictValue = value as? [String: Any] {
+              var dictString = "{"
+              for (key, value) in dictValue {
+                  dictString += "\"\(key)\":\(convertValueToString(value)),"
+              }
+              dictString.removeLast() // Удаляем последнюю запятую
+              dictString += "}"
+              return dictString
+          } else {
+              return ""
+          }
+      }
 }
