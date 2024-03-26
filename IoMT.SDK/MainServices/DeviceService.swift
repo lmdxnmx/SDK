@@ -237,29 +237,31 @@ public class DeviceService {
             if time > savedDate {
                 // Делаем запрос
                 let identifier = UUID()
-                let jsonString = String(data: FhirTemplate.Glucometer(serial: serial,id:id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8)
-                
-                let context = CoreDataStack.shared.viewContext
-                let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
-                do {
-                    let existingEntities = try context.fetch(fetchRequest)
-                    if existingEntities.isEmpty {
-                        let newTask = Entity(context: context)
-                        newTask.title = id
-                        newTask.body = jsonString
-                        do {
-                            try context.save()
-                        } catch {
-                            DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                if let glucometerData = FhirTemplate.Glucometer(serial: serial, id: id, model: model, effectiveDateTime: time, value: value),
+                   let jsonString = String(data: glucometerData, encoding: .utf8) {
+                    
+                    let context = CoreDataStack.shared.viewContext
+                    let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
+                    do {
+                        let existingEntities = try context.fetch(fetchRequest)
+                        if existingEntities.isEmpty {
+                            let newTask = Entity(context: context)
+                            newTask.title = id
+                            newTask.body = jsonString
+                            do {
+                                try context.save()
+                            } catch {
+                                DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                            }
                         }
+                    } catch {
+                        DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
                     }
-                } catch {
-                    DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                    
+                    // Обновляем дату в UserDefaults
+                    UserDefaults.standard.set(time, forKey: serial)
                 }
-                
-                // Обновляем дату в UserDefaults
-                UserDefaults.standard.set(time, forKey: serial)
             }else{
                 DeviceService.getInstance().ls.addLogs(text:"Эти измерения уже были")
             }
@@ -270,74 +272,81 @@ public class DeviceService {
     }
     public func applyObservation(connectClass: ConnectClass, observations: [(id: UUID, serial: String, model: String, time: Date, value: Double)]) {
         guard let instanceDS = instanceDS else { return }
-        
-        let context = CoreDataStack.shared.viewContext
+
+        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
+        fetchRequest.returnsObjectsAsFaults = false
         var entitiesToSave: [Entity] = [] // Массив для хранения объектов, которые нужно сохранить
-        
-        
+
         guard let firstObservation = observations.first else { return }
         var largestTime: Date? = firstObservation.time // Переменная для хранения наибольшего времени
         let savedDate = UserDefaults.standard.object(forKey: firstObservation.serial) as? Date
-        
-        if savedDate != nil{
+
+        // Флаг для отслеживания необходимости сохранения контекста
+        var needsSave = false
+
+        if savedDate != nil {
             for observation in observations {
                 let (id, serial, model, time, value) = observation
-                
+
                 // Проверяем, что время наблюдения больше времени, хранящегося в UserDefaults для данного серийного номера
                 if let savedDate = savedDate, time > savedDate {
-                    
                     if connectClass is EltaGlucometr {
-                        if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, id: id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
-                            let entity = Entity(context: context)
+                        if let glucometerData = FhirTemplate.Glucometer(serial: serial, id: id, model: model, effectiveDateTime: time, value: value),
+                            let jsonString = String(data: glucometerData, encoding: .utf8) {
+                            let entity = Entity(context: backgroundContext)
                             entity.title = id
                             entity.body = jsonString
                             entitiesToSave.append(entity)
-                            
+
                             if let currentLargestTime = largestTime, time > currentLargestTime {
                                 largestTime = time
-                            } else {
                             }
+                            // Устанавливаем флаг, что требуется сохранение
+                            needsSave = true
                         }
                     }
-                    
                 }
             }
             UserDefaults.standard.set(largestTime, forKey: firstObservation.serial)
-            
         }
-        
+
         // Если времени в UserDefaults нет, отправляем все измерения и устанавливаем время для последнего измерения как время в UserDefaults
         if savedDate == nil {
             for observation in observations {
                 let (id, serial, model, time, value) = observation
                 if connectClass is EltaGlucometr {
                     if let jsonString = String(data: FhirTemplate.Glucometer(serial: serial, id: id, model: model, effectiveDateTime: time, value: value)!, encoding: .utf8) {
-                        let entity = Entity(context: context)
+                        let entity = Entity(context: backgroundContext)
                         entity.title = id
                         entity.body = jsonString
                         entitiesToSave.append(entity)
                         if let currentLargestTime = largestTime, time > currentLargestTime {
                             largestTime = time
-                        } else {
-                            
                         }
+                        // Устанавливаем флаг, что требуется сохранение
+                        needsSave = true
                     }
                 }
             }
             // Устанавливаем время для последнего измерения как время в UserDefaults
-            print(largestTime)
-            
             UserDefaults.standard.set(largestTime, forKey: firstObservation.serial)
-            
         }
-        
-        // Сохраняем все объекты из массива в контекст CoreData
-        do {
-            try context.save()
-        } catch {
-            DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
+
+        if needsSave {
+            // Сохраняем все объекты из массива в контекст CoreData
+            backgroundContext.perform {
+                do {
+                    try backgroundContext.save()
+                } catch {
+                    DeviceService.getInstance().ls.addLogs(text: "Ошибка сохранения: \(error.localizedDescription)")
+                }
+            }
         }
     }
+
     
     
     public func getLogs() -> [Logs] {

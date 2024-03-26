@@ -38,7 +38,7 @@ fileprivate class _baseCallback: DeviceCallback {
     }
     var timer: Timer? = nil
     var interval: TimeInterval = 1
-
+     private var isSavingContext = false;
      private var timerIsScheduled = false
     
      internal init(login: String, password: String, debug: Bool, callback: DeviceCallback) {
@@ -59,26 +59,47 @@ fileprivate class _baseCallback: DeviceCallback {
              self.instanceId = newUUID
          }
         sharedManager = self
-        NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataStack.shared.persistentContainer.viewContext)
+         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+         backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: nil)
     }
      let dispatchGroup = DispatchGroup()
-     
      @objc func contextDidChange(_ notification: Notification) {
-         guard let userInfo = notification.userInfo else { return }
-         
-         if let updatedObjects = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject>, !updatedObjects.isEmpty {
-             // Обработка обновленных объектов
-         }
+         guard !isSavingContext else {
+                    // Пропускаем сохранение, если уже происходит сохранение контекста
+                    return
+                }
 
-         // В вашем методе обработки уведомлений contextDidChange:
-         if let insertedObjects = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject>, !insertedObjects.isEmpty {
-             // Обработка вставленных объектов
+                // Установим флаг перед сохранением контекста
+                isSavingContext = true
+                defer {
+                    // Сбрасываем флаг после сохранения контекста, чтобы разрешить следующее сохранение
+                    isSavingContext = false
+                }
+
+             guard let userInfo = notification.userInfo else { return }
+
+         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+         backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+
+             var updatedObjects: [NSManagedObject] = []
+             var insertedObjects: [NSManagedObject] = []
+             var deletedObjects: [NSManagedObject] = []
+
+             if let updatedSet = userInfo[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
+                 updatedObjects = Array(updatedSet)
+             }
+             if let insertedSet = userInfo[NSInsertedObjectsKey] as? Set<NSManagedObject> {
+                 insertedObjects = Array(insertedSet)
+             }
+             if let deletedSet = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> {
+                 deletedObjects = Array(deletedSet)
+             }
+
              for object in insertedObjects {
-                 // Проверяем тип объекта
                  guard let entity = object.entity as? NSEntityDescription, entity.name == "Entity" else {
                      continue
                  }
-                 
                  // Действия, если объект типа Entity
                  if self.timer == nil && self.isCoreDataNotEmpty() && !self.timerIsScheduled {
                      // Отмечаем, что таймер уже запланирован
@@ -88,7 +109,7 @@ fileprivate class _baseCallback: DeviceCallback {
                      self.stopTimer()
                      
                      // Создаем и запускаем таймер только если его нет
-                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                          self.timer = Timer.scheduledTimer(timeInterval: self.interval, target: self, selector: #selector(self.sendDataToServer), userInfo: nil, repeats: false)
                          self.timerIsScheduled = false // Сбрасываем флаг после создания таймера
                      }
@@ -97,16 +118,8 @@ fileprivate class _baseCallback: DeviceCallback {
                      break
                  }
              }
-         }
 
-
-
-         
-         if let deletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject>, !deletedObjects.isEmpty {
-
-             // Обработка удаленных объектов
              for object in deletedObjects {
-                 // Проверяем тип объекта
                  guard let entity = object.entity as? NSEntityDescription, entity.name == "Entity" else {
                      continue
                  }
@@ -117,16 +130,22 @@ fileprivate class _baseCallback: DeviceCallback {
                      self.interval = 1
                  }
              }
+
+             do {
+                 try backgroundContext.save()
+             } catch {
+                 print("Failed to save context: \(error)")
+             }
          }
-     }
 
     
     func isCoreDataNotEmpty() -> Bool {
-        let context = CoreDataStack.shared.persistentContainer.viewContext
+        let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
         
         do {
-            let count = try context.count(for: fetchRequest)
+            let count = try backgroundContext.count(for: fetchRequest)
             return count > 0
         } catch {
             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении объектов из Core Data: \(error)")
@@ -174,7 +193,8 @@ fileprivate class _baseCallback: DeviceCallback {
             if let error = error {
                 self.callback.onExpection(mac: identifier, ex: error)
                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                let context = CoreDataStack.shared.viewContext
+                let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
                 do{
@@ -205,7 +225,8 @@ fileprivate class _baseCallback: DeviceCallback {
                 }
                 else{
                     if(statusCode != 400 && statusCode != 401  && statusCode != 403){
-                        let context = CoreDataStack.shared.viewContext
+                        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                        context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
                         do{
@@ -258,7 +279,8 @@ fileprivate class _baseCallback: DeviceCallback {
                 self.callback.onExpection(mac: identifier, ex: error)
                 
                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-                let context = CoreDataStack.shared.viewContext
+                let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                 let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
                 do{
@@ -285,7 +307,8 @@ fileprivate class _baseCallback: DeviceCallback {
                 }
                 else{
                     if(statusCode != 400 && statusCode != 401  && statusCode != 403){
-                        let context = CoreDataStack.shared.viewContext
+                        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                        context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                         fetchRequest.predicate = NSPredicate(format: "title == %@", identifier as CVarArg)
                         do{
@@ -324,7 +347,7 @@ fileprivate class _baseCallback: DeviceCallback {
          self.dispatchGroup.enter()
          let timeUrl = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
-         var identifier = UUID()
+         let identifier = UUID()
          urlRequest.httpMethod = "POST"
          urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
@@ -356,6 +379,7 @@ fileprivate class _baseCallback: DeviceCallback {
                              let results = try backgroundContext.fetch(fetchRequest)
                              for object in results {
                                  guard let objectData = object as? NSManagedObject else { continue }
+                                 guard objectData.managedObjectContext == backgroundContext else { continue }
                                  backgroundContext.delete(objectData)
                              }
                              try backgroundContext.save()
@@ -443,7 +467,8 @@ fileprivate class _baseCallback: DeviceCallback {
      @objc func sendDataToServer() {
          DispatchQueue.main.async {
              if(self.isCoreDataNotEmpty()){
-                 let context = CoreDataStack.shared.persistentContainer.viewContext
+                 let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                 context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
                  let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
                  
                  var dataArray: [[Data]] = [] // Массив массивов для сбора данных
