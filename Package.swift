@@ -18,7 +18,7 @@ let package = Package(
     targets: [
         .target(
             name: "IoMT.SDK",
-            dependencies: ["ReachabilitySwift"],
+            dependencies: ["Reachability"],
             path: "IoMT.SDK"
         )
     ],

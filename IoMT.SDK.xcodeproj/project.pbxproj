@@ -18,6 +18,7 @@
 		7382DE152B8340DF00BACD76 /* Entity+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE112B8340DF00BACD76 /* Entity+CoreDataProperties.swift */; };
 		7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */; };
 		7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE1D2B87268700BACD76 /* BundleTemplate.swift */; };
+		739708972BB402C7003B1D3B /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 739708962BB402C7003B1D3B /* Reachability */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */,
+				739708972BB402C7003B1D3B /* Reachability in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +196,9 @@
 			dependencies = (
 			);
 			name = IoMT.SDK;
+			packageProductDependencies = (
+				739708962BB402C7003B1D3B /* Reachability */,
+			);
 			productName = IoMT.SDK;
 			productReference = 2F2131292AB8564C007F8FD2 /* libIoMT.SDK.a */;
 			productType = "com.apple.product-type.library.static";
@@ -223,6 +228,9 @@
 				Base,
 			);
 			mainGroup = 2F2131202AB8564C007F8FD2;
+			packageReferences = (
+				739708952BB402C7003B1D3B /* XCRemoteSwiftPackageReference "Reachability" */,
+			);
 			productRefGroup = 2F21312A2AB8564C007F8FD2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -458,6 +466,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		739708952BB402C7003B1D3B /* XCRemoteSwiftPackageReference "Reachability" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift";
+			requirement = {
+				kind = exactVersion;
+				version = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		739708962BB402C7003B1D3B /* Reachability */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 739708952BB402C7003B1D3B /* XCRemoteSwiftPackageReference "Reachability" */;
+			productName = Reachability;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */ = {
