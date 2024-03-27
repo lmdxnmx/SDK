@@ -63,6 +63,8 @@
 		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE1D2B87268700BACD76 /* BundleTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleTemplate.swift; sourceTree = "<group>"; };
 		739708A02BB43F4E003B1D3B /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		739708B02BB45ECC003B1D3B /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
+		739708B12BB45ECC003B1D3B /* IoMT_SDK_main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IoMT_SDK_main.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -94,6 +96,7 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
+				739708AD2BB45ECC003B1D3B /* Sources */,
 				739708A02BB43F4E003B1D3B /* Package.swift */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
@@ -179,6 +182,31 @@
 				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
 			);
 			path = DataBase;
+			sourceTree = "<group>";
+		};
+		739708AD2BB45ECC003B1D3B /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				739708AE2BB45ECC003B1D3B /* IoMT.SDK-main */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		739708AE2BB45ECC003B1D3B /* IoMT.SDK-main */ = {
+			isa = PBXGroup;
+			children = (
+				739708B22BB46252003B1D3B /* Resources */,
+				739708B12BB45ECC003B1D3B /* IoMT_SDK_main.swift */,
+			);
+			path = "IoMT.SDK-main";
+			sourceTree = "<group>";
+		};
+		739708B22BB46252003B1D3B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				739708AF2BB45ECC003B1D3B /* Observation-2.xcdatamodeld */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -510,6 +538,16 @@
 				7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */,
 			);
 			currentVersion = 7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */;
+			path = "Observation-2.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		739708AF2BB45ECC003B1D3B /* Observation-2.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				739708B02BB45ECC003B1D3B /* Observation-2.xcdatamodel */,
+			);
+			currentVersion = 739708B02BB45ECC003B1D3B /* Observation-2.xcdatamodel */;
 			path = "Observation-2.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
