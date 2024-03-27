@@ -13,12 +13,11 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/ashleymills/Reachability.swift.git", from: "5.0.0")
     ],
     targets: [
         .target(
             name: "IoMT.SDK",
-            dependencies: ["Reachability.swift"],
+            dependencies: [],
             path: "IoMT.SDK"
         )
     ],
