@@ -49,7 +49,7 @@ fileprivate class _baseCallback: DeviceCallback {
         else{ baseAddress = "https://dev.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress))!
         self.callback = callback
-        self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        self.sdkVersion = Bundle.module.infoDictionary?["CFBundleShortVersionString"] as? String
          if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId"),
             let storedUUID = UUID(uuidString: storedUUIDString) {
              self.instanceId = storedUUID
