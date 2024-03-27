@@ -19,6 +19,7 @@
 		7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */; };
 		7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE1D2B87268700BACD76 /* BundleTemplate.swift */; };
 		739708972BB402C7003B1D3B /* Reachability in Frameworks */ = {isa = PBXBuildFile; productRef = 739708962BB402C7003B1D3B /* Reachability */; };
+		7397089A2BB40EA5003B1D3B /* IoMT.SDK in Frameworks */ = {isa = PBXBuildFile; productRef = 739708992BB40EA5003B1D3B /* IoMT.SDK */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +62,6 @@
 		7382DE112B8340DF00BACD76 /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE1D2B87268700BACD76 /* BundleTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleTemplate.swift; sourceTree = "<group>"; };
-		739708932BB3E78E003B1D3B /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -71,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7397089A2BB40EA5003B1D3B /* IoMT.SDK in Frameworks */,
 				B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */,
 				739708972BB402C7003B1D3B /* Reachability in Frameworks */,
 			);
@@ -92,7 +93,6 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
-				739708932BB3E78E003B1D3B /* Package.swift */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
@@ -198,6 +198,7 @@
 			name = IoMT.SDK;
 			packageProductDependencies = (
 				739708962BB402C7003B1D3B /* Reachability */,
+				739708992BB40EA5003B1D3B /* IoMT.SDK */,
 			);
 			productName = IoMT.SDK;
 			productReference = 2F2131292AB8564C007F8FD2 /* libIoMT.SDK.a */;
@@ -230,6 +231,7 @@
 			mainGroup = 2F2131202AB8564C007F8FD2;
 			packageReferences = (
 				739708952BB402C7003B1D3B /* XCRemoteSwiftPackageReference "Reachability" */,
+				739708982BB40EA5003B1D3B /* XCRemoteSwiftPackageReference "SDK" */,
 			);
 			productRefGroup = 2F21312A2AB8564C007F8FD2 /* Products */;
 			projectDirPath = "";
@@ -476,6 +478,14 @@
 				version = 5.0.0;
 			};
 		};
+		739708982BB40EA5003B1D3B /* XCRemoteSwiftPackageReference "SDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lmdxnmx/SDK";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -483,6 +493,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 739708952BB402C7003B1D3B /* XCRemoteSwiftPackageReference "Reachability" */;
 			productName = Reachability;
+		};
+		739708992BB40EA5003B1D3B /* IoMT.SDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 739708982BB40EA5003B1D3B /* XCRemoteSwiftPackageReference "SDK" */;
+			productName = IoMT.SDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 
