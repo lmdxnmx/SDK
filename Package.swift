@@ -18,7 +18,8 @@ let package = Package(
     targets: [
         .target(
             name: "IoMT.SDK",
-            exclude:["Observation-2.xcdatamodeld"]
+            resources: [
+                       .process("Observation-2.xcdatamodeld")]
             dependencies: [.product(name: "Reachability", package: "Reachability.swift")],
             path: "IoMT.SDK"
         )
