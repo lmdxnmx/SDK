@@ -63,13 +63,6 @@
 		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE1D2B87268700BACD76 /* BundleTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleTemplate.swift; sourceTree = "<group>"; };
 		739708B42BB46670003B1D3B /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		739708B82BB46820003B1D3B /* Logs+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logs+CoreDataClass.swift"; sourceTree = "<group>"; };
-		739708B92BB46820003B1D3B /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		739708BB2BB46820003B1D3B /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
-		739708BC2BB46820003B1D3B /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		739708BD2BB46820003B1D3B /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = "<group>"; };
-		739708BE2BB46820003B1D3B /* Logs+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logs+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		739708C02BB4692A003B1D3B /* IoMT_SDK_main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IoMT_SDK_main.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,7 +94,6 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
-				739708B52BB46820003B1D3B /* Sources */,
 				739708B42BB46670003B1D3B /* Package.swift */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
@@ -187,36 +179,6 @@
 				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
 			);
 			path = DataBase;
-			sourceTree = "<group>";
-		};
-		739708B52BB46820003B1D3B /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				739708B62BB46820003B1D3B /* IoMT.SDK-main */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		739708B62BB46820003B1D3B /* IoMT.SDK-main */ = {
-			isa = PBXGroup;
-			children = (
-				739708B72BB46820003B1D3B /* Resources */,
-				739708C02BB4692A003B1D3B /* IoMT_SDK_main.swift */,
-			);
-			path = "IoMT.SDK-main";
-			sourceTree = "<group>";
-		};
-		739708B72BB46820003B1D3B /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				739708B82BB46820003B1D3B /* Logs+CoreDataClass.swift */,
-				739708B92BB46820003B1D3B /* CoreDataStack.swift */,
-				739708BA2BB46820003B1D3B /* Observation-2.xcdatamodeld */,
-				739708BC2BB46820003B1D3B /* Entity+CoreDataProperties.swift */,
-				739708BD2BB46820003B1D3B /* Entity+CoreDataClass.swift */,
-				739708BE2BB46820003B1D3B /* Logs+CoreDataProperties.swift */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -548,16 +510,6 @@
 				7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */,
 			);
 			currentVersion = 7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */;
-			path = "Observation-2.xcdatamodeld";
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		739708BA2BB46820003B1D3B /* Observation-2.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				739708BB2BB46820003B1D3B /* Observation-2.xcdatamodel */,
-			);
-			currentVersion = 739708BB2BB46820003B1D3B /* Observation-2.xcdatamodel */;
 			path = "Observation-2.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
