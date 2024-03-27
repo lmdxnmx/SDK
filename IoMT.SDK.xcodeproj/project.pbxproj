@@ -69,7 +69,7 @@
 		739708BC2BB46820003B1D3B /* Entity+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		739708BD2BB46820003B1D3B /* Entity+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Entity+CoreDataClass.swift"; sourceTree = "<group>"; };
 		739708BE2BB46820003B1D3B /* Logs+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Logs+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		739708BF2BB46820003B1D3B /* IoMT_SDK_main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IoMT_SDK_main.swift; sourceTree = "<group>"; };
+		739708C02BB4692A003B1D3B /* IoMT_SDK_main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IoMT_SDK_main.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -201,7 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				739708B72BB46820003B1D3B /* Resources */,
-				739708BF2BB46820003B1D3B /* IoMT_SDK_main.swift */,
+				739708C02BB4692A003B1D3B /* IoMT_SDK_main.swift */,
 			);
 			path = "IoMT.SDK-main";
 			sourceTree = "<group>";
