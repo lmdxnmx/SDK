@@ -19,6 +19,10 @@ let package = Package(
         .target(
             name: "IoMT.SDK",
             dependencies: [.product(name: "Reachability", package: "Reachability.swift")],
+            resources: [
+                .copy("Observation-1.xcdatamodeld"),
+                .copy("Observation-2.xcdatamodeld")
+            ]
             path: "IoMT.SDK"
         )
     ],
