@@ -23,6 +23,7 @@ public class DoctisFetal:
     var peripheral: CBPeripheral?
     var serial:String = "";
     static var mail:String = "";
+    var decoder = LMTPDecoder()
     public var peripherals: [DisplayPeripheral] = []
     
     static var itter:Int = 0
