@@ -135,6 +135,14 @@ public class DeviceService {
             }
             return
         }
+        if(connectClass is DoctisFetal){
+                 if(!DoctisFetal.activeExecute){
+                     DispatchQueue.global().async {
+                         connectClass.connect(device: device.peripheral!)
+                     }
+                 }
+                 return
+             }
         self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
     }
     
@@ -168,6 +176,14 @@ public class DeviceService {
             }
             return
         }
+        if(connectClass is DoctisFetal){
+                 if(!DoctisFetal.activeExecute){
+                     DispatchQueue.global().async {
+                         connectClass.connect(device: device.peripheral!)
+                     }
+                 }
+                 return
+             }
         self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
     }
     ///Поиск ble устройств, конечный список записывается в шаблон для подключения
