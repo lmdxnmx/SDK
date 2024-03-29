@@ -45,6 +45,22 @@ extension UUID{
         self.init(uuid: uuid)
     }
 }
+extension Date {
+    var bleTime: String {
+        let calendar = Calendar(identifier: .gregorian)
+        let timeZone = TimeZone(identifier: "UTC")!
+        let components = calendar.dateComponents(in: timeZone, from: self)
+        return [
+            String(format: "%02d", (components.year ?? 0) % 100),
+            String(format: "%02d", components.month ?? 0),
+            String(format: "%02d", components.day ?? 0),
+            String(format: "%02d", components.hour ?? 0),
+            String(format: "%02d", components.minute ?? 0),
+            String(format: "%02d", components.second ?? 0)
+        ].joined()
+    }
+}
+
 public class EltaGlucometr:
     ConnectClass,
     DeviceScaningDelegate,
@@ -416,7 +432,7 @@ public class EltaGlucometr:
     }
     internal func setTime(device: CBPeripheral){
         let timeNow = Date()
-        let time = EltaGlucometr.FormatDeviceTime.string(from: timeNow)
+        let time = Date().bleTime
         DeviceService.getInstance().ls.addLogs(text:"Settime: " + String(describing:time))
         let response: Data = String("settime." + time).data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
