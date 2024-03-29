@@ -123,7 +123,6 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
-				73298B612BB704300023282D /* IosLib */,
 				73298B542BB6E5960023282D /* Decoder */,
 				7382DDD12B7B407000BACD76 /* DataBase */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
@@ -184,6 +183,7 @@
 		73298B542BB6E5960023282D /* Decoder */ = {
 			isa = PBXGroup;
 			children = (
+				73298B5F2BB6FECA0023282D /* module.modulemap */,
 				73298B552BB6E5960023282D /* lame */,
 				73298B562BB6E5960023282D /* LKCPlayManager.m */,
 				73298B572BB6E5960023282D /* LKCPlayManager.h */,
@@ -193,14 +193,6 @@
 				73298B5B2BB6E5960023282D /* lame.h */,
 			);
 			path = Decoder;
-			sourceTree = "<group>";
-		};
-		73298B612BB704300023282D /* IosLib */ = {
-			isa = PBXGroup;
-			children = (
-				73298B5F2BB6FECA0023282D /* module.modulemap */,
-			);
-			path = IosLib;
 			sourceTree = "<group>";
 		};
 		7382DDD12B7B407000BACD76 /* DataBase */ = {
@@ -370,7 +362,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
-				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
+				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/Decoder/module.modulemap";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -425,7 +417,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
-				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
+				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/Decoder/module.modulemap";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -449,7 +441,7 @@
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
 					"$(PROJECT_DIR)/IoMT.SDK/IosLib",
 				);
-				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
+				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/Decoder/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -474,7 +466,7 @@
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
 					"$(PROJECT_DIR)/IoMT.SDK/IosLib",
 				);
-				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
+				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/Decoder/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
