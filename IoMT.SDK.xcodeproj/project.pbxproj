@@ -104,7 +104,6 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
-				73298B5F2BB6FECA0023282D /* module.modulemap */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
@@ -124,6 +123,7 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
+				73298B612BB704300023282D /* IosLib */,
 				73298B542BB6E5960023282D /* Decoder */,
 				7382DDD12B7B407000BACD76 /* DataBase */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
@@ -193,6 +193,14 @@
 				73298B5B2BB6E5960023282D /* lame.h */,
 			);
 			path = Decoder;
+			sourceTree = "<group>";
+		};
+		73298B612BB704300023282D /* IosLib */ = {
+			isa = PBXGroup;
+			children = (
+				73298B5F2BB6FECA0023282D /* module.modulemap */,
+			);
+			path = IosLib;
 			sourceTree = "<group>";
 		};
 		7382DDD12B7B407000BACD76 /* DataBase */ = {
@@ -438,7 +446,7 @@
 					"$(PROJECT_DIR)/IoMT.SDK",
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
 				);
-				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "/Users/nikosarev/Downloads/IoMT.SDK-main/IoMT.SDK-main/module.modulemap";
+				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -462,7 +470,7 @@
 					"$(PROJECT_DIR)/IoMT.SDK",
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
 				);
-				MODULEMAP_PRIVATE_FILE = "/Users/nikosarev/Downloads/IoMT.SDK-main/IoMT.SDK-main/module.modulemap";
+				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

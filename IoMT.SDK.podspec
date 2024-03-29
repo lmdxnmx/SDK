@@ -15,6 +15,8 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.0'
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
+   s.pod_target_xcconfig = {
+    'SWIFT_INCLUDE_PATHS' => 'IoMT.SDK/IosLib'}
   spec.preserve_paths = 'IoMT.SDK/*'
   spec.dependency 'ReachabilitySwift', '~> 5.0'
 end
