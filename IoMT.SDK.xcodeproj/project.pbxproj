@@ -445,6 +445,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/IoMT.SDK",
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
+					"$(PROJECT_DIR)/IoMT.SDK/IosLib",
 				);
 				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
@@ -469,6 +470,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/IoMT.SDK",
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
+					"$(PROJECT_DIR)/IoMT.SDK/IosLib",
 				);
 				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/IosLib/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
