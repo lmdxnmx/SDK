@@ -62,7 +62,7 @@
 		73298B592BB6E5960023282D /* LMTPDecoder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = LMTPDecoder.a; sourceTree = "<group>"; };
 		73298B5A2BB6E5960023282D /* LKCDecodeHeart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKCDecodeHeart.h; sourceTree = "<group>"; };
 		73298B5B2BB6E5960023282D /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
-		73298B622BBAF0E30023282D /* IoMT.SDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = IoMT.SDK.modulemap; sourceTree = "<group>"; };
+		73298B632BBAF6D70023282D /* IoMT-SDK-umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IoMT-SDK-umbrella.h"; sourceTree = "<group>"; };
 		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7382DDE02B7B7ABF00BACD76 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		7382DDEA2B7DE3D800BACD76 /* LogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogService.swift; sourceTree = "<group>"; };
@@ -183,7 +183,6 @@
 		73298B542BB6E5960023282D /* Decoder */ = {
 			isa = PBXGroup;
 			children = (
-				73298B622BBAF0E30023282D /* IoMT.SDK.modulemap */,
 				73298B552BB6E5960023282D /* lame */,
 				73298B562BB6E5960023282D /* LKCPlayManager.m */,
 				73298B572BB6E5960023282D /* LKCPlayManager.h */,
@@ -191,6 +190,7 @@
 				73298B592BB6E5960023282D /* LMTPDecoder.a */,
 				73298B5A2BB6E5960023282D /* LKCDecodeHeart.h */,
 				73298B5B2BB6E5960023282D /* lame.h */,
+				73298B632BBAF6D70023282D /* IoMT-SDK-umbrella.h */,
 			);
 			path = Decoder;
 			sourceTree = "<group>";
