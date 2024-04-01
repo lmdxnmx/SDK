@@ -104,6 +104,7 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
+				73298B632BBAF6D70023282D /* IoMT-SDK-umbrella.h */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
@@ -190,7 +191,6 @@
 				73298B592BB6E5960023282D /* LMTPDecoder.a */,
 				73298B5A2BB6E5960023282D /* LKCDecodeHeart.h */,
 				73298B5B2BB6E5960023282D /* lame.h */,
-				73298B632BBAF6D70023282D /* IoMT-SDK-umbrella.h */,
 			);
 			path = Decoder;
 			sourceTree = "<group>";
