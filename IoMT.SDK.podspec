@@ -10,10 +10,9 @@ Pod::Spec.new do |spec|
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
-  spec.source_files = 'IoMT.SDK/**/*.{swift,h,m}'
-  spec.pod_target_xcconfig = { 'MODULEMAP_FILE' => 'module.modulemap' }
-  spec.module_map    = 'module.modulemap'
-  spec.private_header_files = 'IoMT.SDK/Decoder/*.h'
+  spec.source_files = 'IoMT.SDK/**/*.{swift,h}'
+  spec.pod_target_xcconfig = { 'MODULEMAP_FILE' => 'IoMT.SDK/IoMT.SDK.modulemap' }
+  spec.module_map    = 'IoMT.SDK/IoMT.SDK.modulemap'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.0'
