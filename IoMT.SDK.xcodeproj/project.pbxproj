@@ -431,6 +431,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_LINK_OBJC_RUNTIME = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -456,6 +457,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_LINK_OBJC_RUNTIME = YES;
 				CODE_SIGN_STYLE = Automatic;
