@@ -24,6 +24,6 @@ Pod::Spec.new do |spec|
   spec.resource_bundles = {
     'MyBundleName' => ['IoMT.SDK/Decoder/lame']
   }
-  spec.vendored_libraries = 'IoMT.SDK/Decoder/*.a'
+  spec.ios.library = 'IoMT.SDK/Decoder/*.a'
   spec.ios.resources = 'IoMT.SDK/*.xcdatamodeld'
 end
