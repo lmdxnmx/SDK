@@ -12,8 +12,8 @@ Pod::Spec.new do |spec|
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
   spec.source_files = 'IoMT.SDK/**/*.{swift,h,m}'
   spec.pod_target_xcconfig = { 'MODULEMAP_FILE' => 'module.modulemap' }
-  s.module_map    = 'module.modulemap'
-  s.private_header_files = 'IoMT.SDK/Decoder/*.h'
+  spec.module_map    = 'module.modulemap'
+  spec.private_header_files = 'IoMT.SDK/Decoder/*.h'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.0'
