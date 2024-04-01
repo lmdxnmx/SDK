@@ -432,6 +432,7 @@
 			baseConfigurationReference = CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_LINK_OBJC_RUNTIME = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 69A943J88V;
 				LIBRARY_SEARCH_PATHS = (
@@ -439,7 +440,6 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/IoMT.SDK",
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
-					"$(PROJECT_DIR)/IoMT.SDK/IosLib",
 				);
 				"MODULEMAP_PRIVATE_FILE[sdk=*]" = "$(PROJECT_DIR)/IoMT.SDK/Decoder/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
@@ -457,6 +457,7 @@
 			baseConfigurationReference = 818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_LINK_OBJC_RUNTIME = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 69A943J88V;
 				LIBRARY_SEARCH_PATHS = (
@@ -464,7 +465,6 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/IoMT.SDK",
 					"$(PROJECT_DIR)/IoMT.SDK/Decoder",
-					"$(PROJECT_DIR)/IoMT.SDK/IosLib",
 				);
 				MODULEMAP_PRIVATE_FILE = "$(PROJECT_DIR)/IoMT.SDK/Decoder/module.modulemap";
 				OTHER_LDFLAGS = "-ObjC";
