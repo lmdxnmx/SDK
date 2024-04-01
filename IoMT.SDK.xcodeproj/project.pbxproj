@@ -104,6 +104,7 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
+				73298B5F2BB6FECA0023282D /* module.modulemap */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
@@ -183,7 +184,6 @@
 		73298B542BB6E5960023282D /* Decoder */ = {
 			isa = PBXGroup;
 			children = (
-				73298B5F2BB6FECA0023282D /* module.modulemap */,
 				73298B552BB6E5960023282D /* lame */,
 				73298B562BB6E5960023282D /* LKCPlayManager.m */,
 				73298B572BB6E5960023282D /* LKCPlayManager.h */,
