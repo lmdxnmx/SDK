@@ -16,4 +16,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
   spec.vendored_frameworks = 'IoMT.SDK/Frameworks/lame.framework'
+  spec.vendored_libraries = 'IoMT.SDK/libs/**/*.a'
 end
