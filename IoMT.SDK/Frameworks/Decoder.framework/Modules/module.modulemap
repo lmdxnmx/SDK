@@ -1,4 +1,4 @@
-framework module OpenSSL {
+framework module Decoder {
   umbrella header "IoMT.SDK-umbrella.h"
   export *
 
