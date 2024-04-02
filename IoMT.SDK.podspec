@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.xcconfig = {
     :LIBRARY_SEARCH_PATHS => 'IoMT.SDK/Decoder',
     :OTHER_CFLAGS => '$(inherited)',
-    :OTHER_LDFLAGS => '-L IoMT.SDK/Decoder IoMT.SDK/Decoder/LMTPDecoder.a',
+    :OTHER_LDFLAGS => '$(inherited)',
     :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
   }
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
@@ -22,5 +22,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
   spec.preserve_paths ='IoMT.SDK/Decoder/LMTPDecoder.h'
-  spec.vendored_libraries = 'IoMT.SDK/Decoder/LMTPDecoder.a'
+  spec.vendored_libraries = 'IoMT.SDK/Decoder/*.a'
 end
