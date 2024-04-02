@@ -22,4 +22,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
   spec.vendored_libraries = 'IoMT.SDK/Decoder/*.a'
+  spec.libraries = 'LMTPDecoder'
 end
