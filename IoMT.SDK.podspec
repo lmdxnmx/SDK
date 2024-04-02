@@ -18,9 +18,9 @@ Pod::Spec.new do |spec|
   spec.vendored_libraries = 'IoMT.SDK/Decoder/LMTPDecoder.a'
   spec.preserve_paths ='IoMT.SDK/Decoder/LMTPDecoder.h'
     spec.xcconfig = {
-    'LIBRARY_SEARCH_PATHS' => '$(inherited) IoMT.SDK/Decoder',
+    'LIBRARY_SEARCH_PATHS' => '$(inherited)/IoMT.SDK/Decoder',
     :OTHER_CFLAGS => '$(inherited)',
     :OTHER_LDFLAGS => '$(inherited)',
-    'HEADER_SEARCH_PATHS' => '$(inherited) IoMT.SDK/Decoder'
+    'HEADER_SEARCH_PATHS' => '$(inherited)/IoMT.SDK/Decoder'
   }
 end
