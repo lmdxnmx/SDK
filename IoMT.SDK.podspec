@@ -8,8 +8,8 @@ Pod::Spec.new do |spec|
   DESC
   spec.xcconfig = {
     :LIBRARY_SEARCH_PATHS => 'IoMT.SDK/Decoder',
-    :OTHER_CFLAGS => '$(inherited)',
-    :OTHER_LDFLAGS => '$(inherited)',
+    :OTHER_CFLAGS => 'IoMT.SDK/Decoder',
+    :OTHER_LDFLAGS => 'IoMT.SDK/Decoder',
     :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
   }
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
