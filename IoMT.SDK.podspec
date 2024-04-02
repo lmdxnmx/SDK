@@ -21,6 +21,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
+  spec.preserve_paths ='IoMT.SDK/Decoder/LMTPDecoder.h'
   spec.vendored_libraries = 'IoMT.SDK/Decoder/*.a'
   spec.libraries = 'LMTPDecoder'
 end
