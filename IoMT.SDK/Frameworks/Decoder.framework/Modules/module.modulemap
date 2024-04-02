@@ -1,5 +1,5 @@
 framework module Decoder {
-  umbrella header "IoMT.SDK-umbrella.h"
+  umbrella header "IoMT.SDK.h"
   export *
 
   module * { export * }
