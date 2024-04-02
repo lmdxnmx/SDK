@@ -13,10 +13,10 @@ Pod::Spec.new do |spec|
     :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
 
   }
-   s.pod_target_xcconfig = {
+   spec.pod_target_xcconfig = {
     'SWIFT_INCLUDE_PATHS' => 'IoMT.SDK/Decoder'
   }
-  s.preserve_paths = 'IoMT.SDK/Decoder'
+  spec.preserve_paths = 'IoMT.SDK/Decoder'
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
