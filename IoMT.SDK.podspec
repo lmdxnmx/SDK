@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   IoMT.SDK is a tool for collecting and sending medical measurements from Bluetooth devices
   DESC
   spec.xcconfig = {
-    :LIBRARY_SEARCH_PATHS => '"$(PODS_ROOT)/IoMT.SDK/IoMT.SDK//Decoder"',
+    :LIBRARY_SEARCH_PATHS => '"$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder"',
     :OTHER_CFLAGS => '$(inherited)',
     :OTHER_LDFLAGS => '-L "$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder" -lLMTPDecoder',
     :HEADER_SEARCH_PATHS => '"$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder"',
@@ -22,6 +22,5 @@ Pod::Spec.new do |spec|
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
   spec.preserve_paths ='IoMT.SDK/Decoder/LMTPDecoder.h'
-  spec.vendored_libraries = 'IoMT.SDK/Decoder/*.a'
-  spec.libraries = 'LMTPDecoder'
+  spec.vendored_libraries = 'IoMT.SDK/Decoder/LMTPDecoder.a'
 end
