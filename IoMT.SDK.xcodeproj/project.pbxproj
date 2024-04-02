@@ -19,7 +19,7 @@
 		7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */; };
 		7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE1D2B87268700BACD76 /* BundleTemplate.swift */; };
 		739709402BB5B1E4003B1D3B /* DoctisFetal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7397093F2BB5B1E4003B1D3B /* DoctisFetal.swift */; };
-		73AF4A4A2BBC3207005D987A /* Decoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A492BBC3207005D987A /* Decoder.framework */; };
+		73AF4A4E2BBC3616005D987A /* lame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A4D2BBC3616005D987A /* lame.framework */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -63,7 +63,7 @@
 		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE1D2B87268700BACD76 /* BundleTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleTemplate.swift; sourceTree = "<group>"; };
 		7397093F2BB5B1E4003B1D3B /* DoctisFetal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctisFetal.swift; sourceTree = "<group>"; };
-		73AF4A492BBC3207005D987A /* Decoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Decoder.framework; sourceTree = "<group>"; };
+		73AF4A4D2BBC3616005D987A /* lame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = lame.framework; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,7 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */,
-				73AF4A4A2BBC3207005D987A /* Decoder.framework in Frameworks */,
+				73AF4A4E2BBC3616005D987A /* lame.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,7 +185,7 @@
 		73AF4A462BBC3155005D987A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				73AF4A492BBC3207005D987A /* Decoder.framework */,
+				73AF4A4D2BBC3616005D987A /* lame.framework */,
 			);
 			path = Frameworks;
 			sourceTree = "<group>";

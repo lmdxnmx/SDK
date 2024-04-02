@@ -24,7 +24,6 @@ public class DoctisFetal:
     var serial:String = "";
     static var mail:String = "";
     public var peripherals: [DisplayPeripheral] = []
-    var decoder = LMTPDecoder()
     static var itter:Int = 0
     
     internal var rxtxService: CBService?
