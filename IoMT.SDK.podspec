@@ -10,12 +10,18 @@ Pod::Spec.new do |spec|
     :LIBRARY_SEARCH_PATHS => 'IoMT.SDK/Decoder',
     :OTHER_CFLAGS => '$(inherited)',
     :OTHER_LDFLAGS => '$(inherited)',
+    :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
+
   }
+   s.pod_target_xcconfig = {
+    'SWIFT_INCLUDE_PATHS' => 'IoMT.SDK/Decoder'
+  }
+  s.preserve_paths = 'IoMT.SDK/Decoder'
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
-  spec.vendored_libraries = 'IoMT.SDK/Decoder/LMTPDecoder.a', 'IoMT.SDK/Decoder/lame'
-  spec.source_files = 'IoMT.SDK/**/*.{*}'
+  spec.vendored_libraries = 'IoMT.SDK/Decoder/LMTPDecoder.a'
+  spec.source_files = 'IoMT.SDK/**/*.{swift}'
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.0'
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
