@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.xcconfig = {
     :LIBRARY_SEARCH_PATHS => 'IoMT.SDK/Decoder',
     :OTHER_CFLAGS => '$(inherited)',
-    :OTHER_LDFLAGS => '$(inherited)',
+    :OTHER_LDFLAGS => '$(inherited) IoMT.SDK/**/*.{a}',
     :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
   }
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
@@ -21,5 +21,4 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
-  spec.ios.vendored_library = 'IoMT.SDK/**/*.{a}'
 end
