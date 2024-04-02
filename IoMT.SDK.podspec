@@ -12,6 +12,7 @@ Pod::Spec.new do |spec|
     :OTHER_LDFLAGS => '$(inherited) IoMT.SDK/Decoder/LMTPDecoder.a',
     :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
   }
+  spec.ios.vendored_library = 'IoMT.SDK/Decoder/LMTPDecoder.a'
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
