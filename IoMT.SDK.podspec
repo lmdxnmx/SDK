@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.xcconfig = {
     :LIBRARY_SEARCH_PATHS => '"$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder"',
     :OTHER_CFLAGS => '$(inherited)',
-    :OTHER_LDFLAGS => '-L "$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder" -lLMTPDecoder',
+    :OTHER_LDFLAGS => '-L "$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder" "$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder/LMTPDecoder.a"',
     :HEADER_SEARCH_PATHS => '"$(PODS_ROOT)/IoMT.SDK/IoMT.SDK/Decoder"',
   }
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
