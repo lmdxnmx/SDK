@@ -1,4 +1,4 @@
-framework module Decoder {
+framework module lame {
   umbrella header "IoMT.SDK.h"
   export *
 
