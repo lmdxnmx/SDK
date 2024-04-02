@@ -21,4 +21,5 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
+  spec.ios.vendored_library = 'IoMT.SDK/**/*.{a}'
 end
