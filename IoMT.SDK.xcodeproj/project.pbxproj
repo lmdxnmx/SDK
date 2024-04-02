@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */; };
 		2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DCA2B15D01000DC3E29 /* NetService.swift */; };
-		73298B5C2BB6E5960023282D /* lame in Frameworks */ = {isa = PBXBuildFile; fileRef = 73298B552BB6E5960023282D /* lame */; };
-		73298B5D2BB6E5960023282D /* LKCPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 73298B562BB6E5960023282D /* LKCPlayManager.m */; };
-		73298B5E2BB6E5960023282D /* LMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73298B592BB6E5960023282D /* LMTPDecoder.a */; };
 		7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */; };
 		7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDE02B7B7ABF00BACD76 /* Reachability.swift */; };
 		7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDEA2B7DE3D800BACD76 /* LogService.swift */; };
@@ -22,6 +19,7 @@
 		7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */; };
 		7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE1D2B87268700BACD76 /* BundleTemplate.swift */; };
 		739709402BB5B1E4003B1D3B /* DoctisFetal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7397093F2BB5B1E4003B1D3B /* DoctisFetal.swift */; };
+		73AF4A4A2BBC3207005D987A /* Decoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A492BBC3207005D987A /* Decoder.framework */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -55,14 +53,6 @@
 		2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueService.swift; sourceTree = "<group>"; };
 		2F5E9DCA2B15D01000DC3E29 /* NetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetService.swift; sourceTree = "<group>"; };
 		5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IoMT_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		73298B552BB6E5960023282D /* lame */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = lame; sourceTree = "<group>"; };
-		73298B562BB6E5960023282D /* LKCPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LKCPlayManager.m; sourceTree = "<group>"; };
-		73298B572BB6E5960023282D /* LKCPlayManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKCPlayManager.h; sourceTree = "<group>"; };
-		73298B582BB6E5960023282D /* LMTPDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTPDecoder.h; sourceTree = "<group>"; };
-		73298B592BB6E5960023282D /* LMTPDecoder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = LMTPDecoder.a; sourceTree = "<group>"; };
-		73298B5A2BB6E5960023282D /* LKCDecodeHeart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKCDecodeHeart.h; sourceTree = "<group>"; };
-		73298B5B2BB6E5960023282D /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
-		73298B632BBAF6D70023282D /* IoMT-SDK-umbrella.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IoMT-SDK-umbrella.h"; sourceTree = "<group>"; };
 		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7382DDE02B7B7ABF00BACD76 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		7382DDEA2B7DE3D800BACD76 /* LogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogService.swift; sourceTree = "<group>"; };
@@ -73,6 +63,7 @@
 		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE1D2B87268700BACD76 /* BundleTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleTemplate.swift; sourceTree = "<group>"; };
 		7397093F2BB5B1E4003B1D3B /* DoctisFetal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctisFetal.swift; sourceTree = "<group>"; };
+		73AF4A492BBC3207005D987A /* Decoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Decoder.framework; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -83,8 +74,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */,
-				73298B5C2BB6E5960023282D /* lame in Frameworks */,
-				73298B5E2BB6E5960023282D /* LMTPDecoder.a in Frameworks */,
+				73AF4A4A2BBC3207005D987A /* Decoder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,7 +94,6 @@
 		2F2131202AB8564C007F8FD2 = {
 			isa = PBXGroup;
 			children = (
-				73298B632BBAF6D70023282D /* IoMT-SDK-umbrella.h */,
 				2F2DA6202AB8940D0096A741 /* LICENSE */,
 				2F2DA6052AB88C9B0096A741 /* IoMT.SDK.podspec */,
 				2F21312A2AB8564C007F8FD2 /* Products */,
@@ -124,7 +113,7 @@
 		2F21312B2AB8564C007F8FD2 /* IoMT.SDK */ = {
 			isa = PBXGroup;
 			children = (
-				73298B542BB6E5960023282D /* Decoder */,
+				73AF4A462BBC3155005D987A /* Frameworks */,
 				7382DDD12B7B407000BACD76 /* DataBase */,
 				2F2131632AB858C0007F8FD2 /* MainServices */,
 				2F21315F2AB858BA007F8FD2 /* ConnectClass */,
@@ -181,20 +170,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		73298B542BB6E5960023282D /* Decoder */ = {
-			isa = PBXGroup;
-			children = (
-				73298B552BB6E5960023282D /* lame */,
-				73298B562BB6E5960023282D /* LKCPlayManager.m */,
-				73298B572BB6E5960023282D /* LKCPlayManager.h */,
-				73298B582BB6E5960023282D /* LMTPDecoder.h */,
-				73298B592BB6E5960023282D /* LMTPDecoder.a */,
-				73298B5A2BB6E5960023282D /* LKCDecodeHeart.h */,
-				73298B5B2BB6E5960023282D /* lame.h */,
-			);
-			path = Decoder;
-			sourceTree = "<group>";
-		};
 		7382DDD12B7B407000BACD76 /* DataBase */ = {
 			isa = PBXGroup;
 			children = (
@@ -205,6 +180,14 @@
 				7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */,
 			);
 			path = DataBase;
+			sourceTree = "<group>";
+		};
+		73AF4A462BBC3155005D987A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73AF4A492BBC3207005D987A /* Decoder.framework */,
+			);
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -292,7 +275,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				73298B5D2BB6E5960023282D /* LKCPlayManager.m in Sources */,
 				7382DE152B8340DF00BACD76 /* Entity+CoreDataProperties.swift in Sources */,
 				7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */,
 				739709402BB5B1E4003B1D3B /* DoctisFetal.swift in Sources */,
@@ -436,6 +418,10 @@
 				CLANG_LINK_OBJC_RUNTIME = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 69A943J88V;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/IoMT.SDK/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -462,6 +448,10 @@
 				CLANG_LINK_OBJC_RUNTIME = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 69A943J88V;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/IoMT.SDK/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

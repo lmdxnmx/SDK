@@ -6,13 +6,6 @@ Pod::Spec.new do |spec|
   spec.description  = <<-DESC
   IoMT.SDK is a tool for collecting and sending medical measurements from Bluetooth devices
   DESC
-  spec.xcconfig = {
-    :LIBRARY_SEARCH_PATHS => 'IoMT.SDK/Decoder',
-    :OTHER_CFLAGS => '$(inherited)',
-    :OTHER_LDFLAGS => '$(inherited)',
-    :HEADER_SEARCH_PATHS => 'IoMT.SDK/Decoder',
-  }
-  spec.ios.vendored_library = 'IoMT.SDK/Decoder/LMTPDecoder.a'
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
@@ -22,4 +15,5 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/lmdxnmx/SDK.git", :tag => "#{spec.version}" }
   spec.dependency 'ReachabilitySwift', '~> 5.0'
   spec.resources = 'IoMT.SDK/*.xcdatamodeld'
+  spec.vendored_frameworks = 'IoMT.SDK/Frameworks/OpenSSL.xcframework'
 end
