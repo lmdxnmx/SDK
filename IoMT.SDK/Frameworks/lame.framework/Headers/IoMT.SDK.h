@@ -8,8 +8,8 @@
 #ifndef IoMT_SDK_umbrella_h
 #define IoMT_SDK_umbrella_h
 
-#import lame.h
-#import LKCDecodeHeart.h
-#import LKCPlayManager.h
-#import LMTPDecoder.h
+#import "lame.h"
+#import "LKCDecodeHeart.h"
+#import "LKCPlayManager.h"
+#import "LMTPDecoder.h"
 #endif /* IoMT_SDK_umbrella_h */
