@@ -260,7 +260,7 @@ fileprivate class _baseCallback: DeviceCallback {
         task.resume()
     }
        internal func postResource(data: Data) {
-        let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
+        let timeUrl  = URL(string: (self.baseAddress + "/fetal/iiot/api/Observation/data"))!
         print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         var identifier = UUID();
@@ -302,6 +302,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
+                print(statusCode)
                 if(statusCode <= 202){
                     self.callback.onSendData(mac: identifier, status: PlatformStatus.Success)
                 }

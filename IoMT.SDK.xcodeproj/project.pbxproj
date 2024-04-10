@@ -22,6 +22,7 @@
 		73AF4A4E2BBC3616005D987A /* lame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A4D2BBC3616005D987A /* lame.framework */; };
 		73AF4A672BBC53E2005D987A /* LMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A662BBC53E2005D987A /* LMTPDecoder.a */; };
 		73AF4A692BBD279E005D987A /* libLMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A682BBD279E005D987A /* libLMTPDecoder.a */; };
+		73AF4A6D2BC6B642005D987A /* Stopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73AF4A6C2BC6B642005D987A /* Stopwatch.swift */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,7 @@
 		73AF4A652BBC53E2005D987A /* LKCDecodeHeart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKCDecodeHeart.h; sourceTree = "<group>"; };
 		73AF4A662BBC53E2005D987A /* LMTPDecoder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = LMTPDecoder.a; sourceTree = "<group>"; };
 		73AF4A682BBD279E005D987A /* libLMTPDecoder.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libLMTPDecoder.a; path = IoMT.SDK/libs/LMTPDecoder/libLMTPDecoder.a; sourceTree = SOURCE_ROOT; };
+		73AF4A6C2BC6B642005D987A /* Stopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stopwatch.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -167,6 +169,7 @@
 				2F5E9DCA2B15D01000DC3E29 /* NetService.swift */,
 				7382DDEA2B7DE3D800BACD76 /* LogService.swift */,
 				7382DE1D2B87268700BACD76 /* BundleTemplate.swift */,
+				73AF4A6C2BC6B642005D987A /* Stopwatch.swift */,
 			);
 			path = MainServices;
 			sourceTree = "<group>";
@@ -312,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7382DE152B8340DF00BACD76 /* Entity+CoreDataProperties.swift in Sources */,
+				73AF4A6D2BC6B642005D987A /* Stopwatch.swift in Sources */,
 				7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */,
 				739709402BB5B1E4003B1D3B /* DoctisFetal.swift in Sources */,
 				7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */,

@@ -39,6 +39,5 @@ public class ConnectClass{
     public func search(timeout: UInt32){ }
     
     
-    
 }
 

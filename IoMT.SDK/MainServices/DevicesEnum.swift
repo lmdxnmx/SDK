@@ -47,7 +47,7 @@ public enum Atributes : String{
     case TemperatureLevel
     ///Время когда было сделано измерения, объект Date
     case TimeStamp
-    
+    case BleTime
     case Temperature
     ///Показатель глюкозы в крови
     case Glucose

@@ -42,18 +42,12 @@ internal protocol ReadWirteCharteristicDelegate: AnyObject {
 internal protocol ReadRSSIValueDelegate: AnyObject {
     func bleManagerReadRSSIValue(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?)
 }
-internal protocol BLEIndicateCallback: AnyObject {
-    func onIndicateSuccess()
-    func onIndicateFailure(error: Error)
-    func onCharacteristicChanged(data: Data)
-}
 
 private var sharedBLEManager: BLEManager? = nil
 
 internal class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     internal var centralManager: CBCentralManager?
     internal var scaningDelegate: DeviceScaningDelegate?
-    internal var indicateCallback: BLEIndicateCallback?
     internal var connectionDelegate: DeviceConnectionDelegate?
     internal var discoveryDelegate: ServicesDiscoveryDelegate?
     internal var readWriteCharDelegate: ReadWirteCharteristicDelegate?
@@ -71,15 +65,7 @@ internal class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
        }
     // MARK: CBPeripheralDelegate
         func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-            if let error = error {
-                indicateCallback?.onIndicateFailure(error: error)
-                return
-            }
-            
-            if let value = characteristic.value {
-                print(value)
-                indicateCallback?.onCharacteristicChanged(data: value)
-            }
+                readWriteCharDelegate?.bleManagerDidUpdateValueForChar(peripheral, didUpdateValueFor:characteristic, error:error)
         }
    // MARK: Intializing BLE CentralManager
     internal func initCentralManager(queue: DispatchQueue?, options: [String : Any]?) {
@@ -97,6 +83,7 @@ internal class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
                 break
             case CBManagerState.poweredOff:
                 scaningDelegate?.scanningStatus(status:CBManagerState.poweredOff.rawValue)
+                DeviceService.getInstance().ls.addLogs(text:"poweredOff")
                 break
             case CBManagerState.resetting:
                 scaningDelegate?.scanningStatus(status:CBManagerState.resetting.rawValue)
@@ -115,6 +102,7 @@ internal class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
                 break
             case CBCentralManagerState.poweredOff:
                 scaningDelegate?.scanningStatus(status:CBCentralManagerState.poweredOff.rawValue)
+                DeviceService.getInstance().ls.addLogs(text:"poweredOff")
                 break
             case CBCentralManagerState.poweredOn:
                 scaningDelegate?.scanningStatus(status:CBCentralManagerState.poweredOn.rawValue)

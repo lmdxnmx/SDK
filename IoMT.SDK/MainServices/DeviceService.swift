@@ -194,14 +194,6 @@ public class DeviceService {
         }
     }
     
-    public func sendData(connectClass: ConnectClass, serial: String, model: String, time: Date, value: Double)
-    {
-        if(instanceDS == nil) { return; }
-        if(connectClass is EltaGlucometr){
-            let postData = FhirTemplate.Glucometer(serial: serial, model: model, effectiveDateTime: time, value: value)
-            im.postResource(data: postData!)
-        }
-    }
     public func applyObservation(connectClass: ConnectClass, serial: String, model: String, time: Date, value: Double) {
         guard let instanceDS = instanceDS else { return }
         guard connectClass is EltaGlucometr else { return }

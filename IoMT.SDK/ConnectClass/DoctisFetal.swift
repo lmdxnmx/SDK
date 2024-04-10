@@ -8,37 +8,39 @@
 import Foundation
 import CoreBluetooth
 import CommonCrypto
-
+import lame
 public class DoctisFetal:
     ConnectClass,
     DeviceScaningDelegate,
     DeviceConnectionDelegate,
     ServicesDiscoveryDelegate,
-    ReadWirteCharteristicDelegate,
-    BLEIndicateCallback{
+    ReadWirteCharteristicDelegate{
     
     
     internal var _identifer: UUID?
     internal var _mac:String?
     var peripheral: CBPeripheral?
     var serial:String = "";
-    static var mail:String = "";
+    var model:String = "";
+    var battLevel:Int = -1;
+    internal var startTime:Date?
     public var peripherals: [DisplayPeripheral] = []
     static var itter:Int = 0
     
     internal var rxtxService: CBService?
-    
+    public struct DataItem:Codable {
+        var key: TimeInterval
+        var value: Int
+    }
+    var rateArray: [DataItem] = []
+    var tocoArray:[DataItem] = []
     internal var rxCharacteistic: CBCharacteristic?
-    
+    var stopwatch = Stopwatch()
     internal var txCharacteistic: CBCharacteristic?
     
     internal var internetManager: InternetManager = InternetManager.getManager()
-    
-    internal var measurements: Collector?
-    let bloodPressureMeasurementUUID = CBUUID(string: "0000FFF1-0000-1000-8000-00805F9B34FB")
-    let heartPressureMeasurementUUID = CBUUID(string: "0000FFF0-0000-1000-8000-00805F9B34FB")
+    var decoder = LMTPDecoder()
     var disconnectTimer: Timer? = nil
-    public static var lastDateMeasurements: Date? = nil
     
     internal static let FormatPlatformTime: ISO8601DateFormatter = {
         let dateFormatter = ISO8601DateFormatter()
@@ -80,6 +82,7 @@ public class DoctisFetal:
         manager.stopScan()
         callback?.searchedDevices(peripherals: peripherals)
     }
+ 
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
         DeviceService.getInstance().ls.addLogs(text:String(describing:status))
@@ -126,25 +129,19 @@ callback?.onExpection(mac: _identifer!, ex: error!)
         callback?.onStatusDevice(mac: _identifer!, status: BluetoothStatus.ConnectStart)
         peripheral.discoverServices(nil)
         self.peripheral = peripheral
-
     }
-    internal func onIndicateSuccess() {
-         print("Indication successful")
-     }
-     
-    internal func onIndicateFailure(error: Error) {
-         print("Indication failure: \(error.localizedDescription)")
-     }
-     
-    internal func onCharacteristicChanged(data: Data) {
-        print(data)
-     }
     // This method will be triggered once device will be disconnected.
     internal func bleManagerDisConect(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
         }
         callback?.onStatusDevice(mac: _identifer!, status: BluetoothStatus.ConnectDisconnect)
+        if let time = startTime{
+           var data =  FhirTemplate.FetalMonitor(model: model, serialNumber: serial, startTime: time, battLevelStart: battLevel, fhrData: rateArray, tocoData: tocoArray, moveDetect: [""])!
+            DeviceService.getInstance().im.postResource(data: data)
+        }else{
+            print(model)
+        }
     }
     
     //ReadWirteCharteristicDelegate
@@ -152,9 +149,39 @@ callback?.onExpection(mac: _identifer!, ex: error!)
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
         }
-        print(characteristic)
+        if let value = characteristic.value {
+            if(characteristic.uuid.uuidString == "2A25"){
+                if let dataString = String(data: value, encoding: .ascii) {
+                   serial = dataString
+                } else {
+                    // Не удалось преобразовать данные в строку ASCII
+                    print("Failed to convert data to ASCII string")
+                }
+            }
+            if(characteristic.uuid.uuidString == "2A24"){
+                if let dataString = String(data: value, encoding: .ascii) {
+                    model = dataString
+                } else {
+                    // Не удалось преобразовать данные в строку ASCII
+                    print("Failed to convert data to ASCII string")
+                }
+            }
+            if let decodedValue = decoder.start(withCharacterData: value) {
+                if(decodedValue.rate > 0){
+                    rateArray.append(DataItem(key:stopwatch.elapsedTimeInSeconds(),value:decodedValue.rate))
+                }
+                if(battLevel == -1){
+                    battLevel = decodedValue.battValue
+                }
+                tocoArray.append(DataItem(key:stopwatch.elapsedTimeInSeconds(),value: decodedValue.tocoValue))
+            } else {
+              
+            }
+        } else {
+            print("Characteristic value is nil")
+        }
+
     }
-    
     internal func bleManagerDidWriteValueForChar(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
@@ -174,14 +201,14 @@ callback?.onExpection(mac: _identifer!, ex: error!)
             callback?.onExpection(mac: peripheral.identifier, ex: error)
         }
     }
-
     //Обработчик:
     internal func bleManagerDidUpdateNotificationState(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
         }
         print(characteristic)
-        print("Notification")
+        stopwatch.start()
+        startTime = Date();
     }
     
     //ServicesDiscoveryDelegate
@@ -201,13 +228,18 @@ callback?.onExpection(mac: _identifer!, ex: error!)
             return
         }
         if let characteristics = service.characteristics {
-                  for characteristic in characteristics {
-                      print(characteristic)
-                      if characteristic.uuid.uuidString == "FED6" {
-                          print("uuid=")
-                          peripheral.setNotifyValue(true, for: characteristic)
-                      }
-                  }
+            for characteristic in characteristics {
+                print(characteristic.uuid)
+                if characteristic.uuid.uuidString == "FED6" {
+                    print("uuid=")
+                    peripheral.setNotifyValue(true, for: characteristic)
+                }
+                if(characteristic.uuid.uuidString == "2A25" || characteristic.uuid.uuidString == "2A24"){
+                    print(characteristic)
+                    peripheral.readValue(for: characteristic)
+                }
+                
+            }
               }
 }
 
@@ -232,31 +264,23 @@ callback?.onExpection(mac: _identifer!, ex: error!)
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }
     
-    internal func getDisplay(device: CBPeripheral){
-        let modelNumber = "SatelliteOnline"
-        self.measurements!.addInfo(atr: Atributes.ModelNumber, value: modelNumber)
-        callback?.onExploreDevice(mac: device.identifier, atr: Atributes.ModelNumber, value: modelNumber)
+    internal func getDisplay(device: CBPeripheral, char:CBCharacteristic){
+        let response: Data = String("ModelNumber").data(using: .utf8)!
+        manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }
     
-    internal func getSerial(device: CBPeripheral){
-        let response: Data = String("serial").data(using: .utf8)!
-        manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
+    internal func getSerial(device: CBPeripheral, char:CBCharacteristic){
+//        let response: Data = String("serial").data(using: .utf8)!
+//        manager.writeCharacteristicValue(peripheral: device, data: response, char: char, type: CBCharacteristicWriteType.withResponse)
+        manager.subscribeToCharacteristic(peripheral: device, characteristic: char)
 
     }
     internal func getMac(device: CBPeripheral){
         let response: Data = String("mac").data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }
-    internal func setTime(device: CBPeripheral){
-        let timeNow = Date()
-        let time = EltaGlucometr.FormatDeviceTime.string(from: timeNow)
-        DeviceService.getInstance().ls.addLogs(text:"Settime: " + String(describing:time))
-        let response: Data = String("settime." + time).data(using: .utf8)!
-        manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
-    }
     internal func getBattery(device: CBPeripheral){
         let response: Data = String("bat").data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }
-    
 }
