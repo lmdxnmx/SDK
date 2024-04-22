@@ -25,8 +25,8 @@ internal class FhirTemplate{
         return Data(TemplateFhir.utf8)
 
     }
-    static public func FetalMonitor(model: String, serialNumber: String, startTime: Date, battLevelStart: Int, fhrData: [DoctisFetal.DataItem], tocoData: [DoctisFetal.DataItem], moveDetect: [String]) -> Data? {
-        let uuid = UUID().uuidString.lowercased()
+    static public func FetalMonitor(model: String,id:UUID, serialNumber: String, startTime: Date, battLevelStart: Int, fhrData: [DoctisFetal.DataItem], tocoData: [DoctisFetal.DataItem], moveDetect: [TimeInterval]) -> Data? {
+        let uuid = id.uuidString.lowercased()
         
         // Преобразование массива fhrData в JSON строку
         var fhrDataJSON = "["
@@ -73,7 +73,6 @@ internal class FhirTemplate{
         }
         """
         
-        // Преобразование JSON строки в Data
         return Data(TemplateFhir.utf8)
     }
 }

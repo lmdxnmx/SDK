@@ -139,6 +139,7 @@ public class DeviceService {
                  if(!DoctisFetal.activeExecute){
                      DispatchQueue.global().async {
                          connectClass.connect(device: device.peripheral!)
+                         DoctisFetal.time = 0
                      }
                  }
                  return
@@ -180,6 +181,62 @@ public class DeviceService {
                  if(!DoctisFetal.activeExecute){
                      DispatchQueue.global().async {
                          connectClass.connect(device: device.peripheral!)
+                         DoctisFetal.time = 0
+                     }
+                 }
+                 return
+             }
+        self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
+    }
+    public func connectToDevice(connectClass: ConnectClass, device: DisplayPeripheral, test: Bool){
+        connectClass.callback = self._callback
+        let _identifier: UUID = device.peripheral!.identifier
+        if(connectClass is AndTonometr){
+            if(!AndTonometr.activeExecute) {
+                DispatchQueue.global().async {
+                    connectClass.connect(device: device.peripheral!)
+                }
+            }
+            else {
+                self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.Connected)
+            }
+            return
+        }
+        if(connectClass is EltaGlucometr){
+            if(connectClass.cred == nil){
+                self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.NotCorrectPin)
+            }else{
+                if(!EltaGlucometr.activeExecute) {
+                    DispatchQueue.global().async {
+                        connectClass.connect(device: device.peripheral!)
+                    }
+                }
+                else {
+                    self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.Connected)
+                }
+            }
+            return
+        }
+        if(connectClass is DoctisFetal){
+                 if(!DoctisFetal.activeExecute){
+                     DispatchQueue.global().async {
+                         DoctisFetal.test = test
+                         connectClass.connect(device: device.peripheral!)
+                         DoctisFetal.time = 0
+                     }
+                 }
+                 return
+             }
+        self._callback.onStatusDevice(mac: _identifier, status: BluetoothStatus.InvalidDeviceTemplate)
+    }
+    public func connectToDevice(connectClass: ConnectClass, device: DisplayPeripheral, time: Int){
+        connectClass.callback = self._callback
+        let _identifier: UUID = device.peripheral!.identifier
+        if(connectClass is DoctisFetal){
+                 if(!DoctisFetal.activeExecute){
+                     DispatchQueue.global().async {
+                         DoctisFetal.time = time
+                         connectClass.connect(device: device.peripheral!)
                      }
                  }
                  return
@@ -215,6 +272,7 @@ public class DeviceService {
                         let newTask = Entity(context: context)
                         newTask.title = identifier
                         newTask.body = jsonString
+                        newTask.deviceType = "EltaGlucometer"
                         do {
                             try context.save()
                         } catch {
@@ -257,6 +315,7 @@ public class DeviceService {
                             let newTask = Entity(context: context)
                             newTask.title = id
                             newTask.body = jsonString
+                            newTask.deviceType = "EltaGlucometer"
                             do {
                                 try context.save()
                             } catch {
@@ -307,6 +366,7 @@ public class DeviceService {
                             let entity = Entity(context: backgroundContext)
                             entity.title = id
                             entity.body = jsonString
+                            entity.deviceType = "EltaGlucometer"
                             entitiesToSave.append(entity)
 
                             if let currentLargestTime = largestTime, time > currentLargestTime {
@@ -397,6 +457,9 @@ public class DeviceService {
     }
     public func clearLogs(){
         ls.clearLogsFromCoreData();
+    }
+    public func finishMeasurments(){
+        DoctisFetal.shared.finishMeasurments()
     }
 }
     ///Структура для сохранения информации об устройтсве
