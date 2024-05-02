@@ -1,12 +1,12 @@
 Pod::Spec.new do |spec|
   spec.name         = "IoMT.SDK"
-  spec.version      = "0.3.3"
+  spec.version      = "0.3.0"
   spec.summary      = "IoMT.SDK is a tool for collecting and sending medical measurements from Bluetooth devices"
   
   spec.description  = <<-DESC
   IoMT.SDK is a tool for collecting and sending medical measurements from Bluetooth devices
   DESC
-  spec.homepage     = "http://EXAMPLE/IoMT.SDK"
+  spec.homepage     = "https://github.com/lmdxnmx/SDK.git"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "lmdxnmx" => "nikita021103@mail.ru" }
   spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
