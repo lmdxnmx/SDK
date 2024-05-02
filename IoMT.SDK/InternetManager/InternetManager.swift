@@ -46,7 +46,7 @@ fileprivate class _baseCallback: DeviceCallback {
         if(!debug){
             baseAddress = "https://ppma.ru"
         }
-        else{ baseAddress = "https://dev.ppma.ru" }
+        else{ baseAddress = "https://test.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -149,7 +149,6 @@ fileprivate class _baseCallback: DeviceCallback {
         
         do {
             let count = try backgroundContext.count(for: fetchRequest)
-            print(count)
             return count > 0
         } catch {
             DeviceService.getInstance().ls.addLogs(text:"Ошибка при получении объектов из Core Data: \(error)")
@@ -584,7 +583,6 @@ fileprivate class _baseCallback: DeviceCallback {
                      var currentArray: [Data] = [] // Текущий массив данных
                      
                      for (index, object) in objects.enumerated() {
-                         print(object.deviceType)
                          if(object.deviceType == "EltaGlucometer" || object.deviceType == nil){
                              if let body = object.body?.data(using: .utf8) {
                                  currentArray.append(body) // Добавляем данные в текущий массив
@@ -592,7 +590,7 @@ fileprivate class _baseCallback: DeviceCallback {
                                  DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
                              }
                              
-                             if currentArray.count == 35 || index == objects.count - 1 {
+                             if currentArray.count == 100 || index == objects.count - 1 {
                                  dataArray.append(currentArray)
                                  currentArray = []
                              }}
@@ -607,7 +605,6 @@ fileprivate class _baseCallback: DeviceCallback {
                          }
                      }
                      for dataSubArray in dataArray {
-                         print(dataSubArray)
                          BundleTemplate.ApplyObservation(dataArray: dataSubArray)
                      }
                  } catch {

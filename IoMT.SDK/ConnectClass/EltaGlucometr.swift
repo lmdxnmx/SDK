@@ -135,11 +135,14 @@ public class EltaGlucometr:
         DeviceService.getInstance().ls.addLogs(text:String(describing:status))
         if(status == 4){
             if let id = EltaGlucometr._identifer{
-                callback?.onStatusDevice(mac: id, status: BluetoothStatus.ConnectDisconnect)
-                EltaGlucometr.activeExecute = false;
+                if(EltaGlucometr.activeExecute == true){
+                    callback?.onStatusDevice(mac: id, status: BluetoothStatus.ConnectDisconnect)
+                    EltaGlucometr.activeExecute = false;
+                }
             }else{
-                callback?.onStatusDevice(mac: UUID(), status: BluetoothStatus.ConnectDisconnect)
-                EltaGlucometr.activeExecute = false;
+                if(EltaGlucometr.activeExecute == true){
+                    EltaGlucometr.activeExecute = false;
+                }
             }
         }
     }
@@ -226,7 +229,7 @@ public class EltaGlucometr:
         let ret = self.measurements?.returnData()
         callback?.onDisconnect(mac: peripheral.identifier, data: ret!)
         DispatchQueue.global().async {
-            sleep(5)
+            sleep(2)
             if(self.rightDisconnect == true){
                 if let serial = self.measurements!.returnCharateristic(atribute: Atributes.SerialNumber) as? String,let model =  self.measurements!.returnCharateristic(atribute: Atributes.ModelNumber) as? String{
                     var measurements: Array<Measurements>
@@ -326,8 +329,6 @@ public class EltaGlucometr:
                 
                 var m = Measurements()
                 let timeStamp = EltaGlucometr.FormatDeviceTime.date(from: dateStr)!
-                print(timeStamp)
-                print(dateStr)
                 m.add(atr: Atributes.BleTime, value: dateStr)
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.TimeStamp, value: timeStamp)
                 m.add(atr: Atributes.TimeStamp, value: timeStamp)

@@ -19,6 +19,10 @@
 		7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE182B834D0D00BACD76 /* Observation-2.xcdatamodeld */; };
 		7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DE1D2B87268700BACD76 /* BundleTemplate.swift */; };
 		739709402BB5B1E4003B1D3B /* DoctisFetal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7397093F2BB5B1E4003B1D3B /* DoctisFetal.swift */; };
+		73989D242BE3B48100BE7708 /* ConciergeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D232BE3B48100BE7708 /* ConciergeService.swift */; };
+		73989D262BE3B4A400BE7708 /* ConciergeTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D252BE3B4A400BE7708 /* ConciergeTemplate.swift */; };
+		73989D282BE3B4B800BE7708 /* ConciergeTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D272BE3B4B800BE7708 /* ConciergeTemplate.swift */; };
+		73989D2A2BE3B51500BE7708 /* DiaryJsonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D292BE3B51500BE7708 /* DiaryJsonBuilder.swift */; };
 		73AF4A4E2BBC3616005D987A /* lame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A4D2BBC3616005D987A /* lame.framework */; };
 		73AF4A672BBC53E2005D987A /* LMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A662BBC53E2005D987A /* LMTPDecoder.a */; };
 		73AF4A692BBD279E005D987A /* libLMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A682BBD279E005D987A /* libLMTPDecoder.a */; };
@@ -66,6 +70,10 @@
 		7382DE192B834D0D00BACD76 /* Observation-2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Observation-2.xcdatamodel"; sourceTree = "<group>"; };
 		7382DE1D2B87268700BACD76 /* BundleTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleTemplate.swift; sourceTree = "<group>"; };
 		7397093F2BB5B1E4003B1D3B /* DoctisFetal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctisFetal.swift; sourceTree = "<group>"; };
+		73989D232BE3B48100BE7708 /* ConciergeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeService.swift; sourceTree = "<group>"; };
+		73989D252BE3B4A400BE7708 /* ConciergeTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeTemplate.swift; sourceTree = "<group>"; };
+		73989D272BE3B4B800BE7708 /* ConciergeTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeTemplate.swift; sourceTree = "<group>"; };
+		73989D292BE3B51500BE7708 /* DiaryJsonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryJsonBuilder.swift; sourceTree = "<group>"; };
 		73AF4A4D2BBC3616005D987A /* lame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = lame.framework; sourceTree = "<group>"; };
 		73AF4A642BBC53E2005D987A /* LMTPDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTPDecoder.h; sourceTree = "<group>"; };
 		73AF4A652BBC53E2005D987A /* LKCDecodeHeart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKCDecodeHeart.h; sourceTree = "<group>"; };
@@ -140,6 +148,7 @@
 			children = (
 				2F21315E2AB858B8007F8FD2 /* InternetManager.swift */,
 				7382DDE02B7B7ABF00BACD76 /* Reachability.swift */,
+				73989D272BE3B4B800BE7708 /* ConciergeTemplate.swift */,
 			);
 			path = InternetManager;
 			sourceTree = "<group>";
@@ -170,6 +179,9 @@
 				7382DDEA2B7DE3D800BACD76 /* LogService.swift */,
 				7382DE1D2B87268700BACD76 /* BundleTemplate.swift */,
 				73AF4A6C2BC6B642005D987A /* Stopwatch.swift */,
+				73989D232BE3B48100BE7708 /* ConciergeService.swift */,
+				73989D252BE3B4A400BE7708 /* ConciergeTemplate.swift */,
+				73989D292BE3B51500BE7708 /* DiaryJsonBuilder.swift */,
 			);
 			path = MainServices;
 			sourceTree = "<group>";
@@ -322,10 +334,14 @@
 				2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */,
 				7382DE142B8340DF00BACD76 /* Logs+CoreDataClass.swift in Sources */,
 				7382DE1A2B834D0D00BACD76 /* Observation-2.xcdatamodeld in Sources */,
+				73989D262BE3B4A400BE7708 /* ConciergeTemplate.swift in Sources */,
 				7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */,
+				73989D242BE3B48100BE7708 /* ConciergeService.swift in Sources */,
 				2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */,
 				7382DE132B8340DF00BACD76 /* Entity+CoreDataClass.swift in Sources */,
+				73989D282BE3B4B800BE7708 /* ConciergeTemplate.swift in Sources */,
 				7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */,
+				73989D2A2BE3B51500BE7708 /* DiaryJsonBuilder.swift in Sources */,
 				7382DE122B8340DF00BACD76 /* Logs+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
