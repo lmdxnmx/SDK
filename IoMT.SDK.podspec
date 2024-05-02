@@ -9,6 +9,8 @@ Pod::Spec.new do |spec|
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   spec.author       = { "lmdxnmx" => "nikita021103@mail.ru" }
+  spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   spec.source_files = 'IoMT.SDK/**/*.{swift}'
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.7.2'
