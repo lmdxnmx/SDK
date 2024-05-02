@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "IoMT.SDK"
-  spec.version      = "0.0.1"
+  spec.version      = "0.3.0"
   spec.summary      = "IoMT.SDK is a tool for collecting and sending medical measurements from Bluetooth devices"
   
   spec.description  = <<-DESC
@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
   DESC
   spec.homepage     = "http://EXAMPLE/IoMT.SDK"
   spec.license      = { :type => "MIT", :file => "FILE_LICENSE" }
-  spec.author       = { "ArooiD" => "deniss.komissarov@gmail.com" }
+  spec.author       = { "lmdxnmx" => "nikita021103@mail.ru" }
   spec.source_files = 'IoMT.SDK/**/*.{swift}'
   spec.ios.deployment_target = '11.0'
   spec.swift_version = '5.0'
