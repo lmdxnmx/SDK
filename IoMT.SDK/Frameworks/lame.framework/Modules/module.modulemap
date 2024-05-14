@@ -1,5 +1,5 @@
 framework module lame {
-    umbrella header "./Headers/IoMT.SDK.h"
+    umbrella header "../Headers/IoMT.SDK.h"
   export *
 
   module * { export * }
