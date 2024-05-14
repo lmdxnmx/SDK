@@ -141,7 +141,9 @@ public class EltaGlucometr:
                 }
             }else{
                 if(EltaGlucometr.activeExecute == true){
+                    print("disconnectBLE")
                     EltaGlucometr.activeExecute = false;
+
                 }
             }
         }

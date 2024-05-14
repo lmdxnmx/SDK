@@ -83,6 +83,7 @@ public class DoctisFetal:
          return sharedInstance!
      }
 
+
      // Приватный конструктор, чтобы предотвратить создание других экземпляров класса
      private override init() {
          super.init()
@@ -229,6 +230,7 @@ callback?.onExpection(mac: _identifer!, ex: error!)
             if(characteristic.uuid.uuidString == "2A25"){
                 if let dataString = String(data: value, encoding: .ascii) {
                    serial = dataString
+                    callback?.onExploreDevice(mac: _identifer!, atr: Atributes.SerialNumber, value: dataString)
                 } else {
                     // Не удалось преобразовать данные в строку ASCII
                     print("Failed to convert data to ASCII string")
@@ -237,14 +239,12 @@ callback?.onExpection(mac: _identifer!, ex: error!)
             if(characteristic.uuid.uuidString == "2A24"){
                 if let dataString = String(data: value, encoding: .ascii) {
                     model = dataString
+                    callback?.onExploreDevice(mac: _identifer!, atr: Atributes.ModelNumber, value: dataString)
                 } else {
                     // Не удалось преобразовать данные в строку ASCII
                     print("Failed to convert data to ASCII string")
                 }
             }
-            print(DoctisFetal.time)
-            print(DoctisFetal.time.doubleValue)
-            print(stopwatch.elapsedTimeInSeconds()/60)
             if(DoctisFetal.time != 0){
                 if(stopwatch.elapsedTimeInSeconds() / 60 > DoctisFetal.time.doubleValue){
                     finishMeasurments()
@@ -256,11 +256,14 @@ callback?.onExpection(mac: _identifer!, ex: error!)
                 }
                 if(decodedValue.rate > 0){
                     rateArray.append(DataItem(key:stopwatch.elapsedTimeInSeconds(),value:decodedValue.rate))
+                    callback?.onExploreDevice(mac: _identifer!, atr: Atributes.HeartRate, value: decodedValue.rate)
                 }
                 if(battLevel == -1){
                     battLevel = decodedValue.battValue
+                    callback?.onExploreDevice(mac: _identifer!, atr: Atributes.BatteryLevel, value: decodedValue.battValue)
                 }
                 tocoArray.append(DataItem(key:stopwatch.elapsedTimeInSeconds(),value: decodedValue.tocoValue))
+                callback?.onExploreDevice(mac: _identifer!, atr: Atributes.Toco, value: decodedValue.tocoValue)
             } else {
               
             }
@@ -421,7 +424,17 @@ callback?.onExpection(mac: _identifer!, ex: error!)
         moveArray.append(stopwatch.elapsedTimeInSeconds())
     }
     public func stopReconnecting(){
+        if let peripheral = self.peripheral{  manager.disconnectPeripheralDevice(peripheral: peripheral)
+            if let centralManager = manager.centralManager {
+                centralManager.cancelPeripheralConnection(peripheral)
+            }
+        }
+        decoder.stopRealTimeAudioPlyer()
+        decoder.stopMoniter()
+        DoctisFetal.activeExecute = false
+        rightDisconnect = true
         reconnectingState = false
+        resetValue()
     }
     public func disconnectDevice(){
         if let peripheral = self.peripheral{  manager.disconnectPeripheralDevice(peripheral: peripheral)

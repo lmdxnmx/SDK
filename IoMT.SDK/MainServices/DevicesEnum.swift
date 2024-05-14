@@ -51,6 +51,8 @@ public enum Atributes : String{
     case Temperature
     ///Показатель глюкозы в крови
     case Glucose
+    case Toco
+    case HeartRate
     ///Объект измерений
     case Measurements
     ///Модель устройства, объект String
