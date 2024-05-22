@@ -9,21 +9,7 @@ import Foundation
 import CoreBluetooth
 import CommonCrypto
 
-extension String {
-    var md5: [UInt8] {
-        let context = UnsafeMutablePointer<CC_MD5_CTX>.allocate(capacity: 1)
-        var digest = Array<UInt8>(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-        
-        CC_MD5_Init(context)
-        CC_MD5_Update(context, self, CC_LONG(lengthOfBytes(using: .utf8)))
-        CC_MD5_Final(&digest, context)
-        
-        context.deallocate()
-        
-        return digest
-    }
-}
-extension UUID{
+extension UUID {
     init?(md5 bytes: [UInt8]) {
         guard
             bytes.count == CC_MD5_DIGEST_LENGTH
@@ -44,6 +30,21 @@ extension UUID{
         
         self.init(uuid: uuid)
     }
+}
+
+extension String {
+  var md5: [UInt8] {
+    let context = UnsafeMutablePointer<CC_MD5_CTX>.allocate(capacity: 1)
+    var digest = Array<UInt8>(repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
+    
+    CC_MD5_Init(context)
+    CC_MD5_Update(context, self, CC_LONG(lengthOfBytes(using: .utf8)))
+    CC_MD5_Final(&digest, context)
+    
+    context.deallocate()
+    
+    return digest
+  }
 }
 extension Date {
     var bleTime: String {
@@ -238,12 +239,12 @@ public class EltaGlucometr:
                     measurements = (self.measurements?.returnMeasurements() as? Array<Measurements>)!
                     for measurement in measurements {
                         let time = measurement.get(atr: Atributes.TimeStamp) as! Date
-                        let bleTime = measurement.get(atr: Atributes.BleTime)
+                        let bleTime = measurement.get(atr: Atributes.BleTime) as! String
                         let value = measurement.get(atr: Atributes.Glucose) as! Double
                         
                         if(EltaGlucometr.mail != ""){
                             if let mac = self._mac {
-                                let concatenatedString = (EltaGlucometr.mail + mac + "\(bleTime)").lowercased()
+                                let concatenatedString = (EltaGlucometr.mail + mac + bleTime).lowercased()
                                 let uuid = UUID(md5: concatenatedString.md5)
                                 let observation = (id:uuid!,serial: serial, model: model, time: time, value: value)
                                 observations.append(observation)
