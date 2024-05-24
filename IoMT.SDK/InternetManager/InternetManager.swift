@@ -468,8 +468,12 @@ fileprivate class _baseCallback: DeviceCallback {
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if (statusCode <= 202 || statusCode == 400 || statusCode == 401 || statusCode == 403 || statusCode == 207) {
-                     // В этом блоке ваша логика обработки успешного запроса
-
+                     if(statusCode <= 202 || statusCode == 207){
+                         self.callback.onSendData(mac: UUID(), status: PlatformStatus.Success)
+                     }
+                     if(statusCode == 400 || statusCode == 401 || statusCode == 403){
+                         self.callback.onSendData(mac: UUID(), status: PlatformStatus.Failed)
+                     }
                      let backgroundQueue = DispatchQueue.global(qos: .background)
                      backgroundQueue.async {
                          let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
