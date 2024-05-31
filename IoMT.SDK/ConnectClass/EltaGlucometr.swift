@@ -284,6 +284,16 @@ public class EltaGlucometr:
     internal func bleManagerDidUpdateValueForChar(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            manager.disconnectPeripheralDevice(peripheral: peripheral)
+            if let centralManager = manager.centralManager {
+                centralManager.cancelPeripheralConnection(peripheral)
+            } else {
+                print("Central manager is nil")
+            }
+            self.rightDisconnect = false
+            EltaGlucometr.activeExecute = false
+            print("Disconnected by error")
+            return
         }
         if(EltaGlucometr.itter > 999){
             manager.disconnectPeripheralDevice(peripheral: peripheral)
