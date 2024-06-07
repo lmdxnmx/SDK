@@ -9,6 +9,8 @@ class ReachabilityManager {
         // Инициализируем Reachability
         guard let reachability = try? Reachability() else {
             fatalError("Unable to create Reachability")
+            DeviceService.getInstance().ls.addLogs(text:"Unable to create Reachability")
+
         }
         self.reachability = reachability
         im = manager
@@ -24,7 +26,6 @@ class ReachabilityManager {
         do {
             try reachability.startNotifier()
         } catch {
-            DeviceService.getInstance().ls.addLogs(text:"Could not start reachability notifier")
         }
     }
     

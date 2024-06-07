@@ -78,6 +78,7 @@ public class DeviceService {
         rm = ReachabilityManager(manager: im)
         ls = LogService()
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)
+        let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId")
         let logs = """
         \(timestamp) Параметры конфигурации сервиса:
         SDK инициализировано с следующими параметрами:
@@ -85,6 +86,7 @@ public class DeviceService {
         Password: \(_password)
         Callback: \(callbackFunction != nil ? "is not nil" : "nil")
         Платформа: \(_test ? "https://test.ppma.ru" : "https://ppma.ru")
+        instanceId:\(storedUUIDString == nil ? "nil" : storedUUIDString!)
         """
         ls.addLogs(text: logs)
         instanceDS = self
@@ -286,7 +288,6 @@ public class DeviceService {
                 // Обновляем дату в UserDefaults
                 UserDefaults.standard.set(time, forKey: serial)
             }else{
-                DeviceService.getInstance().ls.addLogs(text:"Эти измерения уже были")
             }
         } else {
             // Если дата отсутствует в UserDefaults, записываем её и выходим из функции
@@ -330,7 +331,6 @@ public class DeviceService {
                     UserDefaults.standard.set(time, forKey: serial)
                 }
             }else{
-                DeviceService.getInstance().ls.addLogs(text:"Эти измерения уже были")
             }
         } else {
             // Если дата отсутствует в UserDefaults, записываем её и выходим из функции

@@ -121,30 +121,27 @@ public class EltaGlucometr:
         manager.connectionDelegate = self
         EltaGlucometr._identifer = device.identifier
         manager.connectPeripheralDevice(peripheral: device, options: nil)
+        DeviceService.getInstance().ls.addLogs(text: EltaGlucometr.mail)
     }
 
     
     override public func search(timeout: UInt32) {
         manager.scaningDelegate = self
         manager.scanAllDevices()
-        print("START SEARCH")
         sleep(timeout)
         manager.stopScan()
         callback?.searchedDevices(peripherals: peripherals)
     }
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
-        DeviceService.getInstance().ls.addLogs(text:String(describing:status))
         if(status == 4){
             if let id = EltaGlucometr._identifer{
                 if(EltaGlucometr.activeExecute == true){
-                    DeviceService.getInstance().ls.addLogs(text: ("\(id) ConnectDisconnect"))
                     callback?.onStatusDevice(mac: id, status: BluetoothStatus.ConnectDisconnect)
                     EltaGlucometr.activeExecute = false;
                 }
             }else{
                 if(EltaGlucometr.activeExecute == true){
-                    print("disconnectBLE")
                     EltaGlucometr.activeExecute = false;
 
                 }
@@ -215,7 +212,6 @@ public class EltaGlucometr:
         manager.discoveryDelegate = self
         manager.readWriteCharDelegate = self
         callback?.onStatusDevice(mac: EltaGlucometr._identifer!, status: BluetoothStatus.ConnectSuccess)
-        DeviceService.getInstance().ls.addLogs(text: ("\(EltaGlucometr._identifer!) ConnectStart)"))
         peripheral.discoverServices(nil)
         self.peripheral = peripheral
         EltaGlucometr.itter = 0
@@ -232,7 +228,6 @@ public class EltaGlucometr:
         EltaGlucometr.activeExecute = false
         self.stopDisconnectTimer()
         callback?.onStatusDevice(mac: EltaGlucometr._identifer!, status: BluetoothStatus.ConnectDisconnect)
-        DeviceService.getInstance().ls.addLogs(text: ("\(EltaGlucometr._identifer!) ConnectDisconnect"))
         var observations: [(id:UUID,serial: String, model: String, time: Date, value: Double)] = []
         if(self.measurements == nil) { return; }
         let ret = self.measurements?.returnData()
@@ -250,6 +245,7 @@ public class EltaGlucometr:
                         
                         if(EltaGlucometr.mail != ""){
                             if let mac = self._mac {
+                                
                                 let concatenatedString = (EltaGlucometr.mail + mac + bleTime).lowercased()
                                 let uuid = UUID(md5: concatenatedString.md5)
                                 let observation = (id:uuid!,serial: serial, model: model, time: time, value: value)
@@ -257,7 +253,6 @@ public class EltaGlucometr:
                             }
                         }
                         else{
-                            print("noMail")
                             let observation = (id:UUID(),serial: serial, model: model, time: time, value: value)
                             observations.append(observation)
                         }
@@ -267,12 +262,10 @@ public class EltaGlucometr:
                     
                     if(measurements.count == 0){
                         self.callback?.onSendData(mac: peripheral.identifier, status: PlatformStatus.NoDataSend)
-                        DeviceService.getInstance().ls.addLogs(text: ("\(EltaGlucometr._identifer!) NoDataSend"))
 
                     }
                 }else{
                     self.callback?.onSendData(mac: peripheral.identifier, status: PlatformStatus.Failed)
-                    DeviceService.getInstance().ls.addLogs(text: ("\(EltaGlucometr._identifer!) Failed"))
 
                 }}}
             
@@ -284,15 +277,15 @@ public class EltaGlucometr:
     internal func bleManagerDidUpdateValueForChar(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
             manager.disconnectPeripheralDevice(peripheral: peripheral)
             if let centralManager = manager.centralManager {
                 centralManager.cancelPeripheralConnection(peripheral)
             } else {
-                print("Central manager is nil")
+                DeviceService.getInstance().ls.addLogs(text: ("Central manager is nil"))
             }
             self.rightDisconnect = false
             EltaGlucometr.activeExecute = false
-            print("Disconnected by error")
             return
         }
         if(EltaGlucometr.itter > 999){
@@ -304,24 +297,22 @@ public class EltaGlucometr:
             }
             self.rightDisconnect = true
             EltaGlucometr.activeExecute = false
-            print("Disconnected by itter > 999")
             return
         }
         if let resultStr = String(data: characteristic.value!, encoding: .utf8) {
             if(resultStr.contains("enter pincode first")){
                 callback?.onStatusDevice(mac: peripheral.identifier, status: BluetoothStatus.NotCorrectPin)
-                DeviceService.getInstance().ls.addLogs(text: ("\(peripheral.identifier.uuidString) NotCorrectPin"))
 
                 manager.disconnectPeripheralDevice(peripheral: peripheral)
             }
             if(resultStr.starts(with: "ser.")){
                 serial = resultStr.replacingOccurrences(of: "ser.", with: "")
+                DeviceService.getInstance().ls.addLogs(text:"Serial: " + serial)
                 if(UserDefaults.standard.object(forKey: serial) == nil){
                     getLastTime(serial: serial)
                     sleep(2)
                 }
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.SerialNumber, value: serial)
-                DeviceService.getInstance().ls.addLogs(text: ("\(peripheral.identifier) \(serial)"))
 
                 self.measurements!.addInfo(atr: Atributes.SerialNumber, value: serial)
             }
@@ -331,10 +322,8 @@ public class EltaGlucometr:
             if(resultStr.starts(with: "b")){
                 let data = resultStr.replacingOccurrences(of: "b", with: "").replacingOccurrences(of: "t", with: "").split(separator: ".")
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.BatteryLevel, value: data[0])
-                DeviceService.getInstance().ls.addLogs(text: ("\(peripheral.identifier) \(data[0])"))
                 self.measurements!.addInfo(atr: Atributes.BatteryLevel, value: data[0])
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: data[1])
-                DeviceService.getInstance().ls.addLogs(text: ("\(peripheral.identifier) \(data[1])"))
                 self.measurements!.addInfo(atr: Atributes.Temperature, value: data[1])
             }
             if(resultStr.starts(with: "rd")){
@@ -348,7 +337,6 @@ public class EltaGlucometr:
                     }
                     self.rightDisconnect = true
                     EltaGlucometr.activeExecute = false
-                    print("Disconnected by rd0")
                     return
                 }
                 let dateStr: String = String(measurement.prefix(12))
@@ -361,7 +349,6 @@ public class EltaGlucometr:
                 let timeStamp = EltaGlucometr.FormatDeviceTime.date(from: dateStr)!
                 m.add(atr: Atributes.BleTime, value: dateStr)
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.TimeStamp, value: timeStamp)
-                DeviceService.getInstance().ls.addLogs(text: ("\(peripheral.identifier) \(timeStamp)"))
                 m.add(atr: Atributes.TimeStamp, value: timeStamp)
                 if(serial != ""){
                     let savedDate = UserDefaults.standard.object(forKey: serial) as? Date
@@ -371,11 +358,10 @@ public class EltaGlucometr:
                         if let centralManager = manager.centralManager {
                             centralManager.cancelPeripheralConnection(peripheral)
                         } else {
-                            print("Central manager is nil")
+                            DeviceService.getInstance().ls.addLogs(text: "CentralManager is nil")
                         }
                         self.rightDisconnect = true
                         EltaGlucometr.activeExecute = false
-                        print("Disconnected by cacheData")
                         return
                     }
                 }
@@ -386,7 +372,6 @@ public class EltaGlucometr:
                 let value: Double = Double(valueStr)! / 10
                 callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Glucose, value: value)
                 m.add(atr: Atributes.Glucose, value: value)
-                DeviceService.getInstance().ls.addLogs(text: ("\(peripheral.identifier) \(value)"))
 
                 
                 self.measurements!.addMeasurements(Object: m)
@@ -400,18 +385,21 @@ public class EltaGlucometr:
     internal func bleManagerDidWriteValueForChar(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
         }
     }
     
     internal func bleManagerDidUpdateValueForDesc(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
         }
     }
     
     internal func bleManagerDidWriteValueForDesc(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
         }
     }
 
@@ -419,6 +407,7 @@ public class EltaGlucometr:
     internal func bleManagerDidUpdateNotificationState(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?){
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
         }
     }
     
@@ -430,13 +419,13 @@ public class EltaGlucometr:
                 peripheral.discoverCharacteristics(nil, for: service)
             }
         } else {
-            DeviceService.getInstance().ls.addLogs(text:"No services found")
         }
     }
     internal func bleManagerDiscoverCharacteristics (_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?)
     {
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
         }
         rxtxService = service
         rxCharacteistic = rxtxService!.characteristics![0]
@@ -454,8 +443,8 @@ public class EltaGlucometr:
     {
         if let error = error{
             callback?.onExpection(mac: peripheral.identifier, ex: error)
+            DeviceService.getInstance().ls.addLogs(text: "\(error)")
         }
-        DeviceService.getInstance().ls.addLogs(text:"bleManagerDiscoverDescriptors")
     }
     
     internal func setPin(device: CBPeripheral){
@@ -484,7 +473,6 @@ public class EltaGlucometr:
     }
     internal func setTime(device: CBPeripheral){
         let time = Date().bleTime
-        DeviceService.getInstance().ls.addLogs(text:"Settime: " + String(describing:time))
         let response: Data = String("settime." + time).data(using: .utf8)!
         manager.writeCharacteristicValue(peripheral: device, data: response, char: rxCharacteistic!, type: CBCharacteristicWriteType.withResponse)
     }

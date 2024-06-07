@@ -83,7 +83,7 @@ internal class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
                 break
             case CBManagerState.poweredOff:
                 scaningDelegate?.scanningStatus(status:CBManagerState.poweredOff.rawValue)
-                DeviceService.getInstance().ls.addLogs(text:"poweredOff")
+                
                 break
             case CBManagerState.resetting:
                 scaningDelegate?.scanningStatus(status:CBManagerState.resetting.rawValue)
@@ -102,7 +102,7 @@ internal class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDeleg
                 break
             case CBCentralManagerState.poweredOff:
                 scaningDelegate?.scanningStatus(status:CBCentralManagerState.poweredOff.rawValue)
-                DeviceService.getInstance().ls.addLogs(text:"poweredOff")
+              
                 break
             case CBCentralManagerState.poweredOn:
                 scaningDelegate?.scanningStatus(status:CBCentralManagerState.poweredOn.rawValue)

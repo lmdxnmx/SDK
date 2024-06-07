@@ -126,7 +126,6 @@ public class DoctisFetal:
 
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
-        DeviceService.getInstance().ls.addLogs(text:String(describing:status))
         if(status == 4){
             rightDisconnect = false
             DoctisFetal.activeExecute = false

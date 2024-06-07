@@ -134,7 +134,7 @@ fileprivate class _baseCallback: DeviceCallback {
              do {
                  try backgroundContext.save()
              } catch {
-                 print("Failed to save context: \(error)")
+                 DeviceService.getInstance().ls.addLogs(text: ("Failed to save context: \(error)"))
              }
          }
 
@@ -170,7 +170,6 @@ fileprivate class _baseCallback: DeviceCallback {
         if(isCoreDataNotEmpty()){
             self.stopTimer()
             self.interval = 1
-            DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
@@ -179,7 +178,6 @@ fileprivate class _baseCallback: DeviceCallback {
     internal func postResource(identifier: UUID, data: Data) {
 
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
-        print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
@@ -234,7 +232,6 @@ fileprivate class _baseCallback: DeviceCallback {
                         do{
                         let existingEntities = try context.fetch(fetchRequest)
                         for entity in existingEntities {
-                            DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
                             
                         }
                         if existingEntities.isEmpty {
@@ -256,7 +253,6 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
-                    DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                 }
             }
         }
@@ -265,7 +261,6 @@ fileprivate class _baseCallback: DeviceCallback {
      internal func postResource(data: Data, id:UUID) {
          self.dispatchGroup.enter()
         let timeUrl  = URL(string: (self.baseAddress + ":/fetal/iiot/api/Observation/data"))!
-        print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
@@ -304,7 +299,6 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
-                print(statusCode)
                 if(statusCode <= 202 || statusCode == 401 || statusCode == 403 || statusCode == 400 || statusCode == 207){
                     if(statusCode <= 202 || statusCode == 207){
                         self.postFile(id: id)
@@ -368,7 +362,6 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
-                    DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                 }
             }
             self.dispatchGroup.leave()
@@ -426,19 +419,15 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  if let httpResponse = response as? HTTPURLResponse {
                      let statusCode = httpResponse.statusCode
-                     print(statusCode)
                      if(statusCode <= 202 || statusCode == 207){
-                         print("File success")
                          self.callback.onSendData(mac: id, status: PlatformStatus.Success)
                      }
                      else{
-                         print("File failed")
                          self.callback.onSendData(mac: id, status: PlatformStatus.Failed)
                      }
                  }
                  if let responseData = data {
                      if let responseString = String(data: responseData, encoding: .utf8) {
-                         DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                      }
                  }
              }; task.resume()}
@@ -462,7 +451,6 @@ fileprivate class _baseCallback: DeviceCallback {
 
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
-                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
              }
 
              if let httpResponse = response as? HTTPURLResponse {
@@ -505,7 +493,6 @@ fileprivate class _baseCallback: DeviceCallback {
 
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
-                     DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)")
                  }
              }
 
@@ -563,7 +550,6 @@ fileprivate class _baseCallback: DeviceCallback {
              
              if httpResponse.statusCode <=  202 {
                  // Очищаем только объекты типа Logs из CoreData
-                 print("clearLOGS()")
                  DeviceService.getInstance().ls.clearLogsFromCoreData()
              } else {
                  DeviceService.getInstance().ls.addLogs(text:"Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
@@ -582,7 +568,6 @@ fileprivate class _baseCallback: DeviceCallback {
                  
                  do {
                      let objects = try context.fetch(fetchRequest)
-                     DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
                      
                      var currentArray: [Data] = [] // Текущий массив данных
                      

@@ -24,7 +24,6 @@ internal class BundleTemplate {
         }
         jsonString.removeLast() // Удаляем последнюю запятую
         jsonString += "}"
-        print(jsonString)
         DeviceService.getInstance().im.postResource(data: Data(jsonString.utf8), bundle: true)
     }
     

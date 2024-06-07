@@ -105,15 +105,15 @@ private var sharedManager: ConciergeManager? = nil
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202){
-                     ConciergeService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+           
                  }
                  else{
-                     ConciergeService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                     
                  }
              }
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
-                     ConciergeService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                     
                  }
              }
          }
@@ -135,16 +135,10 @@ private var sharedManager: ConciergeManager? = nil
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
-                 if(statusCode <= 202){
-                     ConciergeService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
-                 }
-                 else{
-                     ConciergeService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
-                 }
+                
              }
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
-                     ConciergeService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                  }
              }
          }

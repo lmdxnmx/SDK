@@ -86,8 +86,7 @@ import CoreData
                  // Подготавливаем данные для отправки на сервер
                  do {
                      let jsonData = try JSONSerialization.data(withJSONObject: logsDataDictionary, options: [])
-                     // Отправка данных на сервер
-                     print(logsDataDictionary)
+          
                      DeviceService.getInstance().im.sendLogsToServer(data: jsonData)
                  } catch {
                      print("Ошибка при подготовке или отправке данных на сервер: \(error)")
