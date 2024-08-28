@@ -170,7 +170,7 @@ public class EltaGlucometr:
      func resetDisconnectTimer() {
          stopDisconnectTimer()
          startDisconnectTimer()
-     }
+     }  
     func formatMACAddress(_ mac: String) -> String {
         var formattedMAC = ""
         for (index, char) in mac.enumerated() {

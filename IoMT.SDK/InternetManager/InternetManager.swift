@@ -134,7 +134,7 @@ fileprivate class _baseCallback: DeviceCallback {
              do {
                  try backgroundContext.save()
              } catch {
-                 DeviceService.getInstance().ls.addLogs(text: ("Failed to save context: \(error)"))
+                 print("Failed to save context: \(error)")
              }
          }
 
@@ -170,6 +170,7 @@ fileprivate class _baseCallback: DeviceCallback {
         if(isCoreDataNotEmpty()){
             self.stopTimer()
             self.interval = 1
+            DeviceService.getInstance().ls.addLogs(text:"Таймер сброшен")
             self.timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(sendDataToServer), userInfo: nil, repeats: false)
         }
     }
@@ -178,6 +179,7 @@ fileprivate class _baseCallback: DeviceCallback {
     internal func postResource(identifier: UUID, data: Data) {
 
         let timeUrl  = URL(string: (self.baseAddress + "/gateway/iiot/api/Observation/data"))!
+        print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
@@ -232,6 +234,7 @@ fileprivate class _baseCallback: DeviceCallback {
                         do{
                         let existingEntities = try context.fetch(fetchRequest)
                         for entity in existingEntities {
+                            DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
                             
                         }
                         if existingEntities.isEmpty {
@@ -253,6 +256,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
+                    DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                 }
             }
         }
@@ -261,6 +265,7 @@ fileprivate class _baseCallback: DeviceCallback {
      internal func postResource(data: Data, id:UUID) {
          self.dispatchGroup.enter()
         let timeUrl  = URL(string: (self.baseAddress + ":/fetal/iiot/api/Observation/data"))!
+        print(timeUrl)
         var urlRequest: URLRequest = URLRequest(url: timeUrl)
         urlRequest.httpMethod = "POST"
         urlRequest.addValue("Basic " + self.auth, forHTTPHeaderField: "Authorization")
@@ -299,6 +304,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let httpResponse = response as? HTTPURLResponse {
                 let statusCode = httpResponse.statusCode
+                print(statusCode)
                 if(statusCode <= 202 || statusCode == 401 || statusCode == 403 || statusCode == 400 || statusCode == 207){
                     if(statusCode <= 202 || statusCode == 207){
                         self.postFile(id: id)
@@ -362,6 +368,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
+                    DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                 }
             }
             self.dispatchGroup.leave()
@@ -419,15 +426,19 @@ fileprivate class _baseCallback: DeviceCallback {
                  }
                  if let httpResponse = response as? HTTPURLResponse {
                      let statusCode = httpResponse.statusCode
+                     print(statusCode)
                      if(statusCode <= 202 || statusCode == 207){
+                         print("File success")
                          self.callback.onSendData(mac: id, status: PlatformStatus.Success)
                      }
                      else{
+                         print("File failed")
                          self.callback.onSendData(mac: id, status: PlatformStatus.Failed)
                      }
                  }
                  if let responseData = data {
                      if let responseString = String(data: responseData, encoding: .utf8) {
+                         DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                      }
                  }
              }; task.resume()}
@@ -451,6 +462,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
              if let error = error {
                  self.callback.onExpection(mac: identifier, ex: error)
+                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
              }
 
              if let httpResponse = response as? HTTPURLResponse {
@@ -493,6 +505,7 @@ fileprivate class _baseCallback: DeviceCallback {
 
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
+                     DeviceService.getInstance().ls.addLogs(text: "Response: \(responseString)")
                  }
              }
 
@@ -550,9 +563,244 @@ fileprivate class _baseCallback: DeviceCallback {
              
              if httpResponse.statusCode <=  202 {
                  // Очищаем только объекты типа Logs из CoreData
+                 print("clearLOGS()")
                  DeviceService.getInstance().ls.clearLogsFromCoreData()
              } else {
                  DeviceService.getInstance().ls.addLogs(text:"Ошибка: Не удалось очистить Logs из CoreData. Код ответа сервера: \(httpResponse.statusCode)")
+             }
+         }
+         task.resume()
+     }
+     public func getResource(url: String, completion: @escaping (FhirObj?) -> Void) {
+         let timeUrl = URL(string: (self.baseAddress + url))!
+         var urlRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+         print(timeUrl)
+         if let access = UserDefaults.standard.string(forKey: "access_token") {
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 completion(FhirObj.init(code: 1))
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 return
+             }
+             
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if statusCode == 401 {
+                     self.refreshToken {
+                         self.getResource(url: url, completion: completion)
+                     }
+                     return
+                 }
+                 
+                 if statusCode <= 202 {
+                     if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
+                         completion(FhirObj.init(fhirData: responseString, code: 0))
+                     } else {
+                         completion(FhirObj.init(code: -1))
+                     }
+                 } else {
+                     completion(FhirObj.init(code: -1))
+                 }
+             } else {
+                 completion(FhirObj.init(code: -1))
+             }
+         }
+         task.resume()
+     }
+
+     public func registration(data:Data){
+         let timeUrl  = URL(string: (self.baseAddress + "/concierge/api/user/register"))!
+         print(timeUrl)
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "POST"
+         urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         urlRequest.httpBody = data
+     
+         
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+             }
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if(statusCode <= 202){
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+                 else{
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+             }
+             if let responseData = data {
+                 if let responseString = String(data: responseData, encoding: .utf8) {
+                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                 }
+             }
+         }
+         task.resume()
+     }
+     
+     public func resetTokens(phone:String){
+         let timeUrl  = URL(string: (self.baseAddress + "/concierge/login/reset"))!
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         urlRequest.addValue(phone, forHTTPHeaderField: "phone")
+         
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+             }
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if(statusCode <= 202){
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+                 else{
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+             }
+             if let responseData = data {
+                 if let responseString = String(data: responseData, encoding: .utf8) {
+                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                 }
+             }
+         }
+         task.resume()
+     }
+     public func confirmPhone(url:String){
+         let timeUrl  = URL(string: (self.baseAddress + url))!
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "POST"
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         var status:Int = 500
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+             }
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if(statusCode <= 202){
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                     status = statusCode
+                 }
+                 else{
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                     status = statusCode
+                 }
+             }
+             if let responseData = data {
+                 if let responseString = String(data: responseData, encoding: .utf8) {
+                     if let jsonData = responseString.data(using: .utf8) {
+                         do {
+                             if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                                 if let accessToken = json["access_token"] as? String,
+                                    let refreshToken = json["refresh_token"] as? String {
+                                     UserDefaults.standard.set(accessToken, forKey: "access_token")
+                                     UserDefaults.standard.set(refreshToken, forKey: "refresh_token")
+                                 }
+                             }
+                         } catch {
+                             print("Ошибка при парсинге JSON: \(error.localizedDescription)")
+                         }
+                     }
+                 }
+             }
+         }
+         task.resume()
+     }
+     public func sendDiary(sendData:Data,debug:Bool){
+         let timeUrl  = URL(string: (self.baseAddress + "/concierge/api/pm/observation?debug=\(debug)"))!
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "PUT"
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         if let access = UserDefaults.standard.string(forKey: "access_token"){
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         urlRequest.httpBody = sendData
+         print(sendData)
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+             }
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if statusCode == 401 {
+                     self.refreshToken {
+                             self.sendDiary(sendData: sendData, debug: debug)
+                     }
+                     return
+                 }
+                 if(statusCode <= 202){
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+                 else{
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+             }
+             if let responseData = data {
+                 if let responseString = String(data: responseData, encoding: .utf8) {
+                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                 }
+             }
+         }
+         task.resume()
+     }
+     public func refreshToken(completion: @escaping () -> Void){
+         let timeUrl  = URL(string: (self.baseAddress + "/concierge/login/access"))!
+         var urlRequest: URLRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         if let refresh = UserDefaults.standard.string(forKey: "refresh_token"){
+             urlRequest.addValue(refresh, forHTTPHeaderField: "refreshToken")
+         }
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+             }
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if(statusCode <= 202){
+                 }
+                 else{
+                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 }
+             }
+             if let responseData = data {
+                 if let responseString = String(data: responseData, encoding: .utf8) {
+                     if let jsonData = responseString.data(using: .utf8) {
+                         do {
+                             if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                                 if let accessToken = json["access_token"] as? String{
+                                     DeviceService.getInstance().ls.addLogs(text:"Токен успешно обновлен")
+                                     UserDefaults.standard.set(accessToken, forKey: "access_token")
+                                     completion()
+                                 }
+                             }
+                         } catch {
+                             print("Ошибка при парсинге JSON: \(error.localizedDescription)")
+                         }
+                     }
+                 }
              }
          }
          task.resume()
@@ -568,6 +816,7 @@ fileprivate class _baseCallback: DeviceCallback {
                  
                  do {
                      let objects = try context.fetch(fetchRequest)
+                     DeviceService.getInstance().ls.addLogs(text: "Попытка отправить: \(String(describing: objects.count)) через \(String(describing:self.interval))")
                      
                      var currentArray: [Data] = [] // Текущий массив данных
                      

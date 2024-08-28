@@ -21,8 +21,7 @@ public class ConciergeService {
     internal var _password: String = ""
     
     private var _test: Bool = false
-    internal var ls: LogService
-    internal var cm:ConciergeManager
+
     
     public static func getInstance() -> ConciergeService {
         if(instanceDS == nil) {
@@ -41,8 +40,7 @@ public class ConciergeService {
             UserDefaults.standard.set(newUUID.uuidString, forKey: "instanceId")
         }
         BLEManager.getSharedBLEManager().initCentralManager(queue: DispatchQueue.global(), options: nil)
-        ls = LogService()
-        cm = ConciergeManager(login: _login, password: _password, debug: _test)
+        DeviceService.getInstance();
         instanceDS = self
     }
     
@@ -52,8 +50,7 @@ public class ConciergeService {
         _login = login
         _password = password
         _test = debug
-        ls = LogService()
-        cm = ConciergeManager(login: _login, password: _password, debug: _test)
+        DeviceService.getInstance();
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)
         let logs = """
         \(timestamp) Параметры конфигурации сервиса:
@@ -62,7 +59,7 @@ public class ConciergeService {
         Password: \(_password)
         Платформа: \(_test ? "https://test.ppma.ru" : "https://ppma.ru")
         """
-        ls.addLogs(text: logs)
+        DeviceService.getInstance().ls.addLogs(text: logs)
         instanceDS = self
     }
     
@@ -72,53 +69,52 @@ public class ConciergeService {
         _password = password
         instanceDS = self
     }
-    public func getFhirRepresentation(type: String, id: UUID, completion: @escaping (String?) -> Void) {
-        let url = ":8080/concierge/api/fhir/\(type)/\(id)"
-        cm.getResource(url: url) { result in
-            // Вызываем замыкание completion с результатом запроса
+    public func getFhirRepresentation(type: String, id: UUID, completion: @escaping (FhirObj?) -> Void) {
+        let url = "/concierge/api/fhir/\(type)/\(id)"
+        DeviceService.getInstance().im.getResource(url: url) { result in
             completion(result)
         }
     }
 
     public func getPmList(completion: @escaping (String?) -> Void){
-        let url:String = ":8080/concierge/api/pm"
-        cm.getResource(url: url) { result in
-            // Вызываем замыкание completion с результатом запроса
-            completion(result)
-        }
+        let url:String = "/concierge/api/pm"
+//        DeviceService.getInstance().im.getResource(url: url) { result in
+//            // Вызываем замыкание completion с результатом запроса
+//            completion(result)
+//        }
     }
     public func getMoInfo(id:UUID, completion: @escaping (String?) -> Void){
-        let url:String = ":8080/concierge/api/mo/\(id.uuidString)"
-        cm.getResource(url: url) { result in
-            // Вызываем замыкание completion с результатом запроса
-            completion(result)
-        }
+        let url:String = "/concierge/api/mo/\(id.uuidString)"
+//        DeviceService.getInstance().im.getResource(url: url) { result in
+//            // Вызываем замыкание completion с результатом запроса
+//            completion(result)
+//        }
     }
     public func getObs(year:Int, month:Int, day:Int, completion: @escaping (String?) -> Void){
-        let url:String = ":8080/concierge/api/fhir/?year=\(year)&month=\(month)&day=\(day)"
-        cm.getResource(url: url) { result in
-            // Вызываем замыкание completion с результатом запроса
-            completion(result)
-        }
+        let url:String = "/concierge/api/fhir/?year=\(year)&month=\(month)&day=\(day)"
+//        DeviceService.getInstance().im.getResource(url: url) { result in
+//            // Вызываем замыкание completion с результатом запроса
+//            completion(result)
+//        }
     }
     public func registration(phone:String, password:String, phoneSecondary:String, email:String){
-        cm.registration(data: ConciergeTemplate.Reg(phone: phone, password: password, phoneSecondary: phoneSecondary, email: email)!)
+        DeviceService.getInstance().im.registration(data: ConciergeTemplate.Reg(phone: phone, password: password, phoneSecondary: phoneSecondary, email: email)!)
     }
     public func confirmRegistrationPhone(code:String){
-        let url:String = ":8080/concierge/api/user/register/\(code)"
-        cm.confirmPhone(url: url)
+        let url:String = "/concierge/api/user/register/\(code)"
+        DeviceService.getInstance().im.confirmPhone(url: url)
     }
     public func confirmLoginPhone(code:String){
-        let url:String = ":8080/concierge/login/reset/\(code)"
-        cm.confirmPhone(url: url)
+        let url:String = "/concierge/login/reset/\(code)"
+        DeviceService.getInstance().im.confirmPhone(url: url)
     }
     public func resetTokens(phone:String){
-        cm.resetTokens(phone: phone)
+        DeviceService.getInstance().im.resetTokens(phone: phone)
     }
     public func sendDiary(derivedFrom: UUID? = nil, subject: UUID, basedOn: UUID,
                           value: [String:String], code: Int, start: Date, finish: Date? = nil,
                           note: String? = nil){
-        cm.sendDiary(sendData: buildObservationJson(derivedFromStr: derivedFrom, subjectStr: subject, basedOnStr: basedOn, value: value, code: code, start: start, finish: finish, note: note)!, debug:_test)
+        DeviceService.getInstance().im.sendDiary(sendData: buildObservationJson(derivedFromStr: derivedFrom, subjectStr: subject, basedOnStr: basedOn, value: value, code: code, start: start, finish: finish, note: note)!, debug:_test)
     }
 }
 
