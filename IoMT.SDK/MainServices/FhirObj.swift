@@ -7,7 +7,7 @@
 
 import Foundation
 public class FhirObj:DataHandler{
-var fhirData:String? = nil;
+    public var fhirData:String? = nil;
     init(fhirData: String?, code:Int) {
         super.init(code: code)
         self.fhirData = fhirData

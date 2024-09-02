@@ -46,7 +46,7 @@ fileprivate class _baseCallback: DeviceCallback {
         if(!debug){
             baseAddress = "https://ppma.ru"
         }
-        else{ baseAddress = "https://test.ppma.ru" }
+        else{ baseAddress = "https://dev.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -571,7 +571,7 @@ fileprivate class _baseCallback: DeviceCallback {
          }
          task.resume()
      }
-     public func getResource(url: String, completion: @escaping (FhirObj?) -> Void) {
+     public func getFhir(url: String, completion: @escaping (FhirObj?) -> Void) {
          let timeUrl = URL(string: (self.baseAddress + url))!
          var urlRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "GET"
@@ -595,11 +595,11 @@ fileprivate class _baseCallback: DeviceCallback {
                  let statusCode = httpResponse.statusCode
                  if statusCode == 401 {
                      self.refreshToken {
-                         self.getResource(url: url, completion: completion)
+                         self.getFhir(url: url, completion: completion)
                      }
                      return
                  }
-                 
+                 print(statusCode)
                  if statusCode <= 202 {
                      if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
                          completion(FhirObj.init(fhirData: responseString, code: 0))
@@ -615,77 +615,205 @@ fileprivate class _baseCallback: DeviceCallback {
          }
          task.resume()
      }
-
-     public func registration(data:Data){
-         let timeUrl  = URL(string: (self.baseAddress + "/concierge/api/user/register"))!
+     public func getPm(url: String, completion: @escaping (PmBundle?) -> Void) {
+         let timeUrl = URL(string: (self.baseAddress + url))!
+         var urlRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
          print(timeUrl)
-         var urlRequest: URLRequest = URLRequest(url: timeUrl)
-         urlRequest.httpMethod = "POST"
-         urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
+         if let access = UserDefaults.standard.string(forKey: "access_token") {
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
-         urlRequest.httpBody = data
-     
-         
+
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
              if let error = error {
+                 completion(PmBundle.init(code: 1))
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 return
              }
+             
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
-                 if(statusCode <= 202){
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 if statusCode == 401 {
+                     self.refreshToken {
+                         self.getPm(url: url, completion: completion)
+                     }
+                     return
                  }
-                 else{
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                 print(statusCode)
+                 
+                     if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
+                         DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                         if statusCode <= 202 {
+                         do {
+                             completion(JsonToObj.decodePmBundle(from: responseData))
+                         } catch {
+                             print("Ошибка декодирования: \(error)")
+                         }
+
+           
+                     } else {
+                         completion(PmBundle.init(code: -1))
+                     }
+                 } else {
+                     completion(PmBundle.init(code: -1))
                  }
-             }
-             if let responseData = data {
-                 if let responseString = String(data: responseData, encoding: .utf8) {
-                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
-                 }
+             } else {
+                 completion(PmBundle.init(code: -1))
              }
          }
          task.resume()
      }
-     
-     public func resetTokens(phone:String){
-         let timeUrl  = URL(string: (self.baseAddress + "/concierge/login/reset"))!
+     public func getMoInfo(url: String, completion: @escaping (MoInfoObj?) -> Void) {
+         let timeUrl = URL(string: (self.baseAddress + url))!
+         var urlRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+         print(timeUrl)
+         
+         if let access = UserDefaults.standard.string(forKey: "access_token") {
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         urlRequest.addValue(self.auth, forHTTPHeaderField: "baseAuth")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 completion(MoInfoObj(code: 1))
+                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
+                 return
+             }
+             
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if statusCode == 401 {
+                     self.refreshToken {
+                         self.getMoInfo(url: url, completion: completion) // Исправлено имя метода
+                     }
+                     return
+                 }
+                 print(statusCode)
+                 
+                 if let responseData = data {
+                     DeviceService.getInstance().ls.addLogs(text: "Response: \(String(data: responseData, encoding: .utf8) ?? "No data")")
+                     if statusCode <= 202 {
+                         do {
+                             let decodedObject = try JSONDecoder().decode(MoInfoObj.self, from: responseData)
+                             completion(decodedObject)
+                         } catch {
+                             print("Ошибка декодирования: \(error)")
+                             completion(MoInfoObj(code: -1))
+                         }
+                     } else {
+                         completion(MoInfoObj(code: -1))
+                     }
+                 } else {
+                     completion(MoInfoObj(code: -1))
+                 }
+             } else {
+                 completion(MoInfoObj(code: -1))
+             }
+         }
+         task.resume()
+     }
+     public func getDeviceInfo(url: String, completion: @escaping (DeviceInfoObj?) -> Void) {
+         let timeUrl = URL(string: (self.baseAddress + url))!
+         var urlRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+       
+         
+         if let access = UserDefaults.standard.string(forKey: "access_token") {
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         urlRequest.addValue(self.auth, forHTTPHeaderField: "baseAuth")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 completion(DeviceInfoObj(code: 1))
+                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
+                 return
+             }
+             
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if statusCode == 401 {
+                     self.refreshToken {
+                         self.getDeviceInfo(url: url, completion: completion) // Исправлено имя метода
+                     }
+                     return
+                 }
+          
+                 
+                 if let responseData = data {
+                     DeviceService.getInstance().ls.addLogs(text: "Response: \(String(data: responseData, encoding: .utf8) ?? "No data")")
+                     if statusCode <= 202 {
+                         do {
+                              
+                             completion(JsonToObj.decodeDeviceInfo(from: responseData))
+                         } catch {
+                             print("Ошибка декодирования: \(error)")
+                             completion(DeviceInfoObj(code: -1))
+                         }
+                     } else {
+                         completion(DeviceInfoObj(code: -1))
+                     }
+                 } else {
+                     completion(DeviceInfoObj(code: -1))
+                 }
+             } else {
+                 completion(DeviceInfoObj(code: -1))
+             }
+         }
+         task.resume()
+     }
+     public func startSession(phone:String, completion: @escaping (DataHandler?) -> Void){
+         let timeUrl  = URL(string: (self.baseAddress + "/concierge/login/auth"))!
+         print(timeUrl)
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "GET"
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
          urlRequest.addValue(phone, forHTTPHeaderField: "phone")
+         urlRequest.addValue("true", forHTTPHeaderField: "debug")
          
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
              if let error = error {
-                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 completion(DataHandler.init(code: 1))
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
                  if(statusCode <= 202){
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                     completion(DataHandler.init(code: 0))
                  }
                  else{
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
-                 }
-             }
-             if let responseData = data {
-                 if let responseString = String(data: responseData, encoding: .utf8) {
-                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                     if(statusCode == 400){
+                         completion(DataHandler.init(code: 2))
+                     }else{
+                         completion(DataHandler.init(code: -1))
+                     }
                  }
              }
          }
          task.resume()
      }
-     public func confirmPhone(url:String){
+     
+  
+     public func confirmPhone(url:String, completion: @escaping (DataHandler?) -> Void){
          let timeUrl  = URL(string: (self.baseAddress + url))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "POST"
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          var status:Int = 500
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
@@ -694,13 +822,21 @@ fileprivate class _baseCallback: DeviceCallback {
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
-                 if(statusCode <= 202){
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
-                     status = statusCode
+                 if let error = error {
+                     completion(DataHandler.init(code: 1))
                  }
-                 else{
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
-                     status = statusCode
+                 if let httpResponse = response as? HTTPURLResponse {
+                     let statusCode = httpResponse.statusCode
+                     if(statusCode <= 202){
+                         completion(DataHandler.init(code: 0))
+                     }
+                     else{
+                         if(statusCode == 400){
+                             completion(DataHandler.init(code: 2))
+                         }else{
+                             completion(DataHandler.init(code: -1))
+                         }
+                     }
                  }
              }
              if let responseData = data {
@@ -723,36 +859,110 @@ fileprivate class _baseCallback: DeviceCallback {
          }
          task.resume()
      }
-     public func sendDiary(sendData:Data,debug:Bool){
+     public func sendDiary(id:UUID,sendData:Data,debug:Bool){
+         self.dispatchGroup.enter()
          let timeUrl  = URL(string: (self.baseAddress + "/concierge/api/pm/observation?debug=\(debug)"))!
          var urlRequest: URLRequest = URLRequest(url: timeUrl)
          urlRequest.httpMethod = "PUT"
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.addValue("Id " + self.instanceId.uuidString, forHTTPHeaderField: "InstanceID")
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+         let jsonString = String(data: sendData, encoding: .utf8)
          if let access = UserDefaults.standard.string(forKey: "access_token"){
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
          }
          urlRequest.httpBody = sendData
+         
          print(sendData)
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
              if let error = error {
+                 self.callback.onExpection(mac: id, ex: error)
+                 
                  DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 if(debug == false){
+                     let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                     context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+                     let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                     fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
+                     do{
+                         let existingEntities = try context.fetch(fetchRequest)
+                         if existingEntities.isEmpty {
+                             // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
+                             let newTask = Entity(context: context)
+                             newTask.title = id
+                             newTask.body = jsonString
+                             newTask.deviceType = "Diary"
+                             do {
+                                 try context.save()
+                             } catch {
+                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                             }}}catch{
+                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                             }
+                 }
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
-                 if statusCode == 401 {
-                     self.refreshToken {
-                             self.sendDiary(sendData: sendData, debug: debug)
+                 print(statusCode)
+                 if(statusCode <= 202 || statusCode == 401 || statusCode == 403 || statusCode == 400 || statusCode == 207){
+                  
+                     let backgroundQueue = DispatchQueue.global(qos: .background)
+                     backgroundQueue.async {
+                         let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                         backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+
+                         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Entity")
+                         fetchRequest.returnsObjectsAsFaults = false
+                         fetchRequest.predicate = NSPredicate(format: "deviceType == %@", "DoctisFetal" as CVarArg)
+                         fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
+                         do {
+                             let results = try backgroundContext.fetch(fetchRequest)
+                             for object in results {
+                                 guard let objectData = object as? NSManagedObject else { continue }
+                                 guard objectData.managedObjectContext == backgroundContext else { continue }
+                                 backgroundContext.delete(objectData)
+                             }
+                             try backgroundContext.save()
+
+                             self.stopTimer()
+                             self.interval = 1
+                         } catch let error {
+                             print("Delete all data error :", error)
+                         }
                      }
-                     return
-                 }
-                 if(statusCode <= 202){
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
-                 }
+                        
+                        // Вызов колбэка
+                        self.callback.onSendData(mac: id, status: PlatformStatus.Success)
+                    }
                  else{
-                     DeviceService.getInstance().ls.addLogs(text:"Status: \(statusCode)")
+                     if(statusCode != 400 && statusCode != 401  && statusCode != 403 && debug == false){
+                         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+                         context.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
+                         let fetchRequest: NSFetchRequest<Entity> = Entity.fetchRequest()
+                         fetchRequest.predicate = NSPredicate(format: "title == %@", id as CVarArg)
+                         do{
+                         let existingEntities = try context.fetch(fetchRequest)
+                         for entity in existingEntities {
+                             DeviceService.getInstance().ls.addLogs(text:"Title: \(entity.title?.uuidString ?? "No title"), JSON Body: \(entity.body ?? "No body")")
+                             
+                         }
+                         if existingEntities.isEmpty {
+                             // Нет существующих объектов с таким же идентификатором, поэтому добавляем новый объект
+                             let newTask = Entity(context: context)
+                             newTask.title = id
+                             newTask.body = jsonString
+                             newTask.deviceType = "Diary"
+                             do {
+                                 try context.save()
+                             } catch {
+                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                             }}}catch{
+                                 DeviceService.getInstance().ls.addLogs(text:"Ошибка сохранения: \(error.localizedDescription)")
+                             }
+                 }
+                    
                  }
              }
              if let responseData = data {
@@ -760,6 +970,7 @@ fileprivate class _baseCallback: DeviceCallback {
                      DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                  }
              }
+             self.dispatchGroup.leave()
          }
          task.resume()
      }
@@ -836,6 +1047,15 @@ fileprivate class _baseCallback: DeviceCallback {
                              if let body = object.body?.data(using: .utf8) {
                                  if let title = object.title {
                                      self.postResource(data: body, id: title)
+                                 }
+                             } else {
+                                 DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")
+                             }
+                         }
+                         if(object.deviceType == "Diary"){
+                             if let body = object.body?.data(using: .utf8) {
+                                 if let title = object.title {
+                                     self.sendDiary(id: title, sendData: body, debug: false)
                                  }
                              } else {
                                  DeviceService.getInstance().ls.addLogs(text: "Ошибка: Не удалось преобразовать тело объекта в Data")

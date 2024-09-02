@@ -33,6 +33,8 @@
 		73CC9B2E2C7F0FAF00A2A0BA /* MoInfoObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CC9B2D2C7F0FAF00A2A0BA /* MoInfoObj.swift */; };
 		73CC9B302C7F0FC500A2A0BA /* PmObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CC9B2F2C7F0FC500A2A0BA /* PmObj.swift */; };
 		73CC9B322C7F0FD600A2A0BA /* PmBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CC9B312C7F0FD600A2A0BA /* PmBundle.swift */; };
+		73CC9B492C85EE6200A2A0BA /* JsonToObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CC9B482C85EE6200A2A0BA /* JsonToObj.swift */; };
+		73CC9B4B2C85EE7700A2A0BA /* ConciergeCallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73CC9B4A2C85EE7700A2A0BA /* ConciergeCallback.swift */; };
 		B26F4C573B5883085B002E42 /* Pods_IoMT_SDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -92,6 +94,8 @@
 		73CC9B2D2C7F0FAF00A2A0BA /* MoInfoObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoInfoObj.swift; sourceTree = "<group>"; };
 		73CC9B2F2C7F0FC500A2A0BA /* PmObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmObj.swift; sourceTree = "<group>"; };
 		73CC9B312C7F0FD600A2A0BA /* PmBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmBundle.swift; sourceTree = "<group>"; };
+		73CC9B482C85EE6200A2A0BA /* JsonToObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonToObj.swift; sourceTree = "<group>"; };
+		73CC9B4A2C85EE7700A2A0BA /* ConciergeCallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeCallback.swift; sourceTree = "<group>"; };
 		818B1360FA5E77613A00E77B /* Pods-IoMT.SDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.release.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.release.xcconfig"; sourceTree = "<group>"; };
 		CCD308F652C2631C975C1ED3 /* Pods-IoMT.SDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IoMT.SDK.debug.xcconfig"; path = "Target Support Files/Pods-IoMT.SDK/Pods-IoMT.SDK.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -200,6 +204,8 @@
 				73CC9B2D2C7F0FAF00A2A0BA /* MoInfoObj.swift */,
 				73CC9B2F2C7F0FC500A2A0BA /* PmObj.swift */,
 				73CC9B312C7F0FD600A2A0BA /* PmBundle.swift */,
+				73CC9B482C85EE6200A2A0BA /* JsonToObj.swift */,
+				73CC9B4A2C85EE7700A2A0BA /* ConciergeCallback.swift */,
 			);
 			path = MainServices;
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 				73CC9B2C2C7F0F9900A2A0BA /* FhirObj.swift in Sources */,
 				73556B3E2C7E44650037E252 /* DataHandler.swift in Sources */,
 				73CC9B302C7F0FC500A2A0BA /* PmObj.swift in Sources */,
+				73CC9B4B2C85EE7700A2A0BA /* ConciergeCallback.swift in Sources */,
 				7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */,
 				2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */,
 				7382DE142B8340DF00BACD76 /* Logs+CoreDataClass.swift in Sources */,
@@ -362,6 +369,7 @@
 				7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */,
 				73989D242BE3B48100BE7708 /* ConciergeService.swift in Sources */,
 				2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */,
+				73CC9B492C85EE6200A2A0BA /* JsonToObj.swift in Sources */,
 				7382DE132B8340DF00BACD76 /* Entity+CoreDataClass.swift in Sources */,
 				7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */,
 				73989D2C2BE3B70D00BE7708 /* ConciergeManager.swift in Sources */,

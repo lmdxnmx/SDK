@@ -1,8 +1,9 @@
 import Foundation
 
-func buildObservationJson(derivedFromStr: UUID?, subjectStr: UUID, basedOnStr: UUID,
+func buildObservationJson(id:UUID,derivedFromStr: UUID?, subjectStr: UUID, basedOnStr: UUID,
                           value: [String:String], code: Int, start: Date, finish: Date?, note: String?) -> Data? {
-    let uuid = UUID().uuidString
+    
+    let uuid = id.uuidString;
     var observation: [String:Any] = [:]
     var categoryArray: [[String:Any]] = []
     var categoryObject: [String:Any] = [:]

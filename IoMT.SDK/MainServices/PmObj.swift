@@ -6,17 +6,17 @@
 //
 
 import Foundation
-public class PmObj{
-    var id:UUID? = nil;
-    var deviceId:UUID? = nil;
-    var serviceRequestId:UUID? = nil;
-    var status:String? = nil;
-    var description:String? = nil;
-    var moId:UUID? = nil;
-    var start:Date? = nil;
-    var finish:Date? = nil;
-    init(id: UUID? = nil, deviceId: UUID? = nil, serviceRequestId: UUID? = nil, status: String? = nil, description: String? = nil, moId: UUID? = nil, start: Date? = nil, finish: Date? = nil) {
-        self.id = id
+public class PmObj:Codable{
+   public var taskId:UUID? = nil;
+   public var deviceId:UUID? = nil;
+   public var serviceRequestId:UUID? = nil;
+   public var status:String? = nil;
+   public var description:String? = nil;
+   public var moId:UUID? = nil;
+   public var start:Date? = nil;
+   public var finish:Date? = nil;
+    init(taskId: UUID? = nil, deviceId: UUID? = nil, serviceRequestId: UUID? = nil, status: String? = nil, description: String? = nil, moId: UUID? = nil, start: Date? = nil, finish: Date? = nil) {
+        self.taskId = taskId
         self.deviceId = deviceId
         self.serviceRequestId = serviceRequestId
         self.status = status
@@ -26,3 +26,4 @@ public class PmObj{
         self.finish = finish
     }
 }
+ 
