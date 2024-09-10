@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "IoMT.SDK"
-  spec.version      = "0.3.6"
+  spec.version      = "0.3.8"
   spec.summary      = "IoMT.SDK is a tool for collecting and sending medical measurements from Bluetooth devices"
   
   spec.description  = <<-DESC
