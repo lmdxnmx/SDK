@@ -48,7 +48,7 @@ public class ConciergeService {
     }
     
     ///Создание объекта с указанием авторизационных данных и функции обратного вызова для получения текущего состояния работы сервиса
-    public init(login: String, password: String, debug: Bool) {
+    public init(login: String, password: String, debug: Bool, callbackFunction:ConciergeCallback) {
         BLEManager.getSharedBLEManager().initCentralManager(queue: nil, options: nil)
         _login = login
         _password = password
@@ -57,6 +57,7 @@ public class ConciergeService {
         if(DeviceService.getInstance()._login.isEmpty){
             DeviceService.init(login: _login, password: _password, debug: _test)
         };
+        DeviceService.getInstance().im.setCallback(_callback: _callback)
         let timestamp = DateFormatter.localizedString(from: Date(), dateStyle: .medium, timeStyle: .medium)
         let logs = """
         \(timestamp) Параметры конфигурации сервиса:

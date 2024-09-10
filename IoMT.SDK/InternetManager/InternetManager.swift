@@ -18,7 +18,10 @@ fileprivate class _baseCallback: DeviceCallback {
     
     func searchedDevices(peripherals: [DisplayPeripheral]){}
 }
-
+fileprivate class _baseConciergeCallback: ConciergeCallback {
+    func onSuccessDiary(id: UUID, status:Int){}
+    func onErrorDiary(id: UUID, status: Int){ }
+}
 
  class InternetManager{
     internal var baseAddress: String
@@ -36,6 +39,7 @@ fileprivate class _baseCallback: DeviceCallback {
         }
         return sharedManager!
     }
+   
     var timer: Timer? = nil
     var interval: TimeInterval = 1
      private var isSavingContext = false;
@@ -63,6 +67,10 @@ fileprivate class _baseCallback: DeviceCallback {
          backgroundContext.persistentStoreCoordinator = CoreDataStack.shared.persistentContainer.persistentStoreCoordinator
          NotificationCenter.default.addObserver(self, selector: #selector(contextDidChange(_:)), name: NSNotification.Name.NSManagedObjectContextDidSave, object: nil)
     }
+     var conciergeCallback:ConciergeCallback = _baseConciergeCallback();
+      func setCallback(_callback:ConciergeCallback){
+         self.conciergeCallback = _callback;
+     }
      let dispatchGroup = DispatchGroup()
      @objc func contextDidChange(_ notification: Notification) {
          guard !isSavingContext else {
@@ -368,6 +376,7 @@ fileprivate class _baseCallback: DeviceCallback {
             }
             if let responseData = data {
                 if let responseString = String(data: responseData, encoding: .utf8) {
+                    print(jsonString)
                     DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                 }
             }
@@ -907,7 +916,11 @@ fileprivate class _baseCallback: DeviceCallback {
                  let statusCode = httpResponse.statusCode
                  print(statusCode)
                  if(statusCode <= 202 || statusCode == 401 || statusCode == 403 || statusCode == 400 || statusCode == 207){
-                  
+                     if(statusCode <= 202){
+                         self.conciergeCallback.onSuccessDiary(id: id, status: statusCode)
+                     }else{
+                         self.conciergeCallback.onErrorDiary(id: id, status: statusCode)
+                     }
                      let backgroundQueue = DispatchQueue.global(qos: .background)
                      backgroundQueue.async {
                          let backgroundContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
@@ -932,9 +945,6 @@ fileprivate class _baseCallback: DeviceCallback {
                              print("Delete all data error :", error)
                          }
                      }
-                        
-                        // Вызов колбэка
-                        self.callback.onSendData(mac: id, status: PlatformStatus.Success)
                     }
                  else{
                      if(statusCode != 400 && statusCode != 401  && statusCode != 403 && debug == false){
@@ -967,6 +977,7 @@ fileprivate class _baseCallback: DeviceCallback {
              }
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
+                     print(jsonString)
                      DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                  }
              }

@@ -7,11 +7,11 @@
 
 import Foundation
 public class DataHandler {
-    var responseCode:Int = 0;
+  public  var responseCode:Int = 0;
     init(code:Int) {
         responseCode = code;
     }
-    func isSuccess() -> Bool{
+   public func isSuccess() -> Bool{
         if(responseCode == 0){
             return true;
         }else{
