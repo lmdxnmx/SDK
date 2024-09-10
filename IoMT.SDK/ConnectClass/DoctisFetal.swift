@@ -123,7 +123,15 @@ public class DoctisFetal:
         manager.stopScan()
         callback?.searchedDevices(peripherals: peripherals)
     }
-
+    public func searchByCBUUID(uid:CBUUID,timeout: UInt32) {
+        manager.scaningDelegate = self
+        manager.scanDevice(serviceUUIDs: [uid], options:["":""] )
+        print("START SEARCH")
+        print(DoctisFetal.activeExecute)
+        sleep(timeout)
+        manager.stopScan()
+        callback?.searchedDevices(peripherals: peripherals)
+    }
     //DeviceScaningDelegate
     internal func scanningStatus(status: Int) {
         if(status == 4){
@@ -174,7 +182,6 @@ callback?.onExpection(mac: _identifer!, ex: error!)
     internal func bleManagerDidConnect(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         rightDisconnect = false
         reconnectingState = false
- 
         manager.discoveryDelegate = self
         manager.readWriteCharDelegate = self
         callback?.onStatusDevice(mac: _identifer!, status: BluetoothStatus.ConnectStart)
@@ -213,7 +220,7 @@ callback?.onExpection(mac: _identifer!, ex: error!)
     battLevel = -1
     rateArray.removeAll()
     tocoArray.removeAll()
-    stopwatch.stop()
+    stopwatch.reset()
     id = UUID()
     peripheral = nil
     rightDisconnect = false
@@ -439,6 +446,9 @@ callback?.onExpection(mac: _identifer!, ex: error!)
         if let peripheral = self.peripheral{  manager.disconnectPeripheralDevice(peripheral: peripheral)
             if let centralManager = manager.centralManager {
                 centralManager.cancelPeripheralConnection(peripheral)
+                rightDisconnect = true
+                decoder.stopRealTimeAudioPlyer()
+                stopwatch.pause()
             }
         }
     }
