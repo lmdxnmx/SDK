@@ -274,111 +274,170 @@ public class EltaGlucometr:
     }
     
     //ReadWirteCharteristicDelegate
-    internal func bleManagerDidUpdateValueForChar(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?){
-        if let error = error{
+    internal func bleManagerDidUpdateValueForChar(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        
+        // Проверка на наличие ошибки подключения
+        if let error = error {
+            DeviceService.getInstance().ls.addLogs(text: "Error occurred: \(error.localizedDescription)")
             callback?.onExpection(mac: peripheral.identifier, ex: error)
-            DeviceService.getInstance().ls.addLogs(text: "\(error)")
+            
+            // Отключаем периферийное устройство
+            DeviceService.getInstance().ls.addLogs(text: "Disconnecting device due to error...")
             manager.disconnectPeripheralDevice(peripheral: peripheral)
+            
             if let centralManager = manager.centralManager {
                 centralManager.cancelPeripheralConnection(peripheral)
             } else {
-                DeviceService.getInstance().ls.addLogs(text: ("Central manager is nil"))
+                DeviceService.getInstance().ls.addLogs(text: "Error: Central manager is nil during disconnect due to error.")
             }
+            
             self.rightDisconnect = false
             EltaGlucometr.activeExecute = false
             return
         }
-        if(EltaGlucometr.itter > 999){
+        
+        // Проверка количества итераций
+        if EltaGlucometr.itter > 999 {
+            DeviceService.getInstance().ls.addLogs(text: "Maximum iteration reached. Disconnecting device...")
             manager.disconnectPeripheralDevice(peripheral: peripheral)
+            
             if let centralManager = manager.centralManager {
                 centralManager.cancelPeripheralConnection(peripheral)
             } else {
-                print("Central manager is nil")
+                DeviceService.getInstance().ls.addLogs(text: "Error: Central manager is nil during max iteration disconnect.")
             }
+            
             self.rightDisconnect = true
             EltaGlucometr.activeExecute = false
             return
         }
-        if let resultStr = String(data: characteristic.value!, encoding: .utf8) {
-            if(resultStr.contains("enter pincode first")){
-                callback?.onStatusDevice(mac: peripheral.identifier, status: BluetoothStatus.NotCorrectPin)
-
+        
+        // Проверка на наличие данных и корректную их обработку
+        guard let data = characteristic.value else {
+            DeviceService.getInstance().ls.addLogs(text: "Error: Characteristic value is nil.")
+            return
+        }
+        
+        guard let resultStr = String(data: data, encoding: .utf8) else {
+            DeviceService.getInstance().ls.addLogs(text: "Error: Unable to convert characteristic value to String.")
+            return
+        }
+        
+        DeviceService.getInstance().ls.addLogs(text: "Received data: \(resultStr)")
+        
+        // Обработка пинкода
+        if resultStr.contains("enter pincode first") {
+            DeviceService.getInstance().ls.addLogs(text: "Incorrect pin code. Disconnecting device...")
+            callback?.onStatusDevice(mac: peripheral.identifier, status: BluetoothStatus.NotCorrectPin)
+            manager.disconnectPeripheralDevice(peripheral: peripheral)
+            return
+        }
+        
+        // Обработка серийного номера
+        if resultStr.starts(with: "ser.") {
+            serial = resultStr.replacingOccurrences(of: "ser.", with: "")
+            DeviceService.getInstance().ls.addLogs(text: "Serial number received: \(serial)")
+            
+            if UserDefaults.standard.object(forKey: serial) == nil {
+                DeviceService.getInstance().ls.addLogs(text: "Serial number not found in UserDefaults. Fetching last time...")
+                getLastTime(serial: serial)
+                sleep(2)
+            }
+            
+            callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.SerialNumber, value: serial)
+            self.measurements?.addInfo(atr: Atributes.SerialNumber, value: serial)
+        }
+        
+        // Обработка MAC-адреса
+        if resultStr.starts(with: "mac.") {
+            _mac = formatMACAddress(resultStr.replacingOccurrences(of: "mac.", with: ""))
+            DeviceService.getInstance().ls.addLogs(text: "MAC address received: \(_mac ?? "Invalid MAC")")
+        }
+        
+        // Обработка уровня батареи и температуры
+        if resultStr.starts(with: "b") {
+            let data = resultStr.replacingOccurrences(of: "b", with: "")
+                .replacingOccurrences(of: "t", with: "")
+                .split(separator: ".")
+            
+            guard data.count == 2, let batteryLevel = Double(data[0]), let temperature = Double(data[1]) else {
+                DeviceService.getInstance().ls.addLogs(text: "Error: Invalid battery or temperature data format.")
+                return
+            }
+            
+            DeviceService.getInstance().ls.addLogs(text: "Battery level: \(batteryLevel), Temperature: \(temperature)")
+            callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.BatteryLevel, value: batteryLevel)
+            callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: temperature)
+            
+            self.measurements?.addInfo(atr: Atributes.BatteryLevel, value: batteryLevel)
+            self.measurements?.addInfo(atr: Atributes.Temperature, value: temperature)
+        }
+        
+        // Обработка данных измерения
+        if resultStr.starts(with: "rd") {
+            let measurement = resultStr.replacingOccurrences(of: "rd", with: "")
+            
+            if measurement.replacingOccurrences(of: "0", with: "").isEmpty {
+                DeviceService.getInstance().ls.addLogs(text: "No measurement data available. Disconnecting device...")
                 manager.disconnectPeripheralDevice(peripheral: peripheral)
-            }
-            if(resultStr.starts(with: "ser.")){
-                serial = resultStr.replacingOccurrences(of: "ser.", with: "")
-                DeviceService.getInstance().ls.addLogs(text:"Serial: " + serial)
-                if(UserDefaults.standard.object(forKey: serial) == nil){
-                    getLastTime(serial: serial)
-                    sleep(2)
-                }
-                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.SerialNumber, value: serial)
-
-                self.measurements!.addInfo(atr: Atributes.SerialNumber, value: serial)
-            }
-            if(resultStr.starts(with: "mac.")){
-                _mac = formatMACAddress(resultStr.replacingOccurrences(of: "mac.", with: ""))
-            }
-            if(resultStr.starts(with: "b")){
-                let data = resultStr.replacingOccurrences(of: "b", with: "").replacingOccurrences(of: "t", with: "").split(separator: ".")
-                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.BatteryLevel, value: data[0])
-                self.measurements!.addInfo(atr: Atributes.BatteryLevel, value: data[0])
-                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: data[1])
-                self.measurements!.addInfo(atr: Atributes.Temperature, value: data[1])
-            }
-            if(resultStr.starts(with: "rd")){
-                let measurement = resultStr.replacingOccurrences(of: "rd", with: "")
-                if measurement.replacingOccurrences(of: "0", with: "").count == 0 {
-                    manager.disconnectPeripheralDevice(peripheral: peripheral)
-                    if let centralManager = manager.centralManager {
-                        centralManager.cancelPeripheralConnection(peripheral)
-                    } else {
-                        print("Central manager is nil")
-                    }
-                    self.rightDisconnect = true
-                    EltaGlucometr.activeExecute = false
-                    return
-                }
-                let dateStr: String = String(measurement.prefix(12))
-                let start = measurement.index(measurement.startIndex, offsetBy: 12)
-                let end = measurement.index(measurement.startIndex, offsetBy: 15)
-                let temperatureStr: String = String(measurement[start...end])
-                let valueStr: String = String(measurement.suffix(from: measurement.index(measurement.startIndex, offsetBy: 15)))
                 
-                var m = Measurements()
-                let timeStamp = EltaGlucometr.FormatDeviceTime.date(from: dateStr)!
-                m.add(atr: Atributes.BleTime, value: dateStr)
-                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.TimeStamp, value: timeStamp)
-                m.add(atr: Atributes.TimeStamp, value: timeStamp)
-                if(serial != ""){
-                    let savedDate = UserDefaults.standard.object(forKey: serial) as? Date
-
-                    if let savedDate = savedDate, savedDate >= timeStamp {
-                        manager.disconnectPeripheralDevice(peripheral: peripheral)
-                        if let centralManager = manager.centralManager {
-                            centralManager.cancelPeripheralConnection(peripheral)
-                        } else {
-                            DeviceService.getInstance().ls.addLogs(text: "CentralManager is nil")
-                        }
-                        self.rightDisconnect = true
-                        EltaGlucometr.activeExecute = false
-                        return
-                    }
+                if let centralManager = manager.centralManager {
+                    centralManager.cancelPeripheralConnection(peripheral)
+                } else {
+                    DeviceService.getInstance().ls.addLogs(text: "Error: Central manager is nil during measurement disconnect.")
                 }
-                let temperature: Double = Double(temperatureStr)! / 10
-                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: temperature)
-                m.add(atr: Atributes.Temperature, value: temperature)
                 
-                let value: Double = Double(valueStr)! / 10
-                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Glucose, value: value)
-                m.add(atr: Atributes.Glucose, value: value)
-
-                
-                self.measurements!.addMeasurements(Object: m)
-                EltaGlucometr.itter += 1
-                getRDS(device: peripheral)
-                resetDisconnectTimer()
+                self.rightDisconnect = true
+                EltaGlucometr.activeExecute = false
+                return
             }
+            
+            // Извлечение данных измерения
+            let dateStr = String(measurement.prefix(12))
+            let temperatureStr = String(measurement[measurement.index(measurement.startIndex, offsetBy: 12)...measurement.index(measurement.startIndex, offsetBy: 15)])
+            let valueStr = String(measurement.suffix(from: measurement.index(measurement.startIndex, offsetBy: 15)))
+            
+            guard let timeStamp = EltaGlucometr.FormatDeviceTime.date(from: dateStr),
+                  let temperature = Double(temperatureStr).map({ $0 / 10 }),
+                  let glucoseValue = Double(valueStr).map({ $0 / 10 }) else {
+                DeviceService.getInstance().ls.addLogs(text: "Error: Invalid measurement data.")
+                return
+            }
+            
+            DeviceService.getInstance().ls.addLogs(text: "Measurement received - Date: \(dateStr), Temperature: \(temperature), Glucose: \(glucoseValue)")
+            
+            var m = Measurements()
+            m.add(atr: Atributes.BleTime, value: dateStr)
+            callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.TimeStamp, value: timeStamp)
+            m.add(atr: Atributes.TimeStamp, value: timeStamp)
+            
+            if !serial.isEmpty, let savedDate = UserDefaults.standard.object(forKey: serial) as? Date, savedDate >= timeStamp {
+                DeviceService.getInstance().ls.addLogs(text: "Measurement time is older than the saved one. Disconnecting device...")
+                manager.disconnectPeripheralDevice(peripheral: peripheral)
+                
+                if let centralManager = manager.centralManager {
+                    centralManager.cancelPeripheralConnection(peripheral)
+                } else {
+                    DeviceService.getInstance().ls.addLogs(text: "Error: Central manager is nil during savedDate disconnect.")
+                }
+                
+                self.rightDisconnect = true
+                EltaGlucometr.activeExecute = false
+                return
+            }
+            
+            callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: temperature)
+            m.add(atr: Atributes.Temperature, value: temperature)
+            
+            callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Glucose, value: glucoseValue)
+            m.add(atr: Atributes.Glucose, value: glucoseValue)
+            
+            self.measurements?.addMeasurements(Object: m)
+            EltaGlucometr.itter += 1
+            
+            // Продолжение получения данных
+            getRDS(device: peripheral)
+            resetDisconnectTimer()
         }
     }
     
