@@ -366,8 +366,7 @@ public class EltaGlucometr:
                 DeviceService.getInstance().ls.addLogs(text: "Error: Invalid battery or temperature data format.")
                 return
             }
-            
-            DeviceService.getInstance().ls.addLogs(text: "Battery level: \(batteryLevel), Temperature: \(temperature)")
+
             callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.BatteryLevel, value: batteryLevel)
             callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.Temperature, value: temperature)
             
@@ -405,8 +404,6 @@ public class EltaGlucometr:
                 DeviceService.getInstance().ls.addLogs(text: "Error: Invalid measurement data.")
                 return
             }
-            
-            DeviceService.getInstance().ls.addLogs(text: "Measurement received - Date: \(dateStr), Temperature: \(temperature), Glucose: \(glucoseValue)")
             
             var m = Measurements()
             m.add(atr: Atributes.BleTime, value: dateStr)
