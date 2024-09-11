@@ -57,7 +57,7 @@ public enum Atributes : String{
     case Measurements
     ///Модель устройства, объект String
     case ModelNumber
-    
+    case InstanceId
     //case Systolic
     
     //case Diastolic

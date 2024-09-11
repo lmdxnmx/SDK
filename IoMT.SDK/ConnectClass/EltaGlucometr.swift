@@ -337,7 +337,9 @@ public class EltaGlucometr:
         if resultStr.starts(with: "ser.") {
             serial = resultStr.replacingOccurrences(of: "ser.", with: "")
             DeviceService.getInstance().ls.addLogs(text: "Serial number received: \(serial)")
-            
+            if let storedUUIDString = UserDefaults.standard.string(forKey: "instanceId") {
+                callback?.onExploreDevice(mac: peripheral.identifier, atr: Atributes.InstanceId, value: storedUUIDString)
+            }
             if UserDefaults.standard.object(forKey: serial) == nil {
                 DeviceService.getInstance().ls.addLogs(text: "Serial number not found in UserDefaults. Fetching last time...")
                 getLastTime(serial: serial)
