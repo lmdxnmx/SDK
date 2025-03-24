@@ -51,7 +51,7 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
         if(!debug){
             baseAddress = "https://ppma.ru"
         }
-        else{ baseAddress = "https://dev.ppma.ru" }
+        else{ baseAddress = "https://test.ppma.ru" }
         self.urlGateWay = URL(string: (self.baseAddress))!
         self.callback = callback
         self.sdkVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
@@ -677,6 +677,110 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          }
          task.resume()
      }
+     public func getDiaries(url: String, completion: @escaping (DiariesBundleHandler?) -> Void) {
+         let timeUrl = URL(string: (self.baseAddress + url))!
+         var urlRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+         print(timeUrl)
+         if let access = UserDefaults.standard.string(forKey: "access_token") {
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 completion(DiariesBundleHandler.init(code: 1))
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 return
+             }
+             
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if statusCode == 401 {
+                     self.refreshToken {
+                         self.getDiaries(url: url, completion: completion)
+                     }
+                     return
+                 }
+                 print(statusCode)
+                 
+                     if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
+                         DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                         if statusCode <= 202 {
+                         do {
+                             completion(JsonToObj.decodeDiariesBundle(from: responseData))
+                         } catch {
+                             print("Ошибка декодирования: \(error)")
+                         }
+
+           
+                     } else {
+                         completion(DiariesBundleHandler.init(code: -1))
+                     }
+                 } else {
+                     completion(DiariesBundleHandler.init(code: -1))
+                 }
+             } else {
+                 completion(DiariesBundleHandler.init(code: -1))
+             }
+         }
+         task.resume()
+     }
+     public func getObs(url: String, completion: @escaping (ObservationsBundleHandler?) -> Void) {
+         let timeUrl = URL(string: (self.baseAddress + url))!
+         var urlRequest = URLRequest(url: timeUrl)
+         urlRequest.httpMethod = "GET"
+         print(timeUrl)
+         if let access = UserDefaults.standard.string(forKey: "access_token") {
+             urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
+         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+
+         let session = URLSession.shared
+         let task = session.dataTask(with: urlRequest) { (data, response, error) in
+             if let error = error {
+                 completion(ObservationsBundleHandler.init(code: 1))
+                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                 return
+             }
+             
+             if let httpResponse = response as? HTTPURLResponse {
+                 let statusCode = httpResponse.statusCode
+                 if statusCode == 401 {
+                     self.refreshToken {
+                         self.getObs(url: url, completion: completion)
+                     }
+                     return
+                 }
+                 print(statusCode)
+                 
+                     if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
+                         DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
+                         if statusCode <= 202 {
+                         do {
+                             completion(JsonToObj.decodeObservations(from: responseData))
+                         } catch {
+                             print("Ошибка декодирования: \(error)")
+                         }
+
+           
+                     } else {
+                         completion(ObservationsBundleHandler.init(code: -1))
+                     }
+                 } else {
+                     completion(ObservationsBundleHandler.init(code: -1))
+                 }
+             } else {
+                 completion(ObservationsBundleHandler.init(code: -1))
+             }
+         }
+         task.resume()
+     }
      public func getMoInfo(url: String, completion: @escaping (MoInfoObj?) -> Void) {
          let timeUrl = URL(string: (self.baseAddress + url))!
          var urlRequest = URLRequest(url: timeUrl)
@@ -798,6 +902,8 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
              if let error = error {
                  completion(DataHandler.init(code: 1))
+                 DeviceService.getInstance().ls.addLogs(text: "Error: \(error)")
+                 return
              }
              if let httpResponse = response as? HTTPURLResponse {
                  let statusCode = httpResponse.statusCode
@@ -808,6 +914,8 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
                      if(statusCode == 400){
                          completion(DataHandler.init(code: 2))
                      }else{
+                         print(error)
+                         print(statusCode)
                          completion(DataHandler.init(code: -1))
                      }
                  }

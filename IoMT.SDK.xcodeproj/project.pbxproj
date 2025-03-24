@@ -10,6 +10,8 @@
 		2F5E9DC92B15CFE500DC3E29 /* QueueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DC82B15CFE500DC3E29 /* QueueService.swift */; };
 		2F5E9DCB2B15D01000DC3E29 /* NetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5E9DCA2B15D01000DC3E29 /* NetService.swift */; };
 		73556B3E2C7E44650037E252 /* DataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73556B3D2C7E44650037E252 /* DataHandler.swift */; };
+		735DB86C2D914D7E00878A48 /* SelfObsObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735DB86B2D914D7E00878A48 /* SelfObsObj.swift */; };
+		735DB86E2D914DD000878A48 /* DiariesBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 735DB86D2D914DD000878A48 /* DiariesBundle.swift */; };
 		7382DDCF2B7B3B8100BACD76 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */; };
 		7382DDE12B7B7ABF00BACD76 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDE02B7B7ABF00BACD76 /* Reachability.swift */; };
 		7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382DDEA2B7DE3D800BACD76 /* LogService.swift */; };
@@ -23,7 +25,7 @@
 		73989D242BE3B48100BE7708 /* ConciergeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D232BE3B48100BE7708 /* ConciergeService.swift */; };
 		73989D262BE3B4A400BE7708 /* ConciergeTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D252BE3B4A400BE7708 /* ConciergeTemplate.swift */; };
 		73989D2A2BE3B51500BE7708 /* DiaryJsonBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D292BE3B51500BE7708 /* DiaryJsonBuilder.swift */; };
-		73989D2C2BE3B70D00BE7708 /* ConciergeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D2B2BE3B70D00BE7708 /* ConciergeManager.swift */; };
+		73989D2C2BE3B70D00BE7708 /* ObservationsBundleHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73989D2B2BE3B70D00BE7708 /* ObservationsBundleHandler.swift */; };
 		73AF4A4E2BBC3616005D987A /* lame.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A4D2BBC3616005D987A /* lame.framework */; };
 		73AF4A672BBC53E2005D987A /* LMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A662BBC53E2005D987A /* LMTPDecoder.a */; };
 		73AF4A692BBD279E005D987A /* libLMTPDecoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73AF4A682BBD279E005D987A /* libLMTPDecoder.a */; };
@@ -69,6 +71,8 @@
 		2F5E9DCA2B15D01000DC3E29 /* NetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetService.swift; sourceTree = "<group>"; };
 		5B1B431ABD6097E270CFE572 /* Pods_IoMT_SDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IoMT_SDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73556B3D2C7E44650037E252 /* DataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataHandler.swift; sourceTree = "<group>"; };
+		735DB86B2D914D7E00878A48 /* SelfObsObj.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfObsObj.swift; sourceTree = "<group>"; };
+		735DB86D2D914DD000878A48 /* DiariesBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiariesBundle.swift; sourceTree = "<group>"; };
 		7382DDCE2B7B3B8100BACD76 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		7382DDE02B7B7ABF00BACD76 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		7382DDEA2B7DE3D800BACD76 /* LogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogService.swift; sourceTree = "<group>"; };
@@ -82,7 +86,7 @@
 		73989D232BE3B48100BE7708 /* ConciergeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeService.swift; sourceTree = "<group>"; };
 		73989D252BE3B4A400BE7708 /* ConciergeTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeTemplate.swift; sourceTree = "<group>"; };
 		73989D292BE3B51500BE7708 /* DiaryJsonBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryJsonBuilder.swift; sourceTree = "<group>"; };
-		73989D2B2BE3B70D00BE7708 /* ConciergeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConciergeManager.swift; sourceTree = "<group>"; };
+		73989D2B2BE3B70D00BE7708 /* ObservationsBundleHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationsBundleHandler.swift; sourceTree = "<group>"; };
 		73AF4A4D2BBC3616005D987A /* lame.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = lame.framework; sourceTree = "<group>"; };
 		73AF4A642BBC53E2005D987A /* LMTPDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTPDecoder.h; sourceTree = "<group>"; };
 		73AF4A652BBC53E2005D987A /* LKCDecodeHeart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LKCDecodeHeart.h; sourceTree = "<group>"; };
@@ -164,7 +168,6 @@
 			children = (
 				2F21315E2AB858B8007F8FD2 /* InternetManager.swift */,
 				7382DDE02B7B7ABF00BACD76 /* Reachability.swift */,
-				73989D2B2BE3B70D00BE7708 /* ConciergeManager.swift */,
 			);
 			path = InternetManager;
 			sourceTree = "<group>";
@@ -198,11 +201,14 @@
 				73989D232BE3B48100BE7708 /* ConciergeService.swift */,
 				73989D252BE3B4A400BE7708 /* ConciergeTemplate.swift */,
 				73989D292BE3B51500BE7708 /* DiaryJsonBuilder.swift */,
+				735DB86B2D914D7E00878A48 /* SelfObsObj.swift */,
 				73556B3D2C7E44650037E252 /* DataHandler.swift */,
 				73CC9B292C7F0F8900A2A0BA /* DeviceInfoObj.swift */,
 				73CC9B2B2C7F0F9900A2A0BA /* FhirObj.swift */,
+				735DB86D2D914DD000878A48 /* DiariesBundle.swift */,
 				73CC9B2D2C7F0FAF00A2A0BA /* MoInfoObj.swift */,
 				73CC9B2F2C7F0FC500A2A0BA /* PmObj.swift */,
+				73989D2B2BE3B70D00BE7708 /* ObservationsBundleHandler.swift */,
 				73CC9B312C7F0FD600A2A0BA /* PmBundle.swift */,
 				73CC9B482C85EE6200A2A0BA /* JsonToObj.swift */,
 				73CC9B4A2C85EE7700A2A0BA /* ConciergeCallback.swift */,
@@ -354,6 +360,7 @@
 				73AF4A6D2BC6B642005D987A /* Stopwatch.swift in Sources */,
 				7382DDEB2B7DE3D800BACD76 /* LogService.swift in Sources */,
 				739709402BB5B1E4003B1D3B /* DoctisFetal.swift in Sources */,
+				735DB86C2D914D7E00878A48 /* SelfObsObj.swift in Sources */,
 				73CC9B322C7F0FD600A2A0BA /* PmBundle.swift in Sources */,
 				73CC9B2C2C7F0F9900A2A0BA /* FhirObj.swift in Sources */,
 				73556B3E2C7E44650037E252 /* DataHandler.swift in Sources */,
@@ -372,7 +379,8 @@
 				73CC9B492C85EE6200A2A0BA /* JsonToObj.swift in Sources */,
 				7382DE132B8340DF00BACD76 /* Entity+CoreDataClass.swift in Sources */,
 				7382DE1E2B87268700BACD76 /* BundleTemplate.swift in Sources */,
-				73989D2C2BE3B70D00BE7708 /* ConciergeManager.swift in Sources */,
+				735DB86E2D914DD000878A48 /* DiariesBundle.swift in Sources */,
+				73989D2C2BE3B70D00BE7708 /* ObservationsBundleHandler.swift in Sources */,
 				73989D2A2BE3B51500BE7708 /* DiaryJsonBuilder.swift in Sources */,
 				7382DE122B8340DF00BACD76 /* Logs+CoreDataProperties.swift in Sources */,
 			);

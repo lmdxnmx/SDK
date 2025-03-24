@@ -48,7 +48,7 @@ public class ConciergeService {
     }
     
     ///Создание объекта с указанием авторизационных данных и функции обратного вызова для получения текущего состояния работы сервиса
-    public init(login: String, password: String, debug: Bool, callbackFunction:ConciergeCallback) {
+    public init(login: String, password: String, debug: Bool, callbackFunction:ConciergeCallback? = nil) {
         BLEManager.getSharedBLEManager().initCentralManager(queue: nil, options: nil)
         _login = login
         _password = password
@@ -64,7 +64,7 @@ public class ConciergeService {
         SDK инициализировано с следующими параметрами:
         Login: \(_login)
         Password: \(_password)
-        Платформа: \(_test ? "https://dev.ppma.ru" : "https://ppma.ru")
+        Платформа: \(_test ? "https://test.ppma.ru" : "https://ppma.ru")
         """
         DeviceService.getInstance().ls.addLogs(text: logs)
         instanceDS = self
@@ -99,13 +99,22 @@ public class ConciergeService {
             completion(result)
         }
     }
-    public func getObs(year:Int, month:Int, day:Int, completion: @escaping (String?) -> Void){
-        let url:String = "/concierge/api/fhir/?year=\(year)&month=\(month)&day=\(day)"
-//        DeviceService.getInstance().im.getResource(url: url) { result in
-//            // Вызываем замыкание completion с результатом запроса
-//            completion(result)
-//        }
-    }
+    public func getObs(id:UUID,timeStart:Date?=nil, timeFinish:Date?=nil,count:Int, page:Int, completion: @escaping (ObservationsBundleHandler?) -> Void){
+        DeviceService.getInstance().ls.addLogs(text: "Execute method ConciergeService.getObs")
+            let url:String = "/concierge/api/pm/observation/serviceRequest/\(id.uuidString)?timeStart=\(timeStart)&timeFinish=\(timeFinish)&count=\(count)&page=\(page)"
+        DeviceService.getInstance().im.getObs(url: url) { result in
+                // Вызываем замыкание completion с результатом запроса
+                completion(result)
+            }
+        }
+        public func getObs(id:UUID,timeStart:Date?=nil, timeFinish:Date?=nil, completion: @escaping (ObservationsBundleHandler?) -> Void){
+            DeviceService.getInstance().ls.addLogs(text: "Execute method ConciergeService.getObs")
+            let url:String = "/concierge/api/pm/observation/serviceRequest/\(id.uuidString)?timeStart=\(timeStart)&timeFinish=\(timeFinish)&count=0"
+            DeviceService.getInstance().im.getObs(url: url) { result in
+                // Вызываем замыкание completion с результатом запроса
+                completion(result)
+            }
+        }
     public func startSession(phone:String,completion: @escaping (DataHandler?) -> Void){
         DeviceService.getInstance().ls.addLogs(text: "Execute method ConciergeService.startSession")
         DeviceService.getInstance().im.startSession(phone:phone){ result in
@@ -128,6 +137,36 @@ public class ConciergeService {
             completion(result)
         }
     }
+    public func getDiaries(id:UUID,timeStart:Date, timeFinish:Date,count:Int, page:Int, completion: @escaping (DiariesBundleHandler?) -> Void){
+        DeviceService.getInstance().ls.addLogs(text: "Execute method ConciergeService.getObs")
+            let url:String = "/concierge/api/pm/observation/diaries/serviceRequest/\(id.uuidString)?timeStart=\(timeStart)&timeFinish=\(timeFinish)&count=\(count)&page=\(page)"
+        DeviceService.getInstance().im.getDiaries(url: url) { result in
+                // Вызываем замыкание completion с результатом запроса
+                completion(result)
+            }
+        }
+        public func getDiaries(id:UUID,timeStart:Date?=nil, timeFinish:Date?=nil, completion: @escaping (DiariesBundleHandler?) -> Void){
+            DeviceService.getInstance().ls.addLogs(text: "Execute method ConciergeService.getObs")
+            let url:String = "/concierge/api/pm/observation/diaries/serviceRequest/\(id.uuidString)?timeStart=\(timeStart)&timeFinish=\(timeFinish)&count=0"
+            DeviceService.getInstance().im.getDiaries(url: url) { result in
+                // Вызываем замыкание completion с результатом запроса
+                completion(result)
+            }
+        }
+//        public func getObs(id:UUID,timeStart:Date, timeFinish:Date, completion: @escaping (String?) -> Void){
+//            let url:String = "/concierge/api/pm/observation/\(id.uuidString)?timeStart=\(timeStart)&timeFinish=\(timeFinish)&count=0"
+//            cm.getResource(url: url) { result in
+//                // Вызываем замыкание completion с результатом запроса
+//                completion(result)
+//            }
+//        }
+//        public func getObs(id:UUID,timeStart:Date, timeFinish:Date,count:Int, page:Int, completion: @escaping (String?) -> Void){
+//            let url:String = "/concierge/api/pm/observation/\(id.uuidString)?timeStart=\(timeStart)&timeFinish=\(timeFinish)&count=\(count)&page=\(page)"
+//            cm.getResource(url: url) { result in
+//                // Вызываем замыкание completion с результатом запроса
+//                completion(result)
+//            }
+//        }
     public func sendDiary(id:UUID? = nil,derivedFrom: UUID? = nil, subject: UUID, basedOn: UUID,
                           value: [String:String], code: Int, start: Date, finish: Date? = nil,
                           note: String? = nil){
