@@ -9,7 +9,7 @@ import Foundation
 public class SelfObsObj:Codable{
     public var id: UUID
         public var code: String
-        public var subject: String?
+        public var subject: UUID?
         public var basedOn: UUID
         public var derivedFrom: UUID?
         public var start: Date
@@ -18,7 +18,7 @@ public class SelfObsObj:Codable{
         public var value: [String: String]
         
         // Инициализация Diary
-        init(id: UUID, code: String, subject: String?, basedOn: UUID, derivedFrom: UUID, start: Date, finish: Date, note: String?, value: [String: String]) {
+        init(id: UUID, code: String, subject: UUID?, basedOn: UUID, derivedFrom: UUID?, start: Date, finish: Date?, note: String?, value: [String: String]) {
             self.id = id
             self.code = code
             self.subject = subject

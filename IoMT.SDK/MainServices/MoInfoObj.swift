@@ -7,10 +7,10 @@ public class MoInfoObj: DataHandler, Codable {
     public var zip: String? = nil
     public var email: String? = nil
     public var phone: String? = nil
-    public var region: String? = nil
+    public var state: String? = nil
 
     // Инициализатор
-    init(id: UUID? = nil, address: String? = nil, title: String? = nil, zip: String? = nil, email: String? = nil, phone: String? = nil, region: String? = nil, code: Int) {
+    init(id: UUID? = nil, address: String? = nil, title: String? = nil, zip: String? = nil, email: String? = nil, phone: String? = nil, state: String? = nil, code: Int) {
         super.init(code: code)
         self.id = id
         self.address = address
@@ -18,7 +18,7 @@ public class MoInfoObj: DataHandler, Codable {
         self.zip = zip
         self.email = email
         self.phone = phone
-        self.region = region
+        self.state = state
     }
 
     // Инициализатор по умолчанию
@@ -36,7 +36,7 @@ public class MoInfoObj: DataHandler, Codable {
         self.zip = try container.decodeIfPresent(String.self, forKey: .zip)
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
         self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
-        self.region = try container.decodeIfPresent(String.self, forKey: .region)
+        self.state = try container.decodeIfPresent(String.self, forKey: .state)
         super.init(code:0)
     }
 
@@ -50,7 +50,7 @@ public class MoInfoObj: DataHandler, Codable {
         try container.encodeIfPresent(zip, forKey: .zip)
         try container.encodeIfPresent(email, forKey: .email)
         try container.encodeIfPresent(phone, forKey: .phone)
-        try container.encodeIfPresent(region, forKey: .region)
+        try container.encodeIfPresent(state, forKey: .state)
     
     }
 
@@ -62,7 +62,7 @@ public class MoInfoObj: DataHandler, Codable {
         case zip
         case email
         case phone
-        case region
+        case state
      
     }
 }

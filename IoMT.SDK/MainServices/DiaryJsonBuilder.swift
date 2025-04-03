@@ -1,6 +1,6 @@
 import Foundation
 
-func buildObservationJson(id:UUID,derivedFromStr: UUID?, subjectStr: UUID, basedOnStr: UUID,
+func buildObservationJson(id:UUID,derivedFromStr: UUID?, subjectStr: UUID?, basedOnStr: UUID,
                           value: [String:String], code: Int, start: Date, finish: Date?, note: String?) -> Data? {
     
     let uuid = id.uuidString;
@@ -106,9 +106,11 @@ func buildObservationJson(id:UUID,derivedFromStr: UUID?, subjectStr: UUID, based
         basedOnObject["reference"] = "ServiceRequest/" + basedOnStr.uuidString
         basedOnArray.append(basedOnObject)
         observation["basedOn"] = basedOnArray
+        if subjectStr != nil{
+            subject["reference"] = "Patient/" + subjectStr!.uuidString
+            observation["subject"] = subject
+        }
 
-        subject["reference"] = "Patient/" + subjectStr.uuidString
-        observation["subject"] = subject
         if derivedFromStr != nil {
             derivedFromObj["reference"] = "Observation/" + derivedFromStr!.uuidString
             derivedFrom.append(derivedFromObj)

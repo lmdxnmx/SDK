@@ -584,12 +584,16 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
      public func getFhir(url: String, completion: @escaping (FhirObj?) -> Void) {
          let timeUrl = URL(string: (self.baseAddress + url))!
          var urlRequest = URLRequest(url: timeUrl)
+         
          urlRequest.httpMethod = "GET"
          print(timeUrl)
          if let access = UserDefaults.standard.string(forKey: "access_token") {
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
-         
+         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
 
@@ -632,6 +636,9 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          print(timeUrl)
          if let access = UserDefaults.standard.string(forKey: "access_token") {
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
          urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -684,6 +691,9 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          print(timeUrl)
          if let access = UserDefaults.standard.string(forKey: "access_token") {
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
          urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -736,6 +746,9 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          print(timeUrl)
          if let access = UserDefaults.standard.string(forKey: "access_token") {
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
          urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -789,6 +802,9 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          
          if let access = UserDefaults.standard.string(forKey: "access_token") {
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
          urlRequest.addValue(self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -842,6 +858,9 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          
          if let access = UserDefaults.standard.string(forKey: "access_token") {
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
          urlRequest.addValue(self.auth, forHTTPHeaderField: "baseAuth")
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -896,7 +915,6 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
          urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
          urlRequest.addValue(phone, forHTTPHeaderField: "phone")
-         urlRequest.addValue("true", forHTTPHeaderField: "debug")
          
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
@@ -924,59 +942,121 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          task.resume()
      }
      
+        public func confirmPhone(url:String, completion: @escaping (DataHandler?) -> Void){
+            let timeUrl  = URL(string: (self.baseAddress + url))!
+            var urlRequest: URLRequest = URLRequest(url: timeUrl)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+            urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
+            var status:Int = 500
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest) { (data, response, error) in
+                if let error = error {
+                    DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    let statusCode = httpResponse.statusCode
+                    if let error = error {
+                        completion(DataHandler.init(code: 1))
+                    }
+                    if let httpResponse = response as? HTTPURLResponse {
+                        let statusCode = httpResponse.statusCode
+                        if(statusCode <= 202){
+                            completion(DataHandler.init(code: 0))
+                        }
+                        else{
+                            if(statusCode == 400){
+                                completion(DataHandler.init(code: 2))
+                            }else{
+                                completion(DataHandler.init(code: -1))
+                            }
+                        }
+                    }
+                }
+                if let responseData = data {
+                    if let responseString = String(data: responseData, encoding: .utf8) {
+                        if let jsonData = responseString.data(using: .utf8) {
+                            do {
+                                if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                                    if let accessToken = json["access_token"] as? String,
+                                       let refreshToken = json["refresh_token"] as? String,
+                                       let expired_in = json["refresh_expires_in"] as? Double{
+                            
+                                            
+                                            // Получаем текущее время в миллисекундах
+                                            let currentTime = Date().timeIntervalSince1970 * 1000
+                                            let refreshDateExpire = currentTime + (expired_in * 1000)
+                                        UserDefaults.standard.set(accessToken, forKey: "access_token")
+                                        UserDefaults.standard.set(refreshToken, forKey: "refresh_token")
+                                        UserDefaults.standard.set(refreshDateExpire, forKey: "expire_date")
+                                    }else{
+                                        print("Ошибка конвертации")
+                                    }
+                                    
+                                }
+                            } catch {
+                                print("Ошибка при парсинге JSON: \(error.localizedDescription)")
+                            }
+                        }
+                    }
+                }
+            }
+            task.resume()
+        }
+     
+        public func finishSession(completion: @escaping (DataHandler?) -> Void){
+            let timeUrl  = URL(string: (self.baseAddress + "/concierge/api/user/logout"))!
+            var urlRequest: URLRequest = URLRequest(url: timeUrl)
+            guard let refreshToken = UserDefaults.standard.string(forKey: "refresh_token") else {
+                print("Токена нет, сессия завершена")
+                return
+            }
+            urlRequest.httpMethod = "GET"
+            urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
+            urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
+            urlRequest.addValue(refreshToken, forHTTPHeaderField: "refresh_token")
+            if let access = UserDefaults.standard.string(forKey: "access_token") {
+                urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+            }else{
+                DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+                return
+            }
+            var status:Int = 500
+            let session = URLSession.shared
+            let task = session.dataTask(with: urlRequest) { (data, response, error) in
+                if let error = error {
+                    DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
+                }
+                if let httpResponse = response as? HTTPURLResponse {
+                    let statusCode = httpResponse.statusCode
+                    if let error = error {
+                        completion(DataHandler.init(code: 1))
+                    }
+                    if let httpResponse = response as? HTTPURLResponse {
+                        let statusCode = httpResponse.statusCode
+                        print(statusCode)
+                        if(statusCode <= 202){
+                            completion(DataHandler.init(code: 0))
+                            UserDefaults.standard.removeObject(forKey:"access_token")
+                            UserDefaults.standard.removeObject(forKey:"refresh_token")
+                            UserDefaults.standard.removeObject(forKey: "expire_date")
+                            UserDefaults.standard.synchronize()
+                        }
+                        else{
+                            if(statusCode == 400){
+                                completion(DataHandler.init(code: 2))
+                            }else{
+                                completion(DataHandler.init(code: -1))
+                            }
+                        }
+                    }
+                }
+            }
+            task.resume()
+        }
   
-     public func confirmPhone(url:String, completion: @escaping (DataHandler?) -> Void){
-         let timeUrl  = URL(string: (self.baseAddress + url))!
-         var urlRequest: URLRequest = URLRequest(url: timeUrl)
-         urlRequest.httpMethod = "POST"
-         urlRequest.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-         urlRequest.addValue("I2024-03-20T10:12:22Z", forHTTPHeaderField: "SDK-VERSION")
-         urlRequest.addValue( self.auth, forHTTPHeaderField: "baseAuth")
-         var status:Int = 500
-         let session = URLSession.shared
-         let task = session.dataTask(with: urlRequest) { (data, response, error) in
-             if let error = error {
-                 DeviceService.getInstance().ls.addLogs(text:"Error: \(error)")
-             }
-             if let httpResponse = response as? HTTPURLResponse {
-                 let statusCode = httpResponse.statusCode
-                 if let error = error {
-                     completion(DataHandler.init(code: 1))
-                 }
-                 if let httpResponse = response as? HTTPURLResponse {
-                     let statusCode = httpResponse.statusCode
-                     if(statusCode <= 202){
-                         completion(DataHandler.init(code: 0))
-                     }
-                     else{
-                         if(statusCode == 400){
-                             completion(DataHandler.init(code: 2))
-                         }else{
-                             completion(DataHandler.init(code: -1))
-                         }
-                     }
-                 }
-             }
-             if let responseData = data {
-                 if let responseString = String(data: responseData, encoding: .utf8) {
-                     if let jsonData = responseString.data(using: .utf8) {
-                         do {
-                             if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                                 if let accessToken = json["access_token"] as? String,
-                                    let refreshToken = json["refresh_token"] as? String {
-                                     UserDefaults.standard.set(accessToken, forKey: "access_token")
-                                     UserDefaults.standard.set(refreshToken, forKey: "refresh_token")
-                                 }
-                             }
-                         } catch {
-                             print("Ошибка при парсинге JSON: \(error.localizedDescription)")
-                         }
-                     }
-                 }
-             }
-         }
-         task.resume()
-     }
      public func sendDiary(id:UUID,sendData:Data,debug:Bool){
          self.dispatchGroup.enter()
          let timeUrl  = URL(string: (self.baseAddress + "/concierge/api/pm/observation?debug=\(debug)"))!
@@ -989,10 +1069,12 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
          let jsonString = String(data: sendData, encoding: .utf8)
          if let access = UserDefaults.standard.string(forKey: "access_token"){
              urlRequest.addValue("Bearer " + access, forHTTPHeaderField: "Authorization")
+         }else{
+             DeviceService.getInstance().ls.addLogs(text:"Токена нет, начните сессию")
+             return
          }
          urlRequest.httpBody = sendData
          
-         print(sendData)
          let session = URLSession.shared
          let task = session.dataTask(with: urlRequest) { (data, response, error) in
              if let error = error {
@@ -1086,7 +1168,6 @@ fileprivate class _baseConciergeCallback: ConciergeCallback {
              }
              if let responseData = data {
                  if let responseString = String(data: responseData, encoding: .utf8) {
-                     print(jsonString)
                      DeviceService.getInstance().ls.addLogs(text:"Response: \(responseString)")
                  }
              }
