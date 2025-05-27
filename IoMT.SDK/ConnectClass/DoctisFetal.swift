@@ -253,10 +253,8 @@ callback?.onExpection(mac: _identifer!, ex: error!)
                 if(DoctisFetal.test == true && stopwatch.elapsedTimeInSeconds() > 10){
                     finishMeasurments()
                 }
-                if(decodedValue.rate > 0){
                     rateArray.append(DataItem(key:stopwatch.elapsedTimeInSeconds(),value:decodedValue.rate))
                     callback?.onExploreDevice(mac: _identifer!, atr: Atributes.HeartRate, value: decodedValue.rate)
-                }
                 if(battLevel == -1){
                     battLevel = decodedValue.battValue
                     callback?.onExploreDevice(mac: _identifer!, atr: Atributes.BatteryLevel, value: decodedValue.battValue)
